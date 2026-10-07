@@ -3,7 +3,7 @@
 
 export function SmileIcon() {
   return (
-    <svg width="22" height="11" viewBox="0 0 22 11" fill="none" aria-hidden="true">
+    <svg width="22" height="11" viewBox="0 0 22 11" fill="none" overflow="visible" aria-hidden="true">
       <path
         d="M2 2a9 9 0 0 0 18 0"
         stroke="#fff"
