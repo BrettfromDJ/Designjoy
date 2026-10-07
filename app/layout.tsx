@@ -1,6 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Nav } from "@/components/Nav";
-import { AskBox } from "@/components/AskBox";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,11 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"
         />
       </head>
-      <body>
-        <Nav />
-        {children}
-        <AskBox />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

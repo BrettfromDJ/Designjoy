@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { fixedCards, work, type ColumnCount } from "@/content/site";
+import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import { layoutMasonry } from "@/lib/masonry";
 import { InfoCard } from "./InfoCard";
 import { PricingCard } from "./PricingCard";
@@ -28,7 +28,7 @@ function subscribe(onChange: () => void) {
   return () => lists.forEach((list) => list.removeEventListener("change", onChange));
 }
 
-export function MasonryGrid() {
+export function MasonryGrid({ work }: { work: WorkItem[] }) {
   const columnCount = useSyncExternalStore(subscribe, getColumnCount, () => 4 as const);
   const columns = layoutMasonry(columnCount, work, fixedCards);
 

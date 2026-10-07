@@ -5,12 +5,13 @@
   background: var(--surface);
 }
 
-.image {
+.media {
+  display: block;
   width: 100%;
   height: auto;
   transition: transform 0.4s ease;
 }
 
-.card:hover .image {
+.card:hover .media {
   transform: scale(1.02);
 }
