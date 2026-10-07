@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { introCallHref } from "@/content/site";
+import { parseAnswer } from "@/lib/chat";
 import { SparklesIcon } from "./Icons";
 import styles from "./AskBox.module.css";
 
-type Message = { role: "user" | "assistant"; content: string };
+// `content` keeps the raw answer; `bookCall` forces the booking button (used for errors).
+type Message = { role: "user" | "assistant"; content: string; bookCall?: boolean };
 
 export function AskBox() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,22 +28,28 @@ export function AskBox() {
 
     const history: Message[] = [...messages, { role: "user", content: question }];
     setMessages([...history, { role: "assistant", content: "" }]);
+    // The model doesn't need to see its own tags again.
+    const outgoing = history.map(({ role, content }) => ({
+      role,
+      content: role === "assistant" ? parseAnswer(content).text : content,
+    }));
     setInput("");
     setOpen(true);
     setPending(true);
 
-    const setAnswer = (content: string) =>
-      setMessages([...history, { role: "assistant", content }]);
+    const setAnswer = (content: string, bookCall?: boolean) =>
+      setMessages([...history, { role: "assistant", content, bookCall }]);
 
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: outgoing }),
       });
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.error ?? "Something went wrong.");
+        setAnswer(data?.error ?? "Something went wrong. Please try again.", Boolean(data?.bookCall));
+        return;
       }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -50,8 +60,8 @@ export function AskBox() {
         answer += decoder.decode(value, { stream: true });
         setAnswer(answer);
       }
-    } catch (error) {
-      setAnswer(error instanceof Error ? error.message : "Something went wrong.");
+    } catch {
+      setAnswer("Couldn't reach the chat. Check your connection and try again.");
     } finally {
       setPending(false);
     }
@@ -65,11 +75,29 @@ export function AskBox() {
             Close
           </button>
           <div ref={logRef} className={styles.log} aria-live="polite">
-            {messages.map((message, i) => (
-              <p key={i} className={styles[message.role]}>
-                {message.content || <span className={styles.typing}>Thinking…</span>}
-              </p>
-            ))}
+            {messages.map((message, i) => {
+              if (message.role === "user") {
+                return (
+                  <p key={i} className={styles.user}>
+                    {message.content}
+                  </p>
+                );
+              }
+              const { text, bookCall } = parseAnswer(message.content);
+              const done = !(pending && i === messages.length - 1);
+              return (
+                <div key={i} className={styles.answer}>
+                  <p className={styles.assistant}>
+                    {text || <span className={styles.typing}>Thinking…</span>}
+                  </p>
+                  {done && (bookCall || message.bookCall) && (
+                    <Link href={introCallHref} className={styles.bookCall} onClick={() => setOpen(false)}>
+                      Book a 15 min intro call
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

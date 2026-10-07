@@ -1,3 +1,4 @@
+import { BOOK_CALL_TAG } from "@/lib/chat";
 import { getKnowledgeForChat } from "@/lib/knowledge";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -11,6 +12,7 @@ async function systemPrompt() {
     "You are the assistant on designjoy.co, answering questions from prospective and current clients.",
     "Answer only using the knowledge base below. If the answer isn't there, say you're not sure and suggest booking a 15 minute intro call.",
     "Be friendly, concise (2-4 sentences), and never make up prices, policies, or timelines.",
+    `Whenever you suggest booking an intro call, or the visitor seems ready to talk to someone (pricing for their specific needs, wanting to get started, questions you can't answer), end your reply with ${BOOK_CALL_TAG} on its own line. The site turns it into a booking button, so don't mention the tag or describe a button.`,
     "",
     "<knowledge_base>",
     knowledge.replace(/<!--[\s\S]*?-->/g, "").trim(),
@@ -34,7 +36,7 @@ export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return Response.json(
-      { error: "Chat isn't connected yet — please book an intro call with any questions." },
+      { error: "Chat isn't connected yet — please book an intro call with any questions.", bookCall: true },
       { status: 503 },
     );
   }
