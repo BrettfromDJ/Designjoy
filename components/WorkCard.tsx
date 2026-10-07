@@ -9,11 +9,13 @@ export function WorkCard({
   item,
   priority,
   order = 0,
+  onOpen,
 }: {
   item: WorkItem;
   priority?: boolean;
   /** Position in the grid, used to cascade the reveal. */
   order?: number;
+  onOpen?: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -27,7 +29,11 @@ export function WorkCard({
     <figure
       className={styles.card}
       data-loaded={loaded}
-      style={{ "--reveal-delay": `${Math.min(order, 12) * 60}ms` } as React.CSSProperties}
+      style={
+        {
+          "--reveal-delay": `${Math.min(order, 12) * 60}ms`,
+        } as React.CSSProperties
+      }
     >
       {item.kind === "video" ? (
         <video
@@ -57,6 +63,14 @@ export function WorkCard({
           className={styles.media}
           onLoad={() => setLoaded(true)}
           onError={() => setLoaded(true)}
+        />
+      )}
+      {onOpen && (
+        <button
+          type="button"
+          className={styles.open}
+          onClick={onOpen}
+          aria-label={`View ${item.title || "project"}`}
         />
       )}
     </figure>

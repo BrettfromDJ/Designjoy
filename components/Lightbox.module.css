@@ -1,0 +1,147 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 72px 96px;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: overlay-in 0.25s ease;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  animation: stage-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+    filter: blur(8px);
+  }
+}
+
+/* Fill the space available (--max-w by --max-h) at the work's own
+   proportions (--ratio, set inline), even when that means enlarging it. */
+.media {
+  --max-w: calc(100vw - 192px);
+  --max-h: calc(100dvh - 190px);
+  display: block;
+  width: min(var(--max-w), var(--max-h) * var(--ratio));
+  height: auto;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.caption {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  letter-spacing: -0.39px;
+  color: var(--text-nav);
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.close,
+.arrow {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.close:hover,
+.arrow:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: #161616;
+}
+
+.close {
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  right: 20px;
+}
+
+.arrow {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.arrow:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.prev {
+  left: 24px;
+}
+
+.next {
+  right: 24px;
+}
+
+/* Phones: full-width media, arrows tucked along the bottom. */
+@media (max-width: 559px) {
+  .overlay {
+    padding: 72px 16px 96px;
+  }
+
+  .media {
+    --max-w: calc(100vw - 32px);
+    --max-h: calc(100dvh - 210px);
+  }
+
+  .arrow {
+    top: auto;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: none;
+  }
+
+  .arrow:active {
+    transform: scale(0.94);
+  }
+
+  .prev {
+    left: calc(50% - 56px);
+  }
+
+  .next {
+    right: calc(50% - 56px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .stage {
+    animation: none;
+  }
+}

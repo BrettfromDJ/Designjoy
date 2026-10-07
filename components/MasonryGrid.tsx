@@ -1,9 +1,10 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import { layoutMasonry } from "@/lib/masonry";
 import { InfoCard } from "./InfoCard";
+import { Lightbox } from "./Lightbox";
 import { PricingCard } from "./PricingCard";
 import { WorkCard } from "./WorkCard";
 import styles from "./MasonryGrid.module.css";
@@ -36,29 +37,41 @@ function subscribe(onChange: () => void) {
 export function MasonryGrid({ work }: { work: WorkItem[] }) {
   const columnCount = useSyncExternalStore(subscribe, getColumnCount, () => 4 as const);
   const columns = layoutMasonry(columnCount, work, visibleFixedCards);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <div className={styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>
-      {columns.map((column, i) => (
-        <div key={i} className={styles.column}>
-          {column.map((cell, row) => {
-            if (cell.type === "work") {
-              return (
-                <WorkCard
-                  key={cell.item.id}
-                  item={cell.item}
-                  priority={i < 3}
-                  order={row * columns.length + i}
-                />
-              );
-            }
-            if (cell.card.kind === "pricing") {
-              return <PricingCard key={cell.card.id} />;
-            }
-            return <InfoCard key={cell.card.id} card={cell.card} />;
-          })}
-        </div>
-      ))}
-    </div>
+    <>
+      <div className={styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>
+        {columns.map((column, i) => (
+          <div key={i} className={styles.column}>
+            {column.map((cell, row) => {
+              if (cell.type === "work") {
+                return (
+                  <WorkCard
+                    key={cell.item.id}
+                    item={cell.item}
+                    priority={i < 3}
+                    order={row * columns.length + i}
+                    onOpen={() => setOpenIndex(work.indexOf(cell.item))}
+                  />
+                );
+              }
+              if (cell.card.kind === "pricing") {
+                return <PricingCard key={cell.card.id} />;
+              }
+              return <InfoCard key={cell.card.id} card={cell.card} />;
+            })}
+          </div>
+        ))}
+      </div>
+      {openIndex !== null && work[openIndex] && (
+        <Lightbox
+          items={work}
+          index={openIndex}
+          onIndex={setOpenIndex}
+          onClose={() => setOpenIndex(null)}
+        />
+      )}
+    </>
   );
 }

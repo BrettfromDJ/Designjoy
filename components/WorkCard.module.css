@@ -66,6 +66,23 @@
   transition-delay: 0ms;
 }
 
+/* Covers the tile so the whole thing opens the viewer. */
+.open {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: inherit;
+  cursor: zoom-in;
+}
+
+.open:focus-visible {
+  outline: 2px solid var(--text-nav);
+  outline-offset: -2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card::before {
     animation: none;
