@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { plans, type Plan } from "@/content/site";
+import { clientLogos, plans, type Plan } from "@/content/site";
 import { calTrigger } from "@/lib/cal";
 import { CheckIcon } from "./Icons";
+import { LogoMarquee } from "./LogoMarquee";
 import styles from "./PricingCard.module.css";
 
 export function PricingCard() {
@@ -91,6 +92,13 @@ export function PricingCard() {
           </p>
         )}
       </div>
+
+      {clientLogos.length > 0 && (
+        <div className={styles.trusted}>
+          <p className={styles.includedLabel}>Trusted by teams at</p>
+          <LogoMarquee logos={clientLogos} label="Companies we've worked with" />
+        </div>
+      )}
     </section>
   );
 }

@@ -47,6 +47,37 @@ export const plans: Plan[] = [
 
 export const introCallHref = "/intro-call";
 
+export type ClientLogo = {
+  name: string;
+  /** Logo file in public/logos/, e.g. "/logos/acme.svg". Without one, the name is shown as text. */
+  src?: string;
+  /** Display height in px (default 18). Tweak per logo so they look the same size. */
+  height?: number;
+  /** For text logos (no `src`): the typeface style and an optional small mark. */
+  font?: "serif" | "serif-italic" | "display" | "grotesk" | "mono" | "sans";
+  mark?: "dot" | "ring" | "square" | "triangle" | "arc";
+};
+
+// Companies shown in the "Trusted by" strip on the pricing card (hidden when
+// empty). Logos are shown in white, so any colour logo works; SVG or
+// transparent PNG looks best.
+// These are placeholder wordmarks with made-up names. Swap in real clients:
+// { name: "Acme", src: "/logos/acme.svg" }
+export const clientLogos: ClientLogo[] = [
+  { name: "Halcyon", font: "serif" },
+  { name: "NORTHBOUND", font: "mono", mark: "triangle" },
+  { name: "kestrel", font: "display" },
+  { name: "Lumen&Co", font: "grotesk", mark: "dot" },
+  { name: "Fieldnote", font: "serif-italic" },
+  { name: "Parcel", font: "sans", mark: "square" },
+  { name: "VANTAGE", font: "display" },
+  { name: "Orbit", font: "grotesk", mark: "ring" },
+  { name: "Meridian", font: "serif" },
+  { name: "STILLWATER", font: "mono", mark: "arc" },
+  { name: "quarry", font: "display" },
+  { name: "Tandem", font: "sans", mark: "dot" },
+];
+
 export type WorkItem = {
   id: string;
   title: string;

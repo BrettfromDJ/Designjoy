@@ -195,3 +195,16 @@
   text-align: center;
   color: var(--text-muted);
 }
+
+.trusted {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.trusted .includedLabel {
+  margin: 0;
+}
