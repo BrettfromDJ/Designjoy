@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/content/site";
-import { SmileIcon } from "./Icons";
 import styles from "./Nav.module.css";
 
 export function Nav() {
@@ -12,7 +11,7 @@ export function Nav() {
   return (
     <nav className={styles.nav} aria-label="Main">
       <Link href="/" className={styles.logo} aria-label="Designjoy home">
-        <SmileIcon />
+        <img src="/icons/smile.svg" alt="" width={30} height={30} className={styles.smile} />
       </Link>
       <ul className={styles.links}>
         {navLinks.map((link) => {

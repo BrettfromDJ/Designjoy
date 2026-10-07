@@ -20,6 +20,11 @@
   display: flex;
 }
 
+/* The SVG canvas leaves room for its glow: 4px each side, 19px below the 22×11 smile. */
+.smile {
+  margin: 0 -4px -19px;
+}
+
 .links {
   display: flex;
   gap: 24px;

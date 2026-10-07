@@ -1,19 +1,5 @@
-// Stand-ins for the Figma icon assets (smile, sparkles, checkmark). Replace
+// Stand-ins for the Figma icon assets (sparkles, checkmark). Replace
 // with the exported SVGs from the Figma file once they can be downloaded.
-
-export function SmileIcon() {
-  return (
-    <svg width="22" height="11" viewBox="0 0 22 11" fill="none" overflow="visible" aria-hidden="true">
-      <path
-        d="M2 2a9 9 0 0 0 18 0"
-        stroke="#fff"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        style={{ filter: "drop-shadow(0 2px 4px rgba(255,255,255,0.55))" }}
-      />
-    </svg>
-  );
-}
 
 export function SparklesIcon() {
   return (
