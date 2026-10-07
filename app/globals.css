@@ -7,6 +7,7 @@
   --text-muted: #7a7878;
   --border-subtle: rgba(255, 255, 255, 0.04);
   --border: rgba(255, 255, 255, 0.14);
+  --glow: rgba(255, 255, 255, 0.55);
 
   --radius-card: 12px;
   --radius-pill: 74px;
@@ -30,6 +31,13 @@
     0 134px 80px rgba(0, 0, 0, 0.38),
     0 238px 95px rgba(0, 0, 0, 0.11),
     0 373px 104px rgba(0, 0, 0, 0.01);
+}
+
+/* Animated by the ask box's edge glow. */
+@property --glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
 }
 
 *,

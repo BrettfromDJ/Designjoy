@@ -9,7 +9,6 @@
 
 .box {
   position: relative;
-  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -21,30 +20,49 @@
   box-shadow: var(--shadow-float);
 }
 
-/* Soft pink and amber glows peeking from the box's edges. */
+/* A white highlight travels around the edge: ::before draws the 1px ring,
+   ::after is a blurred copy behind the box for the soft outer glow. */
 .box::before,
 .box::after {
   content: "";
   position: absolute;
-  z-index: -1;
-  width: 107px;
-  height: 34px;
-  border-radius: 50%;
-  filter: blur(14px);
-  opacity: 0.25;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    transparent 160deg,
+    var(--glow) 250deg,
+    transparent 340deg
+  );
+  animation: glow-spin 7s linear infinite;
   pointer-events: none;
 }
 
 .box::before {
-  top: -6px;
-  left: 4px;
-  background: #ff3d9a;
+  padding: 1px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
 
 .box::after {
-  right: 4px;
-  bottom: -6px;
-  background: #ffb02e;
+  z-index: -1;
+  filter: blur(12px);
+  opacity: 0.35;
+}
+
+@keyframes glow-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box::before,
+  .box::after {
+    animation: none;
+  }
 }
 
 .input {
