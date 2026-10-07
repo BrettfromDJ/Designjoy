@@ -178,3 +178,10 @@
 .typing {
   color: var(--text-muted);
 }
+
+/* iOS zooms the page when focusing an input smaller than 16px. */
+@media (max-width: 559px) {
+  .input {
+    font-size: 16px;
+  }
+}
