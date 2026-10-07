@@ -65,6 +65,51 @@
   }
 }
 
+.field {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+/* Cycling sample question, drawn over the empty input like a placeholder. */
+.sample {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+  color: var(--text-nav);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: sample-in 0.45s ease backwards;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sample[data-fading="true"] {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+@keyframes sample-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sample {
+    animation: none;
+    transition: none;
+  }
+}
+
 .input {
   flex: 1;
   min-width: 0;
@@ -183,7 +228,8 @@
 
 /* iOS zooms the page when focusing an input smaller than 16px. */
 @media (max-width: 559px) {
-  .input {
+  .input,
+  .sample {
     font-size: 16px;
   }
 }

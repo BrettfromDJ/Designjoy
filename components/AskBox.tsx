@@ -9,12 +9,83 @@ import styles from "./AskBox.module.css";
 // `content` keeps the raw answer; `bookCall` forces the booking button (used for errors).
 type Message = { role: "user" | "assistant"; content: string; bookCall?: boolean };
 
+const PLACEHOLDER = "Ask anything about Designjoy";
+const SHORT_PLACEHOLDER = "Ask about Designjoy";
+const CYCLE_MS = 3200;
+const FADE_MS = 300;
+
+/**
+ * Sample questions from the knowledge base, plus the placeholder, keeping
+ * only text that fits the input without cutting off.
+ */
+function useSampleQuestions(inputRef: React.RefObject<HTMLInputElement | null>) {
+  const [all, setAll] = useState<string[]>([]);
+  const [fitting, setFitting] = useState<string[]>([]);
+  const [placeholder, setPlaceholder] = useState(PLACEHOLDER);
+
+  useEffect(() => {
+    fetch("/api/chat/questions")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => Array.isArray(data?.questions) && setAll(data.questions))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    const ctx = document.createElement("canvas").getContext("2d");
+    const measure = () => {
+      if (!ctx) return setFitting(all);
+      const style = getComputedStyle(input);
+      ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const room = input.clientWidth - 2;
+      // measureText ignores letter-spacing, so add it per character.
+      const spacing = parseFloat(style.letterSpacing) || 0;
+      const fits = (text: string) => ctx.measureText(text).width + spacing * text.length <= room;
+      setPlaceholder(fits(PLACEHOLDER) ? PLACEHOLDER : SHORT_PLACEHOLDER);
+      setFitting(all.filter(fits));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(input);
+    return () => observer.disconnect();
+  }, [all, inputRef]);
+
+  return { samples: fitting, placeholder };
+}
+
 export function AskBox() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+  const [focused, setFocused] = useState(false);
   const logRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Cycle the placeholder through sample questions while the box is idle.
+  const { samples, placeholder } = useSampleQuestions(inputRef);
+  const [sampleIndex, setSampleIndex] = useState(-1); // -1 shows the default placeholder
+  const [fading, setFading] = useState(false);
+  const idle = !focused && !input && !pending;
+  const sample = sampleIndex >= 0 ? samples[sampleIndex] : undefined;
+
+  useEffect(() => {
+    if (!idle || samples.length === 0) return;
+    let swap: ReturnType<typeof setTimeout>;
+    const tick = setInterval(() => {
+      setFading(true);
+      swap = setTimeout(() => {
+        setSampleIndex((i) => (i + 1 >= samples.length ? -1 : i + 1));
+        setFading(false);
+      }, FADE_MS);
+    }, CYCLE_MS);
+    return () => {
+      clearInterval(tick);
+      clearTimeout(swap);
+      setFading(false);
+    };
+  }, [idle, samples.length]);
 
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
@@ -22,7 +93,8 @@ export function AskBox() {
 
   async function ask(event: React.FormEvent) {
     event.preventDefault();
-    const question = input.trim();
+    // With an empty box, Ask sends the sample question on screen.
+    const question = input.trim() || (idle ? (sample ?? "") : "");
     if (!question || pending) return;
 
     const history: Message[] = [...messages, { role: "user", content: question }];
@@ -47,7 +119,10 @@ export function AskBox() {
       });
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => null);
-        setAnswer(data?.error ?? "Something went wrong. Please try again.", Boolean(data?.bookCall));
+        setAnswer(
+          data?.error ?? "Something went wrong. Please try again.",
+          Boolean(data?.bookCall),
+        );
         return;
       }
       const reader = res.body.getReader();
@@ -111,16 +186,37 @@ export function AskBox() {
         <label htmlFor="ask-input" className="visually-hidden">
           Ask anything about Designjoy
         </label>
-        <input
-          id="ask-input"
-          className={styles.input}
-          placeholder="Ask anything about Designjoy"
-          autoComplete="off"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onFocus={() => messages.length > 0 && setOpen(true)}
-        />
-        <button type="submit" className={styles.submit} disabled={pending || !input.trim()}>
+        <div className={styles.field}>
+          <input
+            ref={inputRef}
+            id="ask-input"
+            className={styles.input}
+            placeholder={idle ? "" : placeholder}
+            autoComplete="off"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onFocus={() => {
+              setFocused(true);
+              if (messages.length > 0) setOpen(true);
+            }}
+            onBlur={() => setFocused(false)}
+          />
+          {idle && (
+            <span
+              key={sample ?? placeholder}
+              className={styles.sample}
+              data-fading={fading}
+              aria-hidden="true"
+            >
+              {sample ?? placeholder}
+            </span>
+          )}
+        </div>
+        <button
+          type="submit"
+          className={styles.submit}
+          disabled={pending || !(input.trim() || (idle && sample))}
+        >
           Ask
         </button>
       </form>

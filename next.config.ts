@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/chat": ["./content/knowledge-base.md"],
     "/admin/knowledge": ["./content/knowledge-base.md"],
+    "/api/chat/questions": ["./content/knowledge-base.md"],
   },
 };
 
