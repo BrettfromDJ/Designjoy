@@ -6,6 +6,7 @@ import { layoutMasonry } from "@/lib/masonry";
 import { InfoCard } from "./InfoCard";
 import { Lightbox } from "./Lightbox";
 import { PricingCard } from "./PricingCard";
+import { ScopeBoard } from "./ScopeBoard";
 import { WorkCard } from "./WorkCard";
 import styles from "./MasonryGrid.module.css";
 
@@ -25,7 +26,7 @@ function getColumnCount(): ColumnCount {
 
 // Info cards with no text yet stay hidden so work fills their slots.
 const visibleFixedCards = fixedCards.filter(
-  (card) => card.kind === "pricing" || card.eyebrow || card.title || card.body,
+  (card) => card.kind !== "info" || Boolean(card.eyebrow || card.title || card.body),
 );
 
 function subscribe(onChange: () => void) {
@@ -55,6 +56,9 @@ export function MasonryGrid({ work }: { work: WorkItem[] }) {
                     onOpen={() => setOpenIndex(work.indexOf(cell.item))}
                   />
                 );
+              }
+              if (cell.card.kind === "scope") {
+                return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
               }
               if (cell.card.kind === "pricing") {
                 return <PricingCard key={cell.card.id} />;

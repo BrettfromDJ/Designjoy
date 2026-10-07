@@ -111,6 +111,8 @@ export type Slot = { column: number | "last"; row: number };
 
 export type FixedCard =
   | { id: string; kind: "pricing"; slots: Record<ColumnCount, Slot> }
+  // The "Scope of work" board; its services come from `scopeOfWork`.
+  | { id: string; kind: "scope"; minHeight: number; slots: Record<ColumnCount, Slot> }
   | {
       id: string;
       kind: "info";
@@ -121,6 +123,25 @@ export type FixedCard =
       body?: string;
       slots: Record<ColumnCount, Slot>;
     };
+
+// Services listed on the "Scope of work" board, in the order they appear.
+export const scopeOfWork = [
+  "Front-end development",
+  "Web design",
+  "MVP builds",
+  "Logos",
+  "Slide decks",
+  "Branding",
+  "Social media",
+  "UI/UX design",
+  "Webflow development",
+  "Mobile apps",
+  "Print design",
+  "Email",
+  "Display ads",
+  "Icons",
+  "Brand guides",
+];
 
 // Info cards stay hidden until they have an eyebrow, title, or body.
 export const fixedCards: FixedCard[] = [
@@ -157,8 +178,8 @@ export const fixedCards: FixedCard[] = [
     },
   },
   {
-    id: "info-c",
-    kind: "info",
+    id: "scope",
+    kind: "scope",
     minHeight: 429,
     slots: {
       4: { column: 1, row: 2 },
