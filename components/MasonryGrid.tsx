@@ -41,9 +41,16 @@ export function MasonryGrid({ work }: { work: WorkItem[] }) {
     <div className={styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>
       {columns.map((column, i) => (
         <div key={i} className={styles.column}>
-          {column.map((cell) => {
+          {column.map((cell, row) => {
             if (cell.type === "work") {
-              return <WorkCard key={cell.item.id} item={cell.item} priority={i < 3} />;
+              return (
+                <WorkCard
+                  key={cell.item.id}
+                  item={cell.item}
+                  priority={i < 3}
+                  order={row * columns.length + i}
+                />
+              );
             }
             if (cell.card.kind === "pricing") {
               return <PricingCard key={cell.card.id} />;
