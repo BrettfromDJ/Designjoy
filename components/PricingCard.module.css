@@ -179,6 +179,7 @@
 }
 
 .secondary {
+  background: none;
   border: 1px solid var(--border);
   color: #fff;
 }

@@ -158,6 +158,8 @@
 }
 
 .bookCall {
+  border: 0;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   height: 36px;

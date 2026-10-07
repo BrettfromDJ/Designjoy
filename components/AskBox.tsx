@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { introCallHref } from "@/content/site";
+import { calTrigger } from "@/lib/cal";
 import { parseAnswer } from "@/lib/chat";
 import { SparklesIcon } from "./Icons";
 import styles from "./AskBox.module.css";
@@ -91,9 +90,14 @@ export function AskBox() {
                     {text || <span className={styles.typing}>Thinking…</span>}
                   </p>
                   {done && (bookCall || message.bookCall) && (
-                    <Link href={introCallHref} className={styles.bookCall} onClick={() => setOpen(false)}>
+                    <button
+                      type="button"
+                      className={styles.bookCall}
+                      onClick={() => setOpen(false)}
+                      {...calTrigger}
+                    >
                       Book a 15 min intro call
-                    </Link>
+                    </button>
                   )}
                 </div>
               );

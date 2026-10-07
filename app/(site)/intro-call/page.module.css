@@ -1,0 +1,44 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 128px 16px 140px;
+}
+
+.header {
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.96px;
+  text-wrap: balance;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.calendar {
+  width: 100%;
+  min-height: 640px;
+  overflow: auto;
+  border-radius: var(--radius-card);
+}
+
+@media (max-width: 559px) {
+  .page {
+    padding-top: 104px;
+  }
+
+  .title {
+    font-size: 24px;
+    letter-spacing: -0.72px;
+  }
+}

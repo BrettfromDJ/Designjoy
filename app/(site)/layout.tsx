@@ -1,5 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { AskBox } from "@/components/AskBox";
+import { CalLoader } from "@/components/CalLoader";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,6 +8,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Nav />
       {children}
       <AskBox />
+      <CalLoader />
     </>
   );
 }

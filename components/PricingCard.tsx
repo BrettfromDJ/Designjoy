@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { introCallHref, plans, type Plan } from "@/content/site";
+import { plans, type Plan } from "@/content/site";
+import { calTrigger } from "@/lib/cal";
 import { CheckIcon } from "./Icons";
 import styles from "./PricingCard.module.css";
 
@@ -82,9 +82,9 @@ export function PricingCard() {
         >
           {status === "loading" ? "One moment…" : "Subscribe now"}
         </button>
-        <Link href={introCallHref} className={styles.secondary}>
+        <button type="button" className={styles.secondary} {...calTrigger}>
           Book a 15 min intro call
-        </Link>
+        </button>
         {status === "error" && (
           <p className={styles.error} role="alert">
             Checkout isn&apos;t available yet. Please book an intro call instead.

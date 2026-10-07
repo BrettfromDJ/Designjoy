@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navLinks } from "@/content/site";
+import { introCallHref, navLinks } from "@/content/site";
+import { calTrigger } from "@/lib/cal";
 import styles from "./Nav.module.css";
 
 export function Nav() {
@@ -16,6 +17,16 @@ export function Nav() {
       <ul className={styles.links}>
         {navLinks.map((link) => {
           const active = pathname === link.href;
+          // "Intro call" opens the booking pop-up instead of navigating.
+          if (link.href === introCallHref) {
+            return (
+              <li key={link.href}>
+                <button type="button" className={styles.link} {...calTrigger}>
+                  {link.label}
+                </button>
+              </li>
+            );
+          }
           return (
             <li key={link.href}>
               <Link
