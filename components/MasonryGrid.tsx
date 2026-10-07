@@ -22,6 +22,11 @@ function getColumnCount(): ColumnCount {
   return 1;
 }
 
+// Info cards with no text yet stay hidden so work fills their slots.
+const visibleFixedCards = fixedCards.filter(
+  (card) => card.kind === "pricing" || card.eyebrow || card.title || card.body,
+);
+
 function subscribe(onChange: () => void) {
   const lists = QUERIES.map(([query]) => window.matchMedia(query));
   lists.forEach((list) => list.addEventListener("change", onChange));
@@ -30,7 +35,7 @@ function subscribe(onChange: () => void) {
 
 export function MasonryGrid({ work }: { work: WorkItem[] }) {
   const columnCount = useSyncExternalStore(subscribe, getColumnCount, () => 4 as const);
-  const columns = layoutMasonry(columnCount, work, fixedCards);
+  const columns = layoutMasonry(columnCount, work, visibleFixedCards);
 
   return (
     <div className={styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>

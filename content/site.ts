@@ -91,6 +91,7 @@ export type FixedCard =
       slots: Record<ColumnCount, Slot>;
     };
 
+// Info cards stay hidden until they have an eyebrow, title, or body.
 export const fixedCards: FixedCard[] = [
   {
     id: "pricing",
