@@ -113,6 +113,8 @@ export type FixedCard =
   | { id: string; kind: "pricing"; slots: Record<ColumnCount, Slot> }
   // The "Scope of work" board; its services come from `scopeOfWork`.
   | { id: string; kind: "scope"; minHeight: number; slots: Record<ColumnCount, Slot> }
+  // The "Kind words" card; its quotes come from `testimonials`.
+  | { id: string; kind: "testimonial"; minHeight: number; slots: Record<ColumnCount, Slot> }
   | {
       id: string;
       kind: "info";
@@ -123,6 +125,23 @@ export type FixedCard =
       body?: string;
       slots: Record<ColumnCount, Slot>;
     };
+
+export type Testimonial = {
+  quote: string;
+  /** A person: name, role and photo (initials are shown until there's a photo). */
+  name?: string;
+  role?: string;
+  photo?: string;
+  /** Or a company: its name, and a logo file in public/logos/ (shown in white). */
+  company?: string;
+  logo?: string;
+};
+
+// Quotes shown one at a time in the "Kind words" card, in this order.
+export const testimonials: Testimonial[] = [
+  { quote: "Designjoy shows that they know the art of subtlety.", company: "Webflow" },
+  { quote: "Design is everything, and these guys have nailed it.", name: "Kevin O'Leary", role: "Shark Tank" },
+];
 
 // Services listed on the "Scope of work" board, in the order they appear.
 export const scopeOfWork = [
@@ -156,9 +175,9 @@ export const fixedCards: FixedCard[] = [
     },
   },
   {
-    id: "info-a",
-    kind: "info",
-    minHeight: 230,
+    id: "testimonials",
+    kind: "testimonial",
+    minHeight: 250,
     slots: {
       4: { column: "last", row: 1 },
       3: { column: "last", row: 1 },

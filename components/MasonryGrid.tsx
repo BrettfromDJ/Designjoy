@@ -7,6 +7,7 @@ import { InfoCard } from "./InfoCard";
 import { Lightbox } from "./Lightbox";
 import { PricingCard } from "./PricingCard";
 import { ScopeBoard } from "./ScopeBoard";
+import { TestimonialCard } from "./TestimonialCard";
 import { WorkCard } from "./WorkCard";
 import styles from "./MasonryGrid.module.css";
 
@@ -56,6 +57,9 @@ export function MasonryGrid({ work }: { work: WorkItem[] }) {
                     onOpen={() => setOpenIndex(work.indexOf(cell.item))}
                   />
                 );
+              }
+              if (cell.card.kind === "testimonial") {
+                return <TestimonialCard key={cell.card.id} height={cell.card.minHeight} />;
               }
               if (cell.card.kind === "scope") {
                 return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
