@@ -14,7 +14,7 @@ npm run dev
 | --- | --- |
 | Upload, reorder, rename, remove projects | `/admin` (password: `ADMIN_PASSWORD`) |
 | Sample tiles, plans, nav links, fixed card slots | `content/site.ts` |
-| What the chat box knows | `content/knowledge-base.md` |
+| What the chat box knows | `/admin/knowledge` (starts from `content/knowledge-base.md`) |
 | Masonry layout logic | `lib/masonry.ts` |
 | ChatGPT endpoint | `app/api/chat/route.ts` |
 | Stripe checkout (stub) | `app/api/checkout/route.ts` |
@@ -32,3 +32,7 @@ project under Storage; Vercel adds the token for you).
 **Fixed cards:** each entry in `fixedCards` has a slot (column + row) for every
 column count (4 on desktop down to 1 on mobile). Work never takes those slots.
 The pricing card is pinned to the top of the right-most column.
+
+**Chatbot knowledge:** edit it in the Chatbot tab at `/admin/knowledge`. Saves
+go to Vercel Blob and the chatbot picks them up within a minute, with no
+redeploy. Until the first save, it uses `content/knowledge-base.md`.

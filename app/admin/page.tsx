@@ -32,7 +32,7 @@ export default async function AdminPage() {
   }
 
   return (
-    <main className={styles.page}>
+    <main>
       <ProjectManager initialProjects={await getProjects()} storageReady={blobConfigured()} />
     </main>
   );

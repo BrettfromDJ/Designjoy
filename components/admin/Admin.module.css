@@ -9,12 +9,80 @@
   padding: 16px;
 }
 
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
 .manager {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 880px;
-  margin: 0 auto;
+}
+
+/* Admin tabs */
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 52px;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+  color: var(--text-nav);
+  opacity: 0.6;
+}
+
+.tab:hover {
+  opacity: 0.9;
+}
+
+.tab[aria-current="page"] {
+  opacity: 1;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Knowledge editor */
+.editor {
+  width: 100%;
+  min-height: 60vh;
+  padding: 20px;
+  resize: vertical;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  outline: none;
+}
+
+.editor:focus {
+  border-color: var(--text-nav);
 }
 
 .header {
@@ -27,6 +95,7 @@
 
 .headerActions {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 

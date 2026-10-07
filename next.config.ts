@@ -5,9 +5,10 @@ const nextConfig: NextConfig = {
     // Projects uploaded at /admin are served from Vercel Blob.
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
-  // The chat route reads content/knowledge-base.md at runtime.
+  // The default knowledge base is read at runtime until one is saved from /admin.
   outputFileTracingIncludes: {
     "/api/chat": ["./content/knowledge-base.md"],
+    "/admin/knowledge": ["./content/knowledge-base.md"],
   },
 };
 

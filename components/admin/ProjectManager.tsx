@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { upload } from "@vercel/blob/client";
-import { addProject, deleteProject, logout, moveProject, renameProject } from "@/app/admin/actions";
+import { addProject, deleteProject, moveProject, renameProject } from "@/app/admin/actions";
 import { ALLOWED_TYPES, MAX_UPLOAD_BYTES } from "@/lib/media";
 import type { Project } from "@/lib/projects";
 import styles from "./Admin.module.css";
@@ -102,16 +101,6 @@ export function ProjectManager({
           <p className={styles.hint}>
             {projects.length} on the homepage, newest first. Drag in PNG, JPG, GIF, or MP4 files.
           </p>
-        </div>
-        <div className={styles.headerActions}>
-          <Link href="/" className={styles.secondary}>
-            View site
-          </Link>
-          <form action={logout}>
-            <button type="submit" className={styles.secondary}>
-              Sign out
-            </button>
-          </form>
         </div>
       </header>
 

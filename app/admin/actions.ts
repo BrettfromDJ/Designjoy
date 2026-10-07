@@ -4,6 +4,7 @@ import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdmin, signIn, signOut } from "@/lib/auth";
+import { MAX_KNOWLEDGE_LENGTH, saveKnowledge } from "@/lib/knowledge";
 import { getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
 
 async function requireAdmin() {
@@ -67,4 +68,14 @@ export async function deleteProject(id: string) {
   const projects = await update((list) => list.filter((p) => p.id !== id));
   if (target) await del(target.url).catch((error) => console.error("Could not delete file", error));
   return projects;
+}
+
+export async function updateKnowledge(text: string) {
+  await requireAdmin();
+  const clean = String(text);
+  if (!clean.trim()) throw new Error("The knowledge base can't be empty.");
+  if (clean.length > MAX_KNOWLEDGE_LENGTH) throw new Error("That's too long to save.");
+  await saveKnowledge(clean);
+  revalidatePath("/admin/knowledge");
+  return new Date().toISOString();
 }

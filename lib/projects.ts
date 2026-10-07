@@ -1,4 +1,6 @@
-import { del, list, put } from "@vercel/blob";
+import { blobConfigured, readLatest, writeLatest } from "./store";
+
+export { blobConfigured };
 
 export type Project = {
   id: string;
@@ -9,27 +11,13 @@ export type Project = {
   height: number;
 };
 
-// The project list is a JSON file in Blob storage. Each save writes a new
-// file (so no CDN copy is ever stale) and removes the older ones.
-const MANIFEST_PREFIX = "data/projects";
-
-export function blobConfigured() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
-}
-
-async function manifestBlobs() {
-  const { blobs } = await list({ prefix: MANIFEST_PREFIX });
-  return blobs.sort((a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt));
-}
+const PREFIX = "data/projects";
 
 export async function getProjects(): Promise<Project[]> {
   if (!blobConfigured()) return [];
   try {
-    const [latest] = await manifestBlobs();
-    if (!latest) return [];
-    const res = await fetch(latest.url);
-    if (!res.ok) throw new Error(`Manifest fetch failed: ${res.status}`);
-    return (await res.json()) as Project[];
+    const json = await readLatest(PREFIX);
+    return json ? (JSON.parse(json) as Project[]) : [];
   } catch (error) {
     console.error("Could not load projects", error);
     return [];
@@ -37,13 +25,7 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function saveProjects(projects: Project[]) {
-  const previous = await manifestBlobs();
-  await put(`${MANIFEST_PREFIX}.json`, JSON.stringify(projects), {
-    access: "public",
-    addRandomSuffix: true,
-    contentType: "application/json",
-  });
-  if (previous.length) await del(previous.map((b) => b.url));
+  await writeLatest(PREFIX, "json", JSON.stringify(projects), "application/json");
 }
 
 export function isBlobUrl(url: string) {

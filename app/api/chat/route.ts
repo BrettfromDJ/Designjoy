@@ -1,5 +1,4 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { getKnowledgeForChat } from "@/lib/knowledge";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -7,10 +6,7 @@ const MAX_HISTORY = 12;
 const MAX_MESSAGE_LENGTH = 2000;
 
 async function systemPrompt() {
-  const knowledge = await readFile(
-    path.join(process.cwd(), "content", "knowledge-base.md"),
-    "utf8",
-  );
+  const knowledge = await getKnowledgeForChat();
   return [
     "You are the assistant on designjoy.co, answering questions from prospective and current clients.",
     "Answer only using the knowledge base below. If the answer isn't there, say you're not sure and suggest booking a 15 minute intro call.",
