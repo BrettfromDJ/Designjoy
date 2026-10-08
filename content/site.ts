@@ -54,6 +54,15 @@ export const plans: Plan[] = [
 
 export const introCallHref = "/intro-call";
 
+// Stripe's billing page, where clients update their card, see invoices or
+// cancel. Set NEXT_PUBLIC_STRIPE_PORTAL_URL in Vercel to the live link at launch.
+export const billingPortalUrl =
+  process.env.NEXT_PUBLIC_STRIPE_PORTAL_URL ||
+  "https://billing.stripe.com/p/login/test_28E00j0PR49s9wT2v57bW00";
+
+// How soon new clients can expect their Trello invite (shown after paying).
+export const trelloInviteEta = "within a few hours";
+
 export type ClientLogo = {
   name: string;
   /** Logo file in public/logos/, e.g. "/logos/acme.svg". Without one, the name is shown as text. */

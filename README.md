@@ -17,7 +17,7 @@ npm run dev
 | What the chat box knows | `/admin/knowledge` (starts from `content/knowledge-base.md`) |
 | Masonry layout logic | `lib/masonry.ts` |
 | ChatGPT endpoint | `app/api/chat/route.ts` |
-| Stripe checkout (stub) | `app/api/checkout/route.ts` |
+| Stripe checkout (embedded) and welcome page | `app/api/checkout/route.ts`, `app/(site)/checkout`, `app/(site)/welcome` — keys in `.env.example` |
 | FAQs / Pricing / Book a call pages | `app/(site)/*/page.tsx` |
 
 **Adding work:** sign in at `/admin` and drag in PNG, JPG, GIF, or MP4 files

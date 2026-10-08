@@ -57,8 +57,10 @@ function useSampleQuestions(inputRef: React.RefObject<HTMLInputElement | null>) 
 }
 
 export function AskBox() {
-  // The FAQ page is a chat already, so the pill would be redundant there.
-  const hidden = usePathname() === "/faqs";
+  // The FAQ page is a chat already, so the pill would be redundant there,
+  // and on checkout it would sit over the payment form.
+  const pathname = usePathname();
+  const hidden = pathname === "/faqs" || pathname === "/checkout";
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
