@@ -1,9 +1,9 @@
+/* A touch lighter than --border-subtle, for the card and the plan list. */
 .card {
-  /* Keeps the highlighted plan's glow above the card's background. */
-  isolation: isolate;
+  --stroke: rgba(255, 255, 255, 0.07);
   padding: 24px;
   background: var(--surface);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--stroke);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
 }
@@ -29,83 +29,42 @@
   color: var(--text-muted);
 }
 
+/* The plans as a compact list: one line each; the chosen one opens up. */
 .plans {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   margin: 24px 0 0;
-  padding: 0;
-  border: 0;
+  padding: 4px 14px;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-card);
 }
 
 .plan {
-  position: relative;
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  min-height: 69px;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-card);
+  padding: 12px 0;
   cursor: pointer;
-  transition: border-color 0.15s ease;
 }
 
-.plan:hover,
-.plan[data-selected="true"] {
-  border-color: var(--border);
-}
-
-/* A slow, soft light travels around the edge of a highlighted plan, like the
-   ask box: ::before draws the 1px ring, ::after a faint blurred glow. */
-.highlight::before,
-.highlight::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--glow-angle),
-    transparent 0deg,
-    transparent 180deg,
-    var(--glow) 260deg,
-    transparent 340deg
-  );
-  animation: glow-spin 9s linear infinite;
-  pointer-events: none;
-}
-
-.highlight::before {
-  padding: 1px;
-  opacity: 0.7;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-}
-
-.highlight::after {
-  z-index: -1;
-  filter: blur(10px);
-  opacity: 0.2;
-}
-
-@keyframes glow-spin {
-  to {
-    --glow-angle: 360deg;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .highlight::before,
-  .highlight::after {
-    animation: none;
-  }
+.plan + .plan {
+  border-top: 1px solid var(--stroke);
 }
 
 .plan:has(:focus-visible) {
   outline: 2px solid var(--text-nav);
   outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.planMain {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
 }
 
 .radio {
@@ -133,14 +92,6 @@
   background: #fff;
 }
 
-.planText {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  padding-top: 1px;
-}
-
 .planName {
   display: flex;
   flex-wrap: wrap;
@@ -164,18 +115,46 @@
   color: var(--text);
 }
 
+/* Only the chosen plan shows its "Perfect for" line. */
 .planDescription {
+  display: none;
+  flex-basis: 100%;
+  padding-left: 24px;
   font-size: 12px;
-  line-height: 1.2;
+  line-height: 1.3;
   letter-spacing: -0.36px;
   color: var(--text-muted);
 }
 
+.plan[data-selected="true"] .planDescription {
+  display: block;
+  animation: reveal 0.3s ease both;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+/* The new plan's tag glows softly. */
+.tagGlow {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan[data-selected="true"] .planDescription {
+    animation: none;
+  }
+}
+
 .price {
+  flex: none;
   font-size: 12px;
   line-height: 1.2;
   letter-spacing: -0.36px;
-  padding-top: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 .includedLabel {

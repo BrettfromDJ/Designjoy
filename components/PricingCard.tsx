@@ -36,9 +36,7 @@ export function PricingCard() {
         {plans.map((p) => (
           <label
             key={p.id}
-            className={
-              p.highlight ? `${styles.plan} ${styles.highlight}` : styles.plan
-            }
+            className={styles.plan}
             data-selected={p.id === planId}
           >
             <input
@@ -52,17 +50,27 @@ export function PricingCard() {
               }}
               className={styles.radio}
             />
-            <span className={styles.planText}>
+            <span className={styles.planMain}>
               <span className={styles.planName}>
                 {p.name}
-                {p.tag && <span className={styles.tag}>{p.tag}</span>}
+                {p.tag && (
+                  <span
+                    className={
+                      p.highlight
+                        ? `${styles.tag} ${styles.tagGlow}`
+                        : styles.tag
+                    }
+                  >
+                    {p.tag}
+                  </span>
+                )}
               </span>
-              <span className={styles.planDescription}>{p.description}</span>
+              <span className={styles.price}>
+                {p.price}
+                <span className={styles.muted}>/mo</span>
+              </span>
             </span>
-            <span className={styles.price}>
-              {p.price}
-              <span className={styles.muted}>/mo</span>
-            </span>
+            <span className={styles.planDescription}>{p.description}</span>
           </label>
         ))}
       </fieldset>
