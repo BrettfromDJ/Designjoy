@@ -26,6 +26,9 @@ const FAQ_TYPING_MS = 900;
 
 const PLACEHOLDER = "Ask anything about Designjoy";
 const SHORT_PLACEHOLDER = "Ask about Designjoy";
+// Shown while the pricing panel is open (the short one on narrow phones).
+const PRICING_PLACEHOLDER = "Not sure which plan? Just ask";
+const PRICING_SHORT_PLACEHOLDER = "Questions? Just ask";
 const CYCLE_MS = 3200;
 const FADE_MS = 300;
 
@@ -92,10 +95,17 @@ export function AskBox() {
   const [sampleIndex, setSampleIndex] = useState(-1); // -1 shows the default placeholder
   const [fading, setFading] = useState(false);
   const idle = !focused && !input && !pending;
-  const sample = sampleIndex >= 0 ? samples[sampleIndex] : undefined;
+  // With the plans open, invite pricing questions instead of cycling samples.
+  const pricingHint = open && mode === "pricing";
+  const hint = pricingHint
+    ? placeholder === SHORT_PLACEHOLDER
+      ? PRICING_SHORT_PLACEHOLDER
+      : PRICING_PLACEHOLDER
+    : placeholder;
+  const sample = !pricingHint && sampleIndex >= 0 ? samples[sampleIndex] : undefined;
 
   useEffect(() => {
-    if (!idle || samples.length === 0) return;
+    if (!idle || pricingHint || samples.length === 0) return;
     let swap: ReturnType<typeof setTimeout>;
     const tick = setInterval(() => {
       setFading(true);
@@ -109,7 +119,7 @@ export function AskBox() {
       clearTimeout(swap);
       setFading(false);
     };
-  }, [idle, samples.length]);
+  }, [idle, pricingHint, samples.length]);
 
   // Keep the newest message in view (above the question chips).
   useEffect(() => {
@@ -381,7 +391,7 @@ export function AskBox() {
                 ref={inputRef}
                 id="ask-input"
                 className={styles.input}
-                placeholder={idle ? "" : placeholder}
+                placeholder={idle ? "" : hint}
                 autoComplete="off"
                 value={input}
                 onChange={(e) => {
@@ -399,12 +409,12 @@ export function AskBox() {
               />
               {idle && (
                 <span
-                  key={sample ?? placeholder}
+                  key={sample ?? hint}
                   className={styles.sample}
                   data-fading={fading}
                   aria-hidden="true"
                 >
-                  {sample ?? placeholder}
+                  {sample ?? hint}
                 </span>
               )}
             </div>
