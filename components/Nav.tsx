@@ -11,7 +11,7 @@ export function Nav() {
   return (
     <nav className={styles.nav} aria-label="Main">
       <Link href="/" className={styles.logo} aria-label="Designjoy home">
-        <img src="/icons/smile.svg" alt="" width={30} height={30} className={styles.smile} />
+        <img src="/icons/smile.svg" alt="" width={36} height={36} className={styles.smile} />
       </Link>
       <ul className={styles.links}>
         {navLinks.map((link) => {

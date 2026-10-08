@@ -20,9 +20,14 @@
   display: flex;
 }
 
-/* The SVG canvas leaves room for its glow: 4px each side, 19px below the 22×11 smile. */
+/* Shown at 1.2× (a 26×13 smile). The SVG canvas leaves room for its glow,
+   about 5px each side and 23px below, which the negative margins cancel out.
+   Nudged up 4px because the smile's weight and glow sit low, which made it
+   look off-centre next to the text. */
 .smile {
-  margin: 0 -4px -19px;
+  position: relative;
+  top: -4px;
+  margin: 0 -5px -23px;
 }
 
 .links {
