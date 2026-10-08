@@ -10,7 +10,7 @@ export const navLinks = [
 ];
 
 export type Plan = {
-  id: "monthly-club" | "pro";
+  id: "monthly-club" | "design-partner";
   name: string;
   price: string;
   description: string;
@@ -22,24 +22,26 @@ export const plans: Plan[] = [
     id: "monthly-club",
     name: "Monthly Club",
     price: "$4,995",
-    description: "Lorem ipsum dolor sit amet.",
+    description: "Perfect for steady workloads.",
     features: [
-      "One request at a time",
-      "Avg. 48 hour delivery",
-      "Unlimited brands, requests & revisions",
-      "Front-end development",
+      "Unlimited design requests",
+      "Unlimited revisions",
+      "~48-hour average delivery",
+      "Async communication via Trello",
+      "Pause or resume anytime",
     ],
   },
   {
-    id: "pro",
-    name: "Pro",
+    id: "design-partner",
+    name: "Design Partner",
     price: "$7,995",
-    description: "Lorem ipsum dolor sit amet.",
+    description: "Perfect for fast-moving teams.",
     features: [
-      "Two requests at a time",
-      "Avg. 48 hour delivery",
-      "Unlimited brands, requests & revisions",
-      "Front-end development",
+      "Everything in Monthly Club",
+      "Daily design updates",
+      "Direct Slack communication",
+      "Faster feedback loops",
+      "Closer day-to-day collaboration",
     ],
   },
 ];
@@ -155,7 +157,7 @@ export const faqs: Faq[] = [
   {
     question: "How much does it cost?",
     answer:
-      "Monthly Club is $4,995/mo and Pro is $7,995/mo. One flat price, no contracts or surprise invoices.",
+      "Monthly Club is $4,995/mo and Design Partner is $7,995/mo. One flat price, no contracts or surprise invoices.",
   },
   {
     question: "How fast will I get my designs?",

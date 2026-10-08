@@ -16,12 +16,17 @@ average of 48 hours.
 ## Plans
 
 - **Monthly Club** — $4,995/month
-  - One request at a time
-  - Avg. 48 hour delivery
-  - Unlimited brands, requests & revisions
-  - Front-end development
-- **Pro** — $7,995/month
-  - <!-- TODO: confirm what Pro includes (e.g. two requests at a time). -->
+  - Unlimited design requests
+  - Unlimited revisions
+  - ~48-hour average delivery
+  - Async communication via Trello
+  - Pause or resume anytime
+- **Design Partner** — $7,995/month
+  - Everything in Monthly Club
+  - Daily design updates
+  - Direct Slack communication
+  - Faster feedback loops
+  - Closer day-to-day collaboration
 
 Subscriptions can be paused or cancelled anytime.
 

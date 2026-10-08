@@ -80,6 +80,9 @@ export function PlanPicker() {
           <span className={styles.muted}>/mo</span>
         </span>
       </p>
+      <p key={`for-${plan.id}`} className={styles.perfectFor}>
+        {plan.description}
+      </p>
 
       <p className={styles.label}>What&apos;s included</p>
       <ul key={plan.id} className={styles.features}>

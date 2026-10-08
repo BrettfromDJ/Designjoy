@@ -10,7 +10,7 @@ const expectations = [
   "15 minutes, no commitment",
   "A walkthrough of how the subscription works",
   "Answers on pricing, scope and turnaround",
-  "Whether Monthly Club or Pro fits your work",
+  "Whether Monthly Club or Design Partner fits your work",
 ];
 
 export default function IntroCall() {
