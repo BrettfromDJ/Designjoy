@@ -5,17 +5,8 @@ import { CheckoutForm } from "./CheckoutForm";
 import styles from "./CheckoutPanel.module.css";
 
 /** Checkout inside the ask box: back to plans, the plan you're buying, and payment. */
-export function CheckoutPanel({
-  planId,
-  onBack,
-  onSwitch,
-}: {
-  planId: Plan["id"];
-  onBack: () => void;
-  onSwitch: (plan: Plan["id"]) => void;
-}) {
+export function CheckoutPanel({ planId, onBack }: { planId: Plan["id"]; onBack: () => void }) {
   const plan = plans.find((p) => p.id === planId) ?? plans[0];
-  const other = plans.find((p) => p.id !== plan.id);
 
   return (
     <div className={styles.panel}>
@@ -34,11 +25,6 @@ export function CheckoutPanel({
           </p>
         </div>
         <p className={styles.for}>{plan.description}</p>
-        {other && (
-          <button type="button" className={styles.switch} onClick={() => onSwitch(other.id)}>
-            Switch to {other.name} <span aria-hidden="true">→</span>
-          </button>
-        )}
       </div>
       <CheckoutForm key={plan.id} plan={plan} embedded />
     </div>

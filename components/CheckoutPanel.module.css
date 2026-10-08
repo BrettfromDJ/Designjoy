@@ -4,8 +4,7 @@
   gap: 18px;
 }
 
-.back,
-.switch {
+.back {
   align-self: flex-start;
   display: inline-flex;
   gap: 6px;
@@ -19,8 +18,7 @@
   transition: color 0.15s ease;
 }
 
-.back:hover,
-.switch:hover {
+.back:hover {
   color: #fff;
 }
 

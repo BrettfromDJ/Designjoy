@@ -307,7 +307,6 @@ export function AskBox() {
                   <CheckoutPanel
                     planId={checkoutPlan}
                     onBack={() => setMode("pricing")}
-                    onSwitch={setCheckoutPlan}
                   />
                 </div>
               ) : (
