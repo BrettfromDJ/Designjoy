@@ -1,6 +1,6 @@
-/* One column, the same width as the FAQ page. */
+/* One column, the same width as the nav and ask box (412px + 16px gutters). */
 .page {
-  max-width: 632px;
+  max-width: 444px;
   margin: 0 auto;
   padding: 112px 16px 140px;
 }
