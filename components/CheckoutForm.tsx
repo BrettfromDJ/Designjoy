@@ -2,15 +2,20 @@
 
 import { useMemo, useState } from "react";
 import { loadStripe, type Appearance } from "@stripe/stripe-js";
-import { CheckoutElementsProvider, PaymentElement, useCheckoutElements } from "@stripe/react-stripe-js/checkout";
+import {
+  CheckoutElementsProvider,
+  PaymentElement,
+  useCheckoutElements,
+} from "@stripe/react-stripe-js/checkout";
 import type { Plan } from "@/content/site";
-import { calTrigger } from "@/lib/cal";
+import { openAskBox } from "@/lib/ask-box";
 import styles from "./CheckoutForm.module.css";
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
-const FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif';
+const FONT =
+  '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif';
 
 // Stripe's card fields, styled to match the inputs around them.
 const appearance: Appearance = {
@@ -36,17 +41,37 @@ const appearance: Appearance = {
       boxShadow: "none",
       padding: "13px 14px",
     },
-    ".Input:focus": { border: "1px solid rgba(255, 255, 255, 0.4)", boxShadow: "none" },
+    ".Input:focus": {
+      border: "1px solid rgba(255, 255, 255, 0.4)",
+      boxShadow: "none",
+    },
     ".Input--invalid": { border: "1px solid #ff7a7a", boxShadow: "none" },
     ".Label": { fontSize: "12px", color: "#b4b4b4", marginBottom: "6px" },
-    ".Tab": { backgroundColor: "#000000", border: "1px solid rgba(255, 255, 255, 0.14)", boxShadow: "none" },
-    ".Tab--selected": { border: "1px solid rgba(255, 255, 255, 0.5)", boxShadow: "none" },
-    ".Block": { backgroundColor: "#000000", border: "1px solid rgba(255, 255, 255, 0.14)", boxShadow: "none" },
+    ".Tab": {
+      backgroundColor: "#000000",
+      border: "1px solid rgba(255, 255, 255, 0.14)",
+      boxShadow: "none",
+    },
+    ".Tab--selected": {
+      border: "1px solid rgba(255, 255, 255, 0.5)",
+      boxShadow: "none",
+    },
+    ".Block": {
+      backgroundColor: "#000000",
+      border: "1px solid rgba(255, 255, 255, 0.14)",
+      boxShadow: "none",
+    },
   },
 };
 
 /** The payment form for a plan, or a "book a call" fallback if checkout can't load. */
-export function CheckoutForm({ plan }: { plan: Plan }) {
+export function CheckoutForm({
+  plan,
+  embedded = false,
+}: {
+  plan: Plan;
+  embedded?: boolean;
+}) {
   const [failed, setFailed] = useState(!stripePromise);
 
   // Starts the Stripe checkout for this plan; the form appears once it's ready.
@@ -57,9 +82,14 @@ export function CheckoutForm({ plan }: { plan: Plan }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: plan.id }),
       })
-        .then((res) => res.json().then((data: { clientSecret?: string }) => ({ ok: res.ok, data })))
+        .then((res) =>
+          res
+            .json()
+            .then((data: { clientSecret?: string }) => ({ ok: res.ok, data })),
+        )
         .then(({ ok, data }) => {
-          if (!ok || !data.clientSecret) throw new Error("Checkout unavailable");
+          if (!ok || !data.clientSecret)
+            throw new Error("Checkout unavailable");
           return data.clientSecret;
         })
         .catch(() => {
@@ -70,33 +100,44 @@ export function CheckoutForm({ plan }: { plan: Plan }) {
     [plan.id],
   );
 
-  if (failed || !stripePromise) return <Fallback />;
+  const cardClass = embedded
+    ? `${styles.card} ${styles.embedded}`
+    : styles.card;
+  if (failed || !stripePromise) return <Fallback className={cardClass} />;
 
   return (
     <CheckoutElementsProvider
       key={plan.id}
       stripe={stripePromise}
-      options={{ clientSecret, elementsOptions: { appearance, loader: "never" } }}
+      options={{
+        clientSecret,
+        elementsOptions: { appearance, loader: "never" },
+      }}
     >
-      <PayForm plan={plan} />
+      <PayForm plan={plan} className={cardClass} />
     </CheckoutElementsProvider>
   );
 }
 
-function Fallback() {
+function Fallback({ className }: { className: string }) {
   return (
-    <div className={styles.card} role="alert">
+    <div className={className} role="alert">
       <p className={styles.note}>
-        Checkout isn&apos;t available right now. Book a quick call and we&apos;ll get you set up.
+        Checkout isn&apos;t available right now. Book a quick call and
+        we&apos;ll get you set up.
       </p>
-      <button type="button" className={styles.pay} {...calTrigger}>
+      <button
+        type="button"
+        className={styles.pay}
+        onClick={() => openAskBox("booking")}
+      >
         Book a 15 min intro call
       </button>
     </div>
   );
 }
 
-function PayForm({ plan }: { plan: Plan }) {
+function PayForm({ plan, className }: { plan: Plan; className: string }) {
   const result = useCheckoutElements();
   const [email, setEmail] = useState("");
   const [trelloEmail, setTrelloEmail] = useState("");
@@ -105,7 +146,7 @@ function PayForm({ plan }: { plan: Plan }) {
   const [error, setError] = useState<string | null>(null);
   const [cardReady, setCardReady] = useState(false);
 
-  if (result.type === "error") return <Fallback />;
+  if (result.type === "error") return <Fallback className={className} />;
   const checkout = result.type === "success" ? result.checkout : null;
 
   async function pay(event: React.FormEvent) {
@@ -136,7 +177,11 @@ function PayForm({ plan }: { plan: Plan }) {
   }
 
   return (
-    <form className={styles.card} onSubmit={pay} aria-busy={!checkout || !cardReady}>
+    <form
+      className={className}
+      onSubmit={pay}
+      aria-busy={!checkout || !cardReady}
+    >
       <h2 className={styles.label}>Your details</h2>
       <div className={styles.field}>
         <label htmlFor="checkout-email">Email</label>
@@ -182,13 +227,20 @@ function PayForm({ plan }: { plan: Plan }) {
         {!cardReady && <div className={styles.skeleton} aria-hidden="true" />}
         {checkout && (
           <PaymentElement
-            options={{ layout: "tabs", fields: { billingDetails: { name: "auto" } } }}
+            options={{
+              layout: "tabs",
+              fields: { billingDetails: { name: "auto" } },
+            }}
             onReady={() => setCardReady(true)}
           />
         )}
       </div>
 
-      <button type="submit" className={styles.pay} disabled={!checkout || !cardReady || paying}>
+      <button
+        type="submit"
+        className={styles.pay}
+        disabled={!checkout || !cardReady || paying}
+      >
         {paying ? "Processing…" : `Subscribe · ${plan.price}/mo`}
       </button>
       {error && (

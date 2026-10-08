@@ -215,17 +215,20 @@
   display: none;
 }
 
-/* Booking is just the calendar: no ask row underneath. */
-.shell[data-view="booking"] .box {
+/* Booking and checkout are just their content: no ask row underneath. */
+.shell[data-view="booking"] .box,
+.shell[data-view="checkout"] .box {
   display: none;
 }
 
-.shell[data-view="booking"] .log {
+.shell[data-view="booking"] .log,
+.shell[data-view="checkout"] .log {
   padding: 20px;
 }
 
-/* No label in booking: the close button floats in the corner, beside the call details. */
-.shell[data-view="booking"] .top {
+/* No label there either: the close button floats in the corner. */
+.shell[data-view="booking"] .top,
+.shell[data-view="checkout"] .top {
   position: absolute;
   top: 0;
   right: 0;

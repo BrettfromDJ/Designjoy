@@ -52,9 +52,8 @@ export function Nav() {
                     .join(" ")}
                   aria-current={active ? "page" : undefined}
                   onClick={
-                    // FAQs, Pricing and Book a call open in the ask box, right where you are
-                    // (except on checkout, where the ask box is hidden).
-                    OPENS_IN_ASK_BOX[link.href] && pathname !== "/checkout"
+                    // FAQs, Pricing and Book a call open in the ask box, right where you are.
+                    OPENS_IN_ASK_BOX[link.href]
                       ? (e) => {
                           e.preventDefault();
                           openAskBox(OPENS_IN_ASK_BOX[link.href]);

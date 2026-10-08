@@ -1,6 +1,7 @@
 import type { Plan } from "@/content/site";
+import { openAskBox } from "./ask-box";
 
-/** Takes the visitor to the checkout page for a plan. */
+/** Opens checkout for a plan, in the ask box. */
 export async function startCheckout(planId: Plan["id"]) {
-  window.location.href = `/checkout?plan=${planId}`;
+  openAskBox("checkout", planId);
 }

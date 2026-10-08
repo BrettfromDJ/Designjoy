@@ -9,6 +9,14 @@
   box-shadow: var(--shadow-card);
 }
 
+/* Inside the ask box panel: no card of its own. */
+.embedded {
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
 .label {
   margin: 0;
   font-family: var(--font-mono);

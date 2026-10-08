@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import { faqs, type Faq } from "@/content/site";
-import { OPEN_ASK_BOX_EVENT, type AskBoxView } from "@/lib/ask-box";
+import { faqs, plans, type Faq, type Plan } from "@/content/site";
+import {
+  OPEN_ASK_BOX_EVENT,
+  type AskBoxView,
+  type OpenAskBoxDetail,
+} from "@/lib/ask-box";
 import { parseAnswer } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
 import { BotFace } from "./BotFace";
 import { BookCall } from "./BookCall";
+import { CheckoutPanel } from "./CheckoutPanel";
 import { PlanPicker } from "./PlanPicker";
 import styles from "./AskBox.module.css";
 
@@ -33,7 +37,10 @@ const VIEW_LABELS: Record<AskBoxView, string> = {
   chat: "FAQ",
   pricing: "Pricing",
   booking: "Book a call",
+  checkout: "Checkout",
 };
+// Views shown without a label or the ask row: just the content and the close button.
+const BARE_VIEWS: AskBoxView[] = ["booking", "checkout"];
 const CYCLE_MS = 3200;
 const FADE_MS = 300;
 
@@ -81,13 +88,12 @@ function useSampleQuestions(
 }
 
 export function AskBox() {
-  // On checkout it would sit over the payment form.
-  const hidden = usePathname() === "/checkout";
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   // What the open panel shows: the conversation (with the FAQ), or the plans.
   const [mode, setMode] = useState<AskBoxView>("chat");
+  const [checkoutPlan, setCheckoutPlan] = useState<Plan["id"]>(plans[0].id);
   const [pending, setPending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -140,22 +146,28 @@ export function AskBox() {
   // Opens from the nav (FAQs, Pricing, Book a call) and other buttons, or
   // from /?faq, /?pricing and /?book (where the old pages redirect).
   useEffect(() => {
-    const show = (view: AskBoxView) => {
+    const isPlan = (id: unknown): id is Plan["id"] =>
+      plans.some((p) => p.id === id);
+    const show = (view: AskBoxView, plan?: unknown) => {
+      if (isPlan(plan)) setCheckoutPlan(plan);
       setMode(view);
       setOpen(true);
     };
-    const onOpen = (e: Event) =>
-      show((e as CustomEvent<AskBoxView>).detail ?? "chat");
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<OpenAskBoxDetail>).detail;
+      show(detail?.view ?? "chat", detail?.plan);
+    };
     window.addEventListener(OPEN_ASK_BOX_EVENT, onOpen);
     const url = new URL(window.location.href);
     const params: [string, AskBoxView][] = [
       ["faq", "chat"],
       ["pricing", "pricing"],
       ["book", "booking"],
+      ["checkout", "checkout"],
     ];
     const found = params.find(([param]) => url.searchParams.has(param));
     if (found) {
-      show(found[1]);
+      show(found[1], url.searchParams.get(found[0]));
       url.searchParams.delete(found[0]);
       window.history.replaceState(
         null,
@@ -242,8 +254,6 @@ export function AskBox() {
     }
   }
 
-  if (hidden) return null;
-
   return (
     <>
       {open && (
@@ -272,7 +282,9 @@ export function AskBox() {
           {open && (
             <>
               <div className={styles.top}>
-                {mode !== "booking" && <p className={styles.label}>{VIEW_LABELS[mode]}</p>}
+                {!BARE_VIEWS.includes(mode) && (
+                  <p className={styles.label}>{VIEW_LABELS[mode]}</p>
+                )}
                 <button
                   type="button"
                   className={styles.close}
@@ -289,6 +301,14 @@ export function AskBox() {
               ) : mode === "booking" ? (
                 <div className={styles.log}>
                   <BookCall />
+                </div>
+              ) : mode === "checkout" ? (
+                <div className={styles.log}>
+                  <CheckoutPanel
+                    planId={checkoutPlan}
+                    onBack={() => setMode("pricing")}
+                    onSwitch={setCheckoutPlan}
+                  />
                 </div>
               ) : (
                 <div ref={logRef} className={styles.log} aria-live="polite">
