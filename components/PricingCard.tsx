@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { clientLogos, plans, type Plan } from "@/content/site";
-import { calTrigger } from "@/lib/cal";
+import { openAskBox } from "@/lib/ask-box";
 import { startCheckout } from "@/lib/checkout";
 import { CheckIcon } from "./Icons";
 import { LogoMarquee } from "./LogoMarquee";
@@ -86,7 +86,11 @@ export function PricingCard() {
         >
           {status === "loading" ? "One moment…" : "Subscribe now"}
         </button>
-        <button type="button" className={styles.secondary} {...calTrigger}>
+        <button
+          type="button"
+          className={styles.secondary}
+          onClick={() => openAskBox("booking")}
+        >
           Book a 15 min intro call
           <span className={styles.arrow} aria-hidden="true">
             →

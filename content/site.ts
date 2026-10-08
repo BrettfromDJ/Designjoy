@@ -52,7 +52,6 @@ export const plans: Plan[] = [
   },
 ];
 
-export const introCallHref = "/intro-call";
 
 // Stripe's billing page, where clients update their card, see invoices or
 // cancel. Set NEXT_PUBLIC_STRIPE_PORTAL_URL in Vercel to the live link at launch.

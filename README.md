@@ -18,7 +18,7 @@ npm run dev
 | Masonry layout logic | `lib/masonry.ts` |
 | ChatGPT endpoint | `app/api/chat/route.ts` |
 | Stripe checkout (embedded) and welcome page | `app/api/checkout/route.ts`, `app/(site)/checkout`, `app/(site)/welcome` — keys in `.env.example` |
-| FAQs / Pricing / Book a call pages | `app/(site)/*/page.tsx` |
+| FAQ, pricing and booking (all open in the ask box) | `components/AskBox.tsx`, `components/BookCall.tsx`, `lib/cal-api.ts` |
 
 **Adding work:** sign in at `/admin` and drag in PNG, JPG, GIF, or MP4 files
 (up to 500 MB each). Files are stored in Vercel Blob and appear on the

@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { faqs, type Faq } from "@/content/site";
-import { calTrigger } from "@/lib/cal";
+import { OPEN_ASK_BOX_EVENT, type AskBoxView } from "@/lib/ask-box";
 import { parseAnswer } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
 import { BotFace } from "./BotFace";
+import { BookCall } from "./BookCall";
 import { PlanPicker } from "./PlanPicker";
 import styles from "./AskBox.module.css";
 
@@ -19,16 +20,21 @@ type Message = {
   typing?: boolean;
 };
 
-/** Open the ask box as the FAQ or as pricing, from anywhere (e.g. the nav). */
-export const OPEN_FAQ_EVENT = "designjoy:open-faq";
-export const OPEN_PRICING_EVENT = "designjoy:open-pricing";
 const FAQ_TYPING_MS = 900;
 
 const PLACEHOLDER = "Ask anything about Designjoy";
 const SHORT_PLACEHOLDER = "Ask about Designjoy";
-// Shown while the pricing panel is open (the short one on narrow phones).
-const PRICING_PLACEHOLDER = "Not sure which plan? Just ask";
-const PRICING_SHORT_PLACEHOLDER = "Questions? Just ask";
+// Shown while pricing or booking is open (the short one on narrow phones).
+const VIEW_HINTS: Partial<Record<AskBoxView, string>> = {
+  pricing: "Not sure which plan? Just ask",
+  booking: "Any questions first? Just ask",
+};
+const SHORT_VIEW_HINT = "Questions? Just ask";
+const VIEW_LABELS: Record<AskBoxView, string> = {
+  chat: "FAQ",
+  pricing: "Pricing",
+  booking: "Book a call",
+};
 const CYCLE_MS = 3200;
 const FADE_MS = 300;
 
@@ -82,7 +88,7 @@ export function AskBox() {
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   // What the open panel shows: the conversation (with the FAQ), or the plans.
-  const [mode, setMode] = useState<"chat" | "pricing">("chat");
+  const [mode, setMode] = useState<AskBoxView>("chat");
   const [pending, setPending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -95,14 +101,16 @@ export function AskBox() {
   const [sampleIndex, setSampleIndex] = useState(-1); // -1 shows the default placeholder
   const [fading, setFading] = useState(false);
   const idle = !focused && !input && !pending;
-  // With the plans open, invite pricing questions instead of cycling samples.
-  const pricingHint = open && mode === "pricing";
-  const hint = pricingHint
+  // With pricing or booking open, invite questions about it instead of cycling samples.
+  const viewHint = open ? VIEW_HINTS[mode] : undefined;
+  const pricingHint = Boolean(viewHint);
+  const hint = viewHint
     ? placeholder === SHORT_PLACEHOLDER
-      ? PRICING_SHORT_PLACEHOLDER
-      : PRICING_PLACEHOLDER
+      ? SHORT_VIEW_HINT
+      : viewHint
     : placeholder;
-  const sample = !pricingHint && sampleIndex >= 0 ? samples[sampleIndex] : undefined;
+  const sample =
+    !pricingHint && sampleIndex >= 0 ? samples[sampleIndex] : undefined;
 
   useEffect(() => {
     if (!idle || pricingHint || samples.length === 0) return;
@@ -130,39 +138,33 @@ export function AskBox() {
     log.scrollTo({ top: Math.min(top, log.scrollHeight), behavior: "smooth" });
   }, [messages, open]);
 
-  // Opens from the nav's FAQs and Pricing links, or from /?faq and /?pricing
-  // (where the old /faqs and /pricing pages redirect).
+  // Opens from the nav (FAQs, Pricing, Book a call) and other buttons, or
+  // from /?faq, /?pricing and /?book (where the old pages redirect).
   useEffect(() => {
-    const showChat = () => {
-      setMode("chat");
+    const show = (view: AskBoxView) => {
+      setMode(view);
       setOpen(true);
     };
-    const showPricing = () => {
-      setMode("pricing");
-      setOpen(true);
-    };
-    window.addEventListener(OPEN_FAQ_EVENT, showChat);
-    window.addEventListener(OPEN_PRICING_EVENT, showPricing);
+    const onOpen = (e: Event) =>
+      show((e as CustomEvent<AskBoxView>).detail ?? "chat");
+    window.addEventListener(OPEN_ASK_BOX_EVENT, onOpen);
     const url = new URL(window.location.href);
-    const param = url.searchParams.has("pricing")
-      ? "pricing"
-      : url.searchParams.has("faq")
-        ? "faq"
-        : null;
-    if (param) {
-      if (param === "pricing") showPricing();
-      else showChat();
-      url.searchParams.delete(param);
+    const params: [string, AskBoxView][] = [
+      ["faq", "chat"],
+      ["pricing", "pricing"],
+      ["book", "booking"],
+    ];
+    const found = params.find(([param]) => url.searchParams.has(param));
+    if (found) {
+      show(found[1]);
+      url.searchParams.delete(found[0]);
       window.history.replaceState(
         null,
         "",
         url.pathname + url.search + url.hash,
       );
     }
-    return () => {
-      window.removeEventListener(OPEN_FAQ_EVENT, showChat);
-      window.removeEventListener(OPEN_PRICING_EVENT, showPricing);
-    };
+    return () => window.removeEventListener(OPEN_ASK_BOX_EVENT, onOpen);
   }, []);
 
   // Escape closes it.
@@ -261,18 +263,16 @@ export function AskBox() {
           role={open ? "dialog" : undefined}
           aria-label={
             open
-              ? mode === "pricing"
-                ? "Pricing"
-                : "Questions about Designjoy"
+              ? mode === "chat"
+                ? "Questions about Designjoy"
+                : VIEW_LABELS[mode]
               : undefined
           }
         >
           {open && (
             <>
               <div className={styles.top}>
-                <p className={styles.label}>
-                  {mode === "pricing" ? "Pricing" : "FAQ"}
-                </p>
+                <p className={styles.label}>{VIEW_LABELS[mode]}</p>
                 <button
                   type="button"
                   className={styles.close}
@@ -285,6 +285,10 @@ export function AskBox() {
               {mode === "pricing" ? (
                 <div className={styles.log}>
                   <PlanPicker embedded />
+                </div>
+              ) : mode === "booking" ? (
+                <div className={styles.log}>
+                  <BookCall />
                 </div>
               ) : (
                 <div ref={logRef} className={styles.log} aria-live="polite">
@@ -329,8 +333,7 @@ export function AskBox() {
                           <button
                             type="button"
                             className={styles.action}
-                            onClick={() => setOpen(false)}
-                            {...calTrigger}
+                            onClick={() => setMode("booking")}
                           >
                             Book a 15 min intro call
                           </button>
