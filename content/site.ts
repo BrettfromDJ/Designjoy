@@ -46,10 +46,6 @@ export const plans: Plan[] = [
 
 export const introCallHref = "/intro-call";
 
-// Shown in a banner at the top of the pricing cards, with a pulsing green
-// dot. Set to "" to hide it, e.g. when you're not taking new clients.
-export const availability = "Spots available today";
-
 export type ClientLogo = {
   name: string;
   /** Logo file in public/logos/, e.g. "/logos/acme.svg". Without one, the name is shown as text. */

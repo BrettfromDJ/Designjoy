@@ -1,4 +1,4 @@
-import { availability, clientLogos, type ColumnCount, type FixedCard, type WorkItem } from "@/content/site";
+import { clientLogos, type ColumnCount, type FixedCard, type WorkItem } from "@/content/site";
 
 export type Cell =
   | { type: "work"; item: WorkItem }
@@ -7,9 +7,8 @@ export type Cell =
 const GAP = 16;
 // Reference column width the fixed card heights are measured at.
 const REF_WIDTH = 340;
-// The "Trusted by" logo strip adds about 70px to the pricing card, and the
-// availability banner about 56px.
-const PRICING_HEIGHT = 580 + (clientLogos.length ? 70 : 0) + (availability ? 56 : 0);
+// The "Trusted by" logo strip adds about 70px to the pricing card.
+const PRICING_HEIGHT = clientLogos.length ? 650 : 580;
 // Columns within this many px of each other count as equally short, so
 // near-identical tiles fill left to right instead of jumping around.
 const TOLERANCE = 12;

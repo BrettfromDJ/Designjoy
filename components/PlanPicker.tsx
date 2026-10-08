@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { plans } from "@/content/site";
 import { calTrigger } from "@/lib/cal";
 import { startCheckout } from "@/lib/checkout";
-import { Availability } from "./Availability";
 import { CheckIcon } from "./Icons";
 import styles from "./PlanPicker.module.css";
 
@@ -57,7 +56,6 @@ export function PlanPicker() {
 
   return (
     <section className={styles.card} aria-label="Choose a plan">
-      <Availability />
       <div className={styles.toggle} role="group" aria-label="Plan" data-pick={index}>
         <i aria-hidden="true" />
         {plans.map((p, n) => (
