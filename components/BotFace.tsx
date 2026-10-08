@@ -7,8 +7,11 @@ import styles from "./BotFace.module.css";
 // cursor, and how far away the cursor must be for it to look all the way over.
 const REACH = 3.6;
 const FULL_LOOK_PX = 260;
+// The face is drawn a little large; this scales it to size.
+const FACE_SCALE = 0.86;
+const AT_REST = `scale(${FACE_SCALE})`;
 // While typing, it watches the text to its right.
-const LOOK_AT_TEXT = "translate(3.2px, 0.6px) scale(0.88)";
+const LOOK_AT_TEXT = `translate(3.2px, 0.6px) scale(${FACE_SCALE})`;
 
 type Sparkle = { id: number; x: number; y: number; size: number; delay: number };
 
@@ -50,7 +53,7 @@ export function BotFace({
   const svgRef = useRef<SVGSVGElement>(null);
   const faceRef = useRef<SVGGElement>(null);
   const typingRef = useRef(typing);
-  const lastLook = useRef("");
+  const lastLook = useRef(AT_REST);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
   const [bounce, setBounce] = useState(0);
 
@@ -76,8 +79,7 @@ export function BotFace({
         const pull = Math.min(distance / FULL_LOOK_PX, 1);
         const x = (dx / distance) * REACH * pull;
         const y = (dy / distance) * REACH * pull;
-        // Features near the edge of the ball shrink a little, as if wrapping round it.
-        lastLook.current = `translate(${x}px, ${y}px) scale(${1 - 0.14 * pull})`;
+        lastLook.current = `translate(${x}px, ${y}px) scale(${FACE_SCALE})`;
         if (!typingRef.current) face.style.transform = lastLook.current;
       });
     };
