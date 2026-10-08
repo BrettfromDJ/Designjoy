@@ -117,16 +117,11 @@ export function BotFace({
         aria-hidden="true"
       >
         <defs>
-          <radialGradient id="bot-ball" cx="38%" cy="32%" r="75%">
-            <stop offset="0" stopColor="#e8e8e8" />
-            <stop offset="0.55" stopColor="#bcbcbc" />
-            <stop offset="1" stopColor="#707070" />
-          </radialGradient>
           <clipPath id="bot-clip">
             <circle cx="12" cy="12" r="11" />
           </clipPath>
         </defs>
-        <circle cx="12" cy="12" r="11" fill="url(#bot-ball)" />
+        <circle cx="12" cy="12" r="11" fill="#c4c4c4" />
         <g clipPath="url(#bot-clip)">
           <g ref={faceRef} className={styles.face} style={{ transform: typing ? LOOK_AT_TEXT : lastLook.current }}>
             <g className={styles.look}>
