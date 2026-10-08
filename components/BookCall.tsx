@@ -43,6 +43,7 @@ export function BookCall() {
   const [time, setTime] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [reason, setReason] = useState("");
   const [booking, setBooking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [booked, setBooked] = useState(false);
@@ -71,7 +72,7 @@ export function BookCall() {
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ start: time, name, email, timeZone }),
+        body: JSON.stringify({ start: time, name, email, timeZone, reason }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok)
@@ -198,30 +199,30 @@ export function BookCall() {
           Pick a day to see open times. Times in {timeZone.replace(/_/g, " ")}.
         </p>
       ) : (
-        <div className={styles.times} role="group" aria-label="Pick a time">
-          {days[day].map((slot, i) => (
-            <button
-              key={slot}
-              type="button"
-              className={styles.time}
-              style={{ animationDelay: `${i * 20}ms` }}
-              aria-pressed={slot === time}
-              onClick={() => {
-                setTime(slot);
+        <form className={styles.form} onSubmit={book}>
+          <label className="visually-hidden" htmlFor="book-time">
+            Time
+          </label>
+          <div className={styles.select}>
+            <select
+              id="book-time"
+              required
+              value={time ?? ""}
+              onChange={(e) => {
+                setTime(e.target.value || null);
                 setError(null);
               }}
             >
-              {fmtTime(slot, timeZone)}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {day && time && (
-        <form className={styles.form} onSubmit={book}>
-          <p className={styles.chosen}>
-            {fmtDay(day)} at {fmtTime(time, timeZone)}
-          </p>
+              <option value="" disabled>
+                Pick a time ({days[day].length} open)
+              </option>
+              {days[day].map((slot) => (
+                <option key={slot} value={slot}>
+                  {fmtTime(slot, timeZone)}
+                </option>
+              ))}
+            </select>
+          </div>
           <label className="visually-hidden" htmlFor="book-name">
             Your name
           </label>
@@ -245,8 +246,19 @@ export function BookCall() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          <label className="visually-hidden" htmlFor="book-reason">
+            Reason for this meeting
+          </label>
+          <input
+            id="book-reason"
+            autoComplete="off"
+            maxLength={200}
+            placeholder="Reason for this meeting"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
           <button type="submit" className={styles.confirm} disabled={booking}>
-            {booking ? "Booking…" : "Confirm booking"}
+            {booking ? "Booking…" : time ? `Confirm ${fmtTime(time, timeZone)}` : "Confirm booking"}
           </button>
           {error && (
             <p className={styles.error} role="alert">

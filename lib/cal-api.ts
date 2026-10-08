@@ -55,6 +55,7 @@ export type BookingRequest = {
   name: string;
   email: string;
   timeZone: string;
+  reason?: string;
 };
 
 /** Books the intro call. Returns Cal.com's error message if it can't. */
@@ -63,6 +64,7 @@ export async function createBooking({
   name,
   email,
   timeZone,
+  reason,
 }: BookingRequest) {
   const res = await fetch(`${API}/bookings`, {
     method: "POST",
@@ -72,8 +74,9 @@ export async function createBooking({
       username: USERNAME,
       eventTypeSlug: EVENT_SLUG,
       attendee: { name, email, timeZone, language: "en" },
-      // The event's "What is this meeting about?" field is required.
-      bookingFieldsResponses: { title: `15 min intro call with ${name}` },
+      // The event's required "What is this meeting about?" field: their reason,
+      // or a sensible default.
+      bookingFieldsResponses: { title: reason || `15 min intro call with ${name}` },
     }),
   });
   const body = (await res.json().catch(() => null)) as {

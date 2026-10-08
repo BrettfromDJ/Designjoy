@@ -9,11 +9,12 @@ export async function POST(request: Request) {
   const name = clean(body.name);
   const email = clean(body.email);
   const timeZone = clean(body.timeZone, 60) || "UTC";
+  const reason = clean(body.reason);
   if (!start || Number.isNaN(Date.parse(start)) || !name || !/^\S+@\S+\.\S+$/.test(email)) {
     return Response.json({ error: "Please add your name and a valid email." }, { status: 400 });
   }
   try {
-    await createBooking({ start, name, email, timeZone });
+    await createBooking({ start, name, email, timeZone, reason });
     return Response.json({ ok: true });
   } catch (error) {
     console.error("Booking failed", error);
