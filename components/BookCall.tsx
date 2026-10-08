@@ -31,6 +31,21 @@ const fmtDay = (key: string) =>
 
 type Days = Record<string, string[]>;
 
+/** The call's details, shown in the ask box panel's top bar. */
+export function BookCallMeta() {
+  return (
+    <div className={styles.meta}>
+      <span className={styles.avatar}>
+        <BotFace size={24} />
+      </span>
+      <div>
+        <p className={styles.metaTitle}>15 min intro call</p>
+        <p className={styles.metaSub}>Video call · with Designjoy</p>
+      </div>
+    </div>
+  );
+}
+
 /** Book the 15 minute intro call: day → time → name and email → booked. Powered by Cal.com. */
 export function BookCall() {
   const [timeZone] = useState(
@@ -87,18 +102,6 @@ export function BookCall() {
     }
   }
 
-  const meta = (
-    <div className={styles.meta}>
-      <span className={styles.avatar}>
-        <BotFace size={24} />
-      </span>
-      <div>
-        <p className={styles.metaTitle}>15 min intro call</p>
-        <p className={styles.metaSub}>Video call · with Designjoy</p>
-      </div>
-    </div>
-  );
-
   if (booked && day && time) {
     return (
       <div className={styles.done} role="status">
@@ -116,8 +119,7 @@ export function BookCall() {
 
   const fallback = (message: string) => (
     <div className={styles.wrap}>
-      {meta}
-      <p className={styles.hint}>
+            <p className={styles.hint}>
         {message}{" "}
         <a href={CAL_URL} target="_blank" rel="noopener noreferrer">
           Open the calendar on Cal.com
@@ -131,8 +133,7 @@ export function BookCall() {
   if (!days) {
     return (
       <div className={styles.wrap} aria-busy="true">
-        {meta}
-        <div className={styles.skeleton} aria-hidden="true" />
+                <div className={styles.skeleton} aria-hidden="true" />
       </div>
     );
   }
@@ -151,8 +152,7 @@ export function BookCall() {
 
   return (
     <div className={styles.wrap}>
-      {meta}
-      <div className={styles.month}>
+            <div className={styles.month}>
         <p>{month}</p>
         <div className={styles.arrows}>
           <button

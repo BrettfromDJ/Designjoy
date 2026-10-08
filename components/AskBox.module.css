@@ -228,6 +228,11 @@
   padding: 12px 20px 20px;
 }
 
+/* Booking's top bar holds the call details, level with the close button. */
+.shell[data-view="booking"] .top {
+  padding-top: 16px;
+}
+
 /* Back to plans, in checkout's top bar. */
 .back {
   display: inline-flex;

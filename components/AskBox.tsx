@@ -10,7 +10,7 @@ import {
 import { parseAnswer } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
 import { BotFace } from "./BotFace";
-import { BookCall } from "./BookCall";
+import { BookCall, BookCallMeta } from "./BookCall";
 import { CheckoutPanel } from "./CheckoutPanel";
 import { PlanPicker } from "./PlanPicker";
 import styles from "./AskBox.module.css";
@@ -290,6 +290,8 @@ export function AskBox() {
                   >
                     <span aria-hidden="true">←</span> Plans
                   </button>
+                ) : mode === "booking" ? (
+                  <BookCallMeta />
                 ) : BARE_VIEWS.includes(mode) ? (
                   <span />
                 ) : (
