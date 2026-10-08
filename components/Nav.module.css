@@ -66,22 +66,29 @@
   background: var(--text-nav);
 }
 
-@media (max-width: 560px) {
+/* Phones: span the same width as the content below (16px from each edge). */
+@media (max-width: 559px) {
   .nav {
     top: 16px;
-    gap: 16px;
-    padding: 0 16px;
-    max-width: calc(100vw - 32px);
+    left: 16px;
+    right: 16px;
+    transform: none;
+    gap: clamp(8px, 3.2vw, 16px);
+    padding: 0 clamp(10px, 3.6vw, 16px);
   }
 
   .links {
-    gap: 14px;
+    flex: 1;
+    justify-content: space-between;
+    gap: clamp(4px, 2.2vw, 10px);
     overflow-x: auto;
     scrollbar-width: none;
   }
 
+  /* Shrinks a little on narrow phones so every link fits. */
   .link {
-    font-size: 13px;
+    font-size: clamp(10.5px, 3.3vw, 13px);
+    letter-spacing: -0.3px;
   }
 
   .active::before {
