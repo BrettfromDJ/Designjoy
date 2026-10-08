@@ -4,6 +4,7 @@ import { useState } from "react";
 import { clientLogos, plans, type Plan } from "@/content/site";
 import { calTrigger } from "@/lib/cal";
 import { startCheckout } from "@/lib/checkout";
+import { Availability } from "./Availability";
 import { CheckIcon } from "./Icons";
 import { LogoMarquee } from "./LogoMarquee";
 import styles from "./PricingCard.module.css";
@@ -24,6 +25,7 @@ export function PricingCard() {
 
   return (
     <section className={styles.card} aria-labelledby="pricing-title">
+      <Availability />
       <h2 id="pricing-title" className={styles.title}>
         One subscription.
         <br />
