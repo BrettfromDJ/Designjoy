@@ -29,7 +29,7 @@ function burst(count: number): Sparkle[] {
 }
 
 /**
- * The ask box's mascot: a ball with slanted eyes and the Designjoy smile.
+ * The ask box's mascot: a ball with pill eyes and the Designjoy smile.
  * The face slides around the ball to look at the pointer and blinks. It
  * perks up with sparkles when the box is hovered, watches the text while
  * you type, and bounces on each keystroke (`poke` changes).
@@ -131,8 +131,8 @@ export function BotFace({
           <g ref={faceRef} className={styles.face} style={{ transform: typing ? LOOK_AT_TEXT : lastLook.current }}>
             <g className={styles.look}>
               <g className={styles.eyes} fill="#0a0a0a">
-                <rect x="7.7" y="6.6" width="2.5" height="5" rx="1.25" transform="rotate(-22 8.95 9.1)" />
-                <rect x="13.8" y="6.6" width="2.5" height="5" rx="1.25" transform="rotate(-22 15.05 9.1)" />
+                <rect x="7.9" y="6.8" width="2.4" height="4.6" rx="1.2" />
+                <rect x="13.7" y="6.8" width="2.4" height="4.6" rx="1.2" />
               </g>
               {/* The Designjoy smile, scaled down from the logo. */}
               <g className={styles.smile}>

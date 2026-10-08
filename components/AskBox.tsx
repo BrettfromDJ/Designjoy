@@ -178,7 +178,7 @@ export function AskBox() {
         onPointerLeave={() => setHovered(false)}
       >
         <BotFace
-          size={35}
+          size={28}
           thinking={pending}
           typing={focused && input.length > 0}
           excited={hovered && !input}
