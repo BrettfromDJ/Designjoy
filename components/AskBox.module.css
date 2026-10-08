@@ -21,8 +21,8 @@
   box-shadow: var(--shadow-float);
 }
 
-/* A white highlight travels around the edge: ::before draws the 1px ring,
-   ::after is a blurred copy behind the box for the soft outer glow. */
+/* A faint white highlight travels slowly around the edge: ::before draws the
+   1px ring, ::after is a blurred copy behind the box for a soft outer glow. */
 .box::before,
 .box::after {
   content: "";
@@ -36,12 +36,13 @@
     var(--glow) 250deg,
     transparent 340deg
   );
-  animation: glow-spin 7s linear infinite;
+  animation: glow-spin 9s linear infinite;
   pointer-events: none;
 }
 
 .box::before {
   padding: 1px;
+  opacity: 0.45;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
@@ -50,7 +51,7 @@
 .box::after {
   z-index: -1;
   filter: blur(12px);
-  opacity: 0.35;
+  opacity: 0.12;
 }
 
 @keyframes glow-spin {
@@ -192,7 +193,8 @@
     var(--glow) 250deg,
     transparent 340deg
   );
-  animation: glow-spin 7s linear infinite;
+  animation: glow-spin 9s linear infinite;
+  opacity: 0.45;
   pointer-events: none;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
