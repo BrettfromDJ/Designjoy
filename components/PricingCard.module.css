@@ -1,4 +1,6 @@
 .card {
+  /* Keeps the highlighted plan's glow above the card's background. */
+  isolation: isolate;
   padding: 24px;
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -53,6 +55,52 @@
 .plan:hover,
 .plan[data-selected="true"] {
   border-color: var(--border);
+}
+
+/* A slow, soft light travels around the edge of a highlighted plan, like the
+   ask box: ::before draws the 1px ring, ::after a faint blurred glow. */
+.highlight::before,
+.highlight::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    transparent 180deg,
+    var(--glow) 260deg,
+    transparent 340deg
+  );
+  animation: glow-spin 9s linear infinite;
+  pointer-events: none;
+}
+
+.highlight::before {
+  padding: 1px;
+  opacity: 0.7;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+.highlight::after {
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0.2;
+}
+
+@keyframes glow-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight::before,
+  .highlight::after {
+    animation: none;
+  }
 }
 
 .plan:has(:focus-visible) {

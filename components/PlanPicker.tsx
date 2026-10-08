@@ -17,7 +17,10 @@ function useRollingPrice(target: number) {
 
   useEffect(() => {
     const start = from.current;
-    if (start === target || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      start === target ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       from.current = target;
       setShown(target);
       return;
@@ -56,13 +59,19 @@ export function PlanPicker() {
 
   return (
     <section className={styles.card} aria-label="Choose a plan">
-      <div className={styles.toggle} role="group" aria-label="Plan" data-pick={index}>
+      <div
+        className={styles.toggle}
+        role="group"
+        aria-label="Plan"
+        data-pick={index}
+      >
         <i aria-hidden="true" />
         {plans.map((p, n) => (
           <button
             key={p.id}
             type="button"
             aria-pressed={n === index}
+            className={p.highlight ? styles.highlight : undefined}
             onClick={() => {
               setIndex(n);
               setStatus("idle");
@@ -112,7 +121,8 @@ export function PlanPicker() {
         </button>
         {status === "error" && (
           <p className={styles.error} role="alert">
-            Checkout isn&apos;t available yet. Please book an intro call instead.
+            Checkout isn&apos;t available yet. Please book an intro call
+            instead.
           </p>
         )}
       </div>

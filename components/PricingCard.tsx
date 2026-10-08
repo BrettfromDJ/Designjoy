@@ -34,7 +34,13 @@ export function PricingCard() {
       <fieldset className={styles.plans}>
         <legend className="visually-hidden">Choose a plan</legend>
         {plans.map((p) => (
-          <label key={p.id} className={styles.plan} data-selected={p.id === planId}>
+          <label
+            key={p.id}
+            className={
+              p.highlight ? `${styles.plan} ${styles.highlight}` : styles.plan
+            }
+            data-selected={p.id === planId}
+          >
             <input
               type="radio"
               name="plan"
@@ -88,7 +94,8 @@ export function PricingCard() {
         </button>
         {status === "error" && (
           <p className={styles.error} role="alert">
-            Checkout isn&apos;t available yet. Please book an intro call instead.
+            Checkout isn&apos;t available yet. Please book an intro call
+            instead.
           </p>
         )}
       </div>
@@ -96,7 +103,10 @@ export function PricingCard() {
       {clientLogos.length > 0 && (
         <div className={styles.trusted}>
           <p className={styles.includedLabel}>Trusted by teams at</p>
-          <LogoMarquee logos={clientLogos} label="Companies we've worked with" />
+          <LogoMarquee
+            logos={clientLogos}
+            label="Companies we've worked with"
+          />
         </div>
       )}
     </section>

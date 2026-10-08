@@ -16,6 +16,8 @@ export type Plan = {
   description: string;
   /** Optional short tag shown next to the plan name, e.g. "New". */
   tag?: string;
+  /** Gives the plan a slowly travelling edge highlight, like the ask box. */
+  highlight?: boolean;
   features: string[];
 };
 
@@ -37,6 +39,7 @@ export const plans: Plan[] = [
     id: "design-partner",
     name: "Design Partner",
     tag: "New",
+    highlight: true,
     price: "$7,995",
     description: "Perfect for fast-moving teams.",
     features: [
