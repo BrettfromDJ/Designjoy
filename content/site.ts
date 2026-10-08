@@ -143,6 +143,55 @@ export const testimonials: Testimonial[] = [
   { quote: "Design is everything, and these guys have nailed it.", name: "Kevin O'Leary", role: "Shark Tank" },
 ];
 
+export type Faq = { question: string; answer: string };
+
+// Shown on the FAQ page as tappable questions, and given to the chatbot so it
+// answers them the same way everywhere.
+export const faqs: Faq[] = [
+  {
+    question: "How does the subscription work?",
+    answer:
+      "Subscribe to a plan and add as many design requests as you like. We work through them one at a time on Monthly Club, delivering each in about 48 hours on average.",
+  },
+  {
+    question: "How much does it cost?",
+    answer:
+      "Monthly Club is $4,995/mo and Pro is $7,995/mo. One flat price, no contracts or surprise invoices.",
+  },
+  {
+    question: "How fast will I get my designs?",
+    answer:
+      "Most requests are delivered in about 48 hours. Bigger requests are broken into smaller pieces so you see progress every couple of days.",
+  },
+  { question: "Can I pause or cancel?", answer: "Yes, pause or cancel anytime. There's no lock-in." },
+  {
+    question: "What kind of design do you do?",
+    answer:
+      "Front-end development, web design, MVP builds, logos, slide decks, branding, social media, UI/UX design, Webflow development, mobile apps, print design, email, display ads, icons and brand guides.",
+  },
+  {
+    question: "Is there a limit to how many requests I can make?",
+    answer:
+      "No. Add as many requests as you like. They're worked on one at a time, in the order you choose.",
+  },
+  {
+    question: "What if I don't love the design?",
+    answer: "Revisions are unlimited. We'll keep refining until it's right.",
+  },
+  {
+    question: "Can you build the site too?",
+    answer: "Yes. Front-end development and Webflow development are included.",
+  },
+  {
+    question: "Can I use it for more than one brand?",
+    answer: "Yes. Unlimited brands are included in your subscription.",
+  },
+  {
+    question: "Can I talk to someone first?",
+    answer: "Of course. Book a 15 minute intro call and we'll walk you through how it works.",
+  },
+];
+
 // Services listed on the "Scope of work" board, in the order they appear.
 export const scopeOfWork = [
   "Front-end development",

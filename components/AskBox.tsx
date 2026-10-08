@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { calTrigger } from "@/lib/cal";
 import { parseAnswer } from "@/lib/chat";
+import { ChatError, streamChat } from "@/lib/chat-client";
 import { SparklesIcon } from "./Icons";
 import styles from "./AskBox.module.css";
 
@@ -55,6 +57,8 @@ function useSampleQuestions(inputRef: React.RefObject<HTMLInputElement | null>) 
 }
 
 export function AskBox() {
+  // The FAQ page is a chat already, so the pill would be redundant there.
+  const hidden = usePathname() === "/faqs";
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
@@ -112,34 +116,18 @@ export function AskBox() {
       setMessages([...history, { role: "assistant", content, bookCall }]);
 
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: outgoing }),
-      });
-      if (!res.ok || !res.body) {
-        const data = await res.json().catch(() => null);
-        setAnswer(
-          data?.error ?? "Something went wrong. Please try again.",
-          Boolean(data?.bookCall),
-        );
-        return;
-      }
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let answer = "";
-      for (;;) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        answer += decoder.decode(value, { stream: true });
-        setAnswer(answer);
-      }
-    } catch {
-      setAnswer("Couldn't reach the chat. Check your connection and try again.");
+      await streamChat(outgoing, (text) => setAnswer(text));
+    } catch (error) {
+      setAnswer(
+        error instanceof ChatError ? error.message : "Something went wrong. Please try again.",
+        error instanceof ChatError && error.bookCall,
+      );
     } finally {
       setPending(false);
     }
   }
+
+  if (hidden) return null;
 
   return (
     <div className={styles.wrapper}>

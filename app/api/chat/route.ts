@@ -1,3 +1,4 @@
+import { faqs } from "@/content/site";
 import { BOOK_CALL_TAG } from "@/lib/chat";
 import { getKnowledgeForChat } from "@/lib/knowledge";
 
@@ -16,6 +17,9 @@ async function systemPrompt() {
     "",
     "<knowledge_base>",
     knowledge.replace(/<!--[\s\S]*?-->/g, "").trim(),
+    "",
+    "## FAQ (as shown on the site)",
+    ...faqs.map((f) => `Q: ${f.question}\nA: ${f.answer}`),
     "</knowledge_base>",
   ].join("\n");
 }
