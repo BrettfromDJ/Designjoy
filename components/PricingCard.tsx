@@ -47,7 +47,10 @@ export function PricingCard() {
               className={styles.radio}
             />
             <span className={styles.planText}>
-              <span className={styles.planName}>{p.name}</span>
+              <span className={styles.planName}>
+                {p.name}
+                {p.tag && <span className={styles.tag}>{p.tag}</span>}
+              </span>
               <span className={styles.planDescription}>{p.description}</span>
             </span>
             <span className={styles.price}>

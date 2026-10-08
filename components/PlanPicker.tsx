@@ -69,6 +69,7 @@ export function PlanPicker() {
             }}
           >
             {p.name}
+            {p.tag && <span className={styles.tag}>{p.tag}</span>}
           </button>
         ))}
       </div>

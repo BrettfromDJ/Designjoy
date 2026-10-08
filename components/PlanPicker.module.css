@@ -53,6 +53,41 @@
   color: #000;
 }
 
+.toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* Narrow phones: tighten up so "Design Partner" and its tag fit on one line. */
+@media (max-width: 359px) {
+  .toggle button {
+    gap: 4px;
+    font-size: 12px;
+  }
+}
+
+.tag {
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  color: var(--text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* On the white selected tab, flip the tag to dark. */
+.toggle button[aria-pressed="true"] .tag {
+  background: #000;
+  color: #fff;
+}
+
 .price {
   margin: 0;
   font-size: 32px;

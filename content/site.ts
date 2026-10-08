@@ -14,6 +14,8 @@ export type Plan = {
   name: string;
   price: string;
   description: string;
+  /** Optional short tag shown next to the plan name, e.g. "New". */
+  tag?: string;
   features: string[];
 };
 
@@ -34,6 +36,7 @@ export const plans: Plan[] = [
   {
     id: "design-partner",
     name: "Design Partner",
+    tag: "New",
     price: "$7,995",
     description: "Perfect for fast-moving teams.",
     features: [
