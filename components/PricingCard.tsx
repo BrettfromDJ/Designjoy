@@ -82,6 +82,9 @@ export function PricingCard() {
         </button>
         <button type="button" className={styles.secondary} {...calTrigger}>
           Book a 15 min intro call
+          <span className={styles.arrow} aria-hidden="true">
+            →
+          </span>
         </button>
         {status === "error" && (
           <p className={styles.error} role="alert">
