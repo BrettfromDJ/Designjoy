@@ -4,6 +4,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
+  /* Same width as the ask box at the bottom of the page. */
+  width: min(412px, calc(100vw - 32px));
   display: flex;
   align-items: center;
   gap: 30px;
@@ -31,7 +33,9 @@
 }
 
 .links {
+  flex: 1;
   display: flex;
+  justify-content: space-between;
   gap: 24px;
   margin: 0;
   padding: 0;
