@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { clientLogos, plans, type Plan } from "@/content/site";
 import { calTrigger } from "@/lib/cal";
+import { startCheckout } from "@/lib/checkout";
 import { CheckIcon } from "./Icons";
 import { LogoMarquee } from "./LogoMarquee";
 import styles from "./PricingCard.module.css";
@@ -15,14 +16,7 @@ export function PricingCard() {
   async function subscribe() {
     setStatus("loading");
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: plan.id }),
-      });
-      const data = (await res.json()) as { url?: string };
-      if (!res.ok || !data.url) throw new Error();
-      window.location.href = data.url;
+      await startCheckout(plan.id);
     } catch {
       setStatus("error");
     }

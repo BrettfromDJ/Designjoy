@@ -1,0 +1,163 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* Segmented toggle; the white pill slides under the chosen plan. */
+.toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+}
+
+.toggle i {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: #fff;
+  transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.toggle[data-pick="1"] i {
+  transform: translateX(100%);
+}
+
+.toggle button {
+  position: relative;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-size: 13px;
+  letter-spacing: -0.39px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.toggle button[aria-pressed="true"] {
+  color: #000;
+}
+
+.price {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -1.2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  font-size: 14px;
+  letter-spacing: -0.42px;
+  color: var(--text-muted);
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: -6px 0 0;
+  padding: 0;
+  list-style: none;
+  animation: swap 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.features li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.36px;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.primary,
+.secondary {
+  height: 48px;
+  border-radius: 52px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.42px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.primary {
+  background: #fff;
+  color: #000;
+  border: 1px solid var(--border-subtle);
+}
+
+.primary:hover {
+  background: #e8e8e8;
+}
+
+.primary:disabled {
+  cursor: progress;
+}
+
+.secondary {
+  background: none;
+  color: #fff;
+  border: 1px solid var(--border);
+}
+
+.secondary:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.error {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+@keyframes swap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle i,
+  .features {
+    transition: none;
+    animation: none;
+  }
+}
