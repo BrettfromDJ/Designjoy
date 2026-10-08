@@ -13,7 +13,8 @@
   align-items: center;
   gap: 8px;
   height: 49px;
-  padding: 0 24px;
+  /* The bot sits in the rounded left end, 6px from the edge all round. */
+  padding: 0 24px 0 6px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);

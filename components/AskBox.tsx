@@ -64,6 +64,8 @@ export function AskBox() {
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [keystrokes, setKeystrokes] = useState(0);
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -169,8 +171,19 @@ export function AskBox() {
         </div>
       )}
 
-      <form className={styles.box} onSubmit={ask}>
-        <BotFace thinking={pending} />
+      <form
+        className={styles.box}
+        onSubmit={ask}
+        onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        <BotFace
+          size={35}
+          thinking={pending}
+          typing={focused && input.length > 0}
+          excited={hovered && !input}
+          poke={keystrokes}
+        />
         <label htmlFor="ask-input" className="visually-hidden">
           Ask anything about Designjoy
         </label>
@@ -182,7 +195,10 @@ export function AskBox() {
             placeholder={idle ? "" : placeholder}
             autoComplete="off"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              setKeystrokes((n) => n + 1);
+            }}
             onFocus={() => {
               setFocused(true);
               if (messages.length > 0) setOpen(true);
