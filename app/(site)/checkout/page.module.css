@@ -1,4 +1,4 @@
-/* One column, the same width as the nav and ask box (412px + 16px gutters). */
+/* Phones: one column. Wider screens: plan summary on the left, payment form on the right. */
 .page {
   /* Above the nav's shadow (but below the nav), so the shadow never darkens the text. */
   position: relative;
@@ -9,6 +9,32 @@
   max-width: 444px;
   margin: 0 auto;
   padding: 112px 16px 80px;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .page {
+    max-width: 960px;
+    padding-top: 128px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
+
+  /* The summary stays in view while the form scrolls. */
+  .summary {
+    position: sticky;
+    top: 112px;
+  }
 }
 
 .header {
