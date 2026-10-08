@@ -7,28 +7,46 @@ import styles from "./Nav.module.css";
 
 export function Nav() {
   const pathname = usePathname();
+  // On the homepage the nav casts its shadow over the grid. On the other
+  // pages the shadow is a separate layer beneath the page content, so text
+  // scrolling under the nav isn't darkened by it.
+  const home = pathname === "/";
 
   return (
-    <nav className={styles.nav} aria-label="Main">
-      <Link href="/" className={styles.logo} aria-label="Designjoy home">
-        <img src="/icons/smile.svg" alt="" width={36} height={36} className={styles.smile} />
-      </Link>
-      <ul className={styles.links}>
-        {navLinks.map((link) => {
-          const active = pathname === link.href;
-          return (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className={active ? `${styles.link} ${styles.active}` : styles.link}
-                aria-current={active ? "page" : undefined}
-              >
-                {link.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+    <>
+      {!home && <div className={styles.shadow} aria-hidden="true" />}
+      <nav
+        className={home ? styles.nav : `${styles.nav} ${styles.flat}`}
+        aria-label="Main"
+      >
+        <Link href="/" className={styles.logo} aria-label="Designjoy home">
+          <img
+            src="/icons/smile.svg"
+            alt=""
+            width={36}
+            height={36}
+            className={styles.smile}
+          />
+        </Link>
+        <ul className={styles.links}>
+          {navLinks.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={
+                    active ? `${styles.link} ${styles.active}` : styles.link
+                  }
+                  aria-current={active ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }

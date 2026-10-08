@@ -1,5 +1,8 @@
 /* One column, the same width as the nav and ask box (412px + 16px gutters). */
 .page {
+  /* Above the nav's shadow (but below the nav), so the shadow never darkens the text. */
+  position: relative;
+  z-index: 2;
   max-width: 444px;
   margin: 0 auto;
   padding: 112px 16px 140px;

@@ -18,6 +18,24 @@
   white-space: nowrap;
 }
 
+/* The nav's shadow as its own layer, under the page content (z-index 2). */
+.shadow {
+  position: fixed;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: min(412px, calc(100vw - 32px));
+  height: 49px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-float);
+  pointer-events: none;
+}
+
+.flat {
+  box-shadow: none;
+}
+
 .logo {
   display: flex;
 }
@@ -70,6 +88,13 @@
 
 /* Phones: span the same width as the content below (16px from each edge). */
 @media (max-width: 559px) {
+  .shadow {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+  }
+
   .nav {
     top: 16px;
     left: 16px;
