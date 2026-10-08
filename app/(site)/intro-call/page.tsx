@@ -4,7 +4,7 @@ import { TestimonialCard } from "@/components/TestimonialCard";
 import { CAL_LINK } from "@/lib/cal";
 import styles from "./page.module.css";
 
-export const metadata = { title: "Intro call — Designjoy" };
+export const metadata = { title: "Book a call — Designjoy" };
 
 const expectations = [
   "15 minutes, no commitment",
@@ -17,7 +17,7 @@ export default function IntroCall() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <p className={styles.label}>Intro call</p>
+        <p className={styles.label}>Book a call</p>
         <h1 className={styles.title}>
           Book a 15 min intro call, <span className={styles.muted}>see if it&apos;s a fit.</span>
         </h1>
