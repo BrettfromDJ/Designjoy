@@ -15,6 +15,7 @@
   isolation: isolate;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 6px;
   padding: 4px;
   background: var(--bg);
   border: 1px solid var(--border-subtle);
@@ -26,14 +27,15 @@
   top: 4px;
   bottom: 4px;
   left: 4px;
-  width: calc(50% - 4px);
+  /* One column: half of what's left after the padding and the 6px gap. */
+  width: calc((100% - 14px) / 2);
   border-radius: 999px;
   background: #fff;
   transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .toggle[data-pick="1"] i {
-  transform: translateX(100%);
+  transform: translateX(calc(100% + 6px));
 }
 
 .toggle button {
