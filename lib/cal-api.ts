@@ -72,6 +72,8 @@ export async function createBooking({
       username: USERNAME,
       eventTypeSlug: EVENT_SLUG,
       attendee: { name, email, timeZone, language: "en" },
+      // The event's "What is this meeting about?" field is required.
+      bookingFieldsResponses: { title: `15 min intro call with ${name}` },
     }),
   });
   const body = (await res.json().catch(() => null)) as {

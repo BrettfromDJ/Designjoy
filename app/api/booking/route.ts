@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     return Response.json({ ok: true });
   } catch (error) {
     console.error("Booking failed", error);
-    const message = error instanceof Error && !error.message.startsWith("Cal.com") ? error.message : null;
+    // Pass on Cal.com's message only when it reads like a sentence, not a code.
+    const raw = error instanceof Error ? error.message : "";
+    const message = raw && !raw.startsWith("Cal.com") && !/[_{}]/.test(raw) ? raw : null;
     return Response.json(
       { error: message ?? "That time couldn't be booked. Please pick another, or try again." },
       { status: 502 },
