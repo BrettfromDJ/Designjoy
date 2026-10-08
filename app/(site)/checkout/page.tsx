@@ -57,7 +57,7 @@ export default async function Checkout({
         </section>
 
         <div className={styles.form}>
-          <CheckoutForm planId={plan.id} />
+          <CheckoutForm plan={plan} />
         </div>
       </div>
     </main>

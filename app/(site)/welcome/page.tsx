@@ -17,12 +17,11 @@ async function checkoutDetails(sessionId?: string): Promise<Details | null> {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const status = session.status === "complete" ? "complete" : session.status === "open" ? "open" : null;
     if (!status) return null;
-    const field = session.custom_fields.find((f) => f.key === "trelloemail");
     return {
       status,
       planId: session.metadata?.plan,
       email: session.customer_details?.email ?? undefined,
-      trelloEmail: field?.text?.value?.trim() || undefined,
+      trelloEmail: session.metadata?.trello_email?.trim() || undefined,
     };
   } catch {
     return null;
