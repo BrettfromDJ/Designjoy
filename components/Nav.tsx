@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/content/site";
+import { OPEN_FAQ_EVENT } from "./AskBox";
 import styles from "./Nav.module.css";
 
 export function Nav() {
@@ -39,6 +40,16 @@ export function Nav() {
                     active ? `${styles.link} ${styles.active}` : styles.link
                   }
                   aria-current={active ? "page" : undefined}
+                  onClick={
+                    // FAQs open in the ask box, right where you are (except on
+                    // checkout, where the ask box is hidden).
+                    link.href === "/faqs" && pathname !== "/checkout"
+                      ? (e) => {
+                          e.preventDefault();
+                          window.dispatchEvent(new Event(OPEN_FAQ_EVENT));
+                        }
+                      : undefined
+                  }
                 >
                   {link.label}
                 </Link>

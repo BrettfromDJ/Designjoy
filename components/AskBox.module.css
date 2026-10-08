@@ -145,54 +145,155 @@
   opacity: 0.6;
 }
 
-.panel {
+/* Catches clicks outside the open panel to close it. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+}
+
+.shell {
   position: relative;
-  margin-bottom: 12px;
+}
+
+/* Open: the pill grows up into a panel that fits its content (up to a limit),
+   with the travelling edge light around the whole thing. */
+.shell[data-open="true"] {
+  display: flex;
+  flex-direction: column;
+  max-height: min(640px, calc(100dvh - 130px));
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
-  border-radius: 20px;
+  border-radius: 26px;
   box-shadow: var(--shadow-float);
+  animation: grow-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes grow-up {
+  from {
+    clip-path: inset(calc(100% - 49px) 0 0 0 round 74px);
+  }
+  to {
+    clip-path: inset(-2px round 26px);
+  }
+}
+
+.shell[data-open="true"]::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    transparent 160deg,
+    var(--glow) 250deg,
+    transparent 340deg
+  );
+  animation: glow-spin 7s linear infinite;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* The pill becomes the panel's bottom row. */
+.shell[data-open="true"] .box {
+  flex: none;
+  height: 48px;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0 0 26px 26px;
+  box-shadow: none;
+}
+
+.shell[data-open="true"] .box::before,
+.shell[data-open="true"] .box::after {
+  display: none;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 0 20px;
+  animation: fade-up 0.35s 0.18s ease both;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
   padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
   background: none;
-  border: 0;
-  font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-nav);
+  font-size: 11px;
   cursor: pointer;
+}
+
+.close:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text);
 }
 
 .log {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-height: min(420px, 55vh);
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 40px 20px 20px;
+  overscroll-behavior: contain;
+  padding: 12px 20px 16px;
+  animation: fade-up 0.35s 0.18s ease both;
 }
 
-.user,
-.assistant {
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.bubble {
   margin: 0;
-  font-size: 14px;
+  max-width: 88%;
+  padding: 9px 13px;
+  font-size: 13px;
   line-height: 1.45;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  animation: fade-up 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.user {
+/* Visitor on the right, Designjoy on the left. */
+.me {
   align-self: flex-end;
-  max-width: 85%;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--text);
+  color: #000;
 }
 
-.assistant {
+.dj {
+  align-self: flex-start;
+  border-radius: 14px 14px 14px 4px;
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-nav);
 }
 
@@ -200,31 +301,105 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
 }
 
-.bookCall {
-  border: 0;
-  cursor: pointer;
+.typing {
+  display: inline-flex;
+  gap: 4px;
+  padding: 13px;
+}
+
+.typing i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: dot 1s ease-in-out infinite;
+}
+
+.typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: none;
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.action {
   display: inline-flex;
   align-items: center;
-  height: 36px;
+  height: 34px;
   padding: 0 16px;
+  border: 0;
   border-radius: 52px;
   background: #fff;
   color: #000;
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.39px;
+  cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
-.bookCall:hover {
+.action:hover {
   background: #e8e8e8;
 }
 
-.typing {
-  color: var(--text-muted);
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.chips button {
+  padding: 7px 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: none;
+  color: var(--text-nav);
+  font-size: 12px;
+  letter-spacing: -0.36px;
+  text-align: left;
+  cursor: pointer;
+  animation: fade-up 0.35s ease both;
+  transition: color 0.15s ease;
+}
+
+.chips button:hover:not(:disabled) {
+  border-style: solid;
+  color: var(--text);
+}
+
+.chips button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell[data-open="true"],
+  .shell[data-open="true"]::before,
+  .top,
+  .log,
+  .bubble,
+  .chips button,
+  .typing i {
+    animation: none;
+  }
 }
 
 /* iOS zooms the page when focusing an input smaller than 16px. */

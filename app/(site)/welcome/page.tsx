@@ -100,7 +100,7 @@ export default async function Welcome({
           Manage billing <span aria-hidden="true">→</span>
         </a>
         <p className={styles.stepBody}>Update your card, download invoices, or cancel anytime.</p>
-        <Link href="/faqs" className={styles.link}>
+        <Link href="/?faq" className={styles.link}>
           Questions? See the FAQs <span aria-hidden="true">→</span>
         </Link>
       </section>

@@ -2,14 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { faqs, type Faq } from "@/content/site";
 import { calTrigger } from "@/lib/cal";
 import { parseAnswer } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
 import { BotFace } from "./BotFace";
 import styles from "./AskBox.module.css";
 
-// `content` keeps the raw answer; `bookCall` forces the booking button (used for errors).
-type Message = { role: "user" | "assistant"; content: string; bookCall?: boolean };
+// `content` keeps the raw answer; `bookCall` forces the booking button (used for errors);
+// `typing` shows dots while a FAQ answer is "being typed".
+type Message = { role: "user" | "assistant"; content: string; bookCall?: boolean; typing?: boolean };
+
+/** Opens the ask box as the FAQ, from anywhere (e.g. the nav's FAQs link). */
+export const OPEN_FAQ_EVENT = "designjoy:open-faq";
+const FAQ_TYPING_MS = 900;
 
 const PLACEHOLDER = "Ask anything about Designjoy";
 const SHORT_PLACEHOLDER = "Ask about Designjoy";
@@ -57,10 +63,8 @@ function useSampleQuestions(inputRef: React.RefObject<HTMLInputElement | null>) 
 }
 
 export function AskBox() {
-  // The FAQ page is a chat already, so the pill would be redundant there,
-  // and on checkout it would sit over the payment form.
-  const pathname = usePathname();
-  const hidden = pathname === "/faqs" || pathname === "/checkout";
+  // On checkout it would sit over the payment form.
+  const hidden = usePathname() === "/checkout";
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
@@ -95,9 +99,57 @@ export function AskBox() {
     };
   }, [idle, samples.length]);
 
+  // Keep the newest message in view (above the question chips).
   useEffect(() => {
-    logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
-  }, [messages]);
+    const log = logRef.current;
+    const last = log?.querySelector<HTMLElement>("[data-last]");
+    if (!log || !last) return;
+    const top = last.offsetTop - log.offsetTop - 12;
+    log.scrollTo({ top: Math.min(top, log.scrollHeight), behavior: "smooth" });
+  }, [messages, open]);
+
+  // Opens from the nav's FAQs link, or from /?faq (where /faqs redirects).
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_FAQ_EVENT, show);
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("faq")) {
+      show();
+      url.searchParams.delete("faq");
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    }
+    return () => window.removeEventListener(OPEN_FAQ_EVENT, show);
+  }, []);
+
+  // Escape closes it.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // FAQ questions not yet asked, offered as chips under the conversation.
+  const asked = new Set(messages.filter((m) => m.role === "user").map((m) => m.content));
+  const remaining = faqs.filter((f) => !asked.has(f.question));
+  // Scroll target: the visitor's latest question, so it and its answer show.
+  const lastUser = messages.findLastIndex((m) => m.role === "user");
+
+  // A known FAQ is answered from the list, after a short "typing" pause.
+  function askFaq(faq: Faq) {
+    if (pending) return;
+    const history: Message[] = [...messages, { role: "user", content: faq.question }];
+    setMessages([...history, { role: "assistant", content: "", typing: true }]);
+    setPending(true);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(
+      () => {
+        setMessages([...history, { role: "assistant", content: faq.answer }]);
+        setPending(false);
+      },
+      reduced ? 0 : FAQ_TYPING_MS,
+    );
+  }
 
   async function ask(event: React.FormEvent) {
     event.preventDefault();
@@ -134,103 +186,141 @@ export function AskBox() {
   if (hidden) return null;
 
   return (
-    <div className={styles.wrapper}>
-      {open && messages.length > 0 && (
-        <div className={styles.panel} role="dialog" aria-label="Ask Designjoy">
-          <button type="button" className={styles.close} onClick={() => setOpen(false)}>
-            Close
-          </button>
-          <div ref={logRef} className={styles.log} aria-live="polite">
-            {messages.map((message, i) => {
-              if (message.role === "user") {
-                return (
-                  <p key={i} className={styles.user}>
-                    {message.content}
-                  </p>
-                );
-              }
-              const { text, bookCall, billing } = parseAnswer(message.content);
-              const done = !(pending && i === messages.length - 1);
-              return (
-                <div key={i} className={styles.answer}>
-                  <p className={styles.assistant}>
-                    {text || <span className={styles.typing}>Thinking…</span>}
-                  </p>
-                  {done && (bookCall || message.bookCall) && (
-                    <button
-                      type="button"
-                      className={styles.bookCall}
-                      onClick={() => setOpen(false)}
-                      {...calTrigger}
-                    >
-                      Book a 15 min intro call
-                    </button>
-                  )}
-                  {done && billing && (
-                    <a href="/billing" target="_blank" rel="noopener" className={styles.bookCall}>
-                      Manage billing →
-                    </a>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      <form
-        className={styles.box}
-        onSubmit={ask}
-        onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        <BotFace
-          size={24}
-          thinking={pending}
-          typing={focused && input.length > 0}
-          excited={hovered && !input}
-          poke={keystrokes}
-        />
-        <label htmlFor="ask-input" className="visually-hidden">
-          Ask anything about Designjoy
-        </label>
-        <div className={styles.field}>
-          <input
-            ref={inputRef}
-            id="ask-input"
-            className={styles.input}
-            placeholder={idle ? "" : placeholder}
-            autoComplete="off"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              setKeystrokes((n) => n + 1);
-            }}
-            onFocus={() => {
-              setFocused(true);
-              if (messages.length > 0) setOpen(true);
-            }}
-            onBlur={() => setFocused(false)}
-          />
-          {idle && (
-            <span
-              key={sample ?? placeholder}
-              className={styles.sample}
-              data-fading={fading}
-              aria-hidden="true"
-            >
-              {sample ?? placeholder}
-            </span>
-          )}
-        </div>
-        <button
-          type="submit"
-          className={styles.submit}
-          disabled={pending || !(input.trim() || (idle && sample))}
+    <>
+      {open && <div className={styles.backdrop} onClick={() => setOpen(false)} aria-hidden="true" />}
+      <div className={styles.wrapper}>
+        {/* Closed, this is just the ask pill. Open, the pill grows up into a
+            panel with the conversation, and the pill stays as its bottom row. */}
+        <div
+          className={styles.shell}
+          data-open={open}
+          role={open ? "dialog" : undefined}
+          aria-label={open ? "Questions about Designjoy" : undefined}
         >
-          Ask
-        </button>
-      </form>
-    </div>
+          {open && (
+            <>
+              <div className={styles.top}>
+                <p className={styles.label}>FAQ</p>
+                <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label="Close">
+                  ✕
+                </button>
+              </div>
+              <div ref={logRef} className={styles.log} aria-live="polite">
+                <p className={`${styles.bubble} ${styles.dj}`}>Hi! Tap a question below, or type your own.</p>
+                {messages.map((message, i) => {
+                  if (message.role === "user") {
+                    return (
+                      <p key={i} className={`${styles.bubble} ${styles.me}`} data-last={lastUser === i || undefined}>
+                        {message.content}
+                      </p>
+                    );
+                  }
+                  if (message.typing || (!message.content && pending)) {
+                    return (
+                      <span key={i} className={`${styles.bubble} ${styles.dj} ${styles.typing}`} aria-label="Typing">
+                        <i />
+                        <i />
+                        <i />
+                      </span>
+                    );
+                  }
+                  const { text, bookCall, billing } = parseAnswer(message.content);
+                  const done = !(pending && i === messages.length - 1);
+                  return (
+                    <div key={i} className={styles.answer}>
+                      <p className={`${styles.bubble} ${styles.dj}`}>{text}</p>
+                      {done && (bookCall || message.bookCall) && (
+                        <button
+                          type="button"
+                          className={styles.action}
+                          onClick={() => setOpen(false)}
+                          {...calTrigger}
+                        >
+                          Book a 15 min intro call
+                        </button>
+                      )}
+                      {done && billing && (
+                        <a href="/billing" target="_blank" rel="noopener" className={styles.action}>
+                          Manage billing →
+                        </a>
+                      )}
+                    </div>
+                  );
+                })}
+                {remaining.length > 0 && (
+                  <div className={styles.chips} aria-label="Common questions">
+                    {remaining.map((faq, n) => (
+                      <button
+                        key={faq.question}
+                        type="button"
+                        style={{ animationDelay: `${150 + n * 25}ms` }}
+                        disabled={pending}
+                        onClick={() => askFaq(faq)}
+                      >
+                        {faq.question}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          <form
+            className={styles.box}
+            onSubmit={ask}
+            onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
+            onPointerLeave={() => setHovered(false)}
+          >
+            <BotFace
+              size={24}
+              thinking={pending}
+              typing={focused && input.length > 0}
+              excited={hovered && !input}
+              poke={keystrokes}
+            />
+            <label htmlFor="ask-input" className="visually-hidden">
+              Ask anything about Designjoy
+            </label>
+            <div className={styles.field}>
+              <input
+                ref={inputRef}
+                id="ask-input"
+                className={styles.input}
+                placeholder={idle ? "" : placeholder}
+                autoComplete="off"
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  setKeystrokes((n) => n + 1);
+                }}
+                onFocus={() => {
+                  setFocused(true);
+                  if (messages.length > 0) setOpen(true);
+                }}
+                onBlur={() => setFocused(false)}
+              />
+              {idle && (
+                <span
+                  key={sample ?? placeholder}
+                  className={styles.sample}
+                  data-fading={fading}
+                  aria-hidden="true"
+                >
+                  {sample ?? placeholder}
+                </span>
+              )}
+            </div>
+            <button
+              type="submit"
+              className={styles.submit}
+              disabled={pending || !(input.trim() || (idle && sample))}
+            >
+              Ask
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 }
