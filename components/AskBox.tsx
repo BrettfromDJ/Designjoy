@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { calTrigger } from "@/lib/cal";
 import { parseAnswer } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
-import { SparklesIcon } from "./Icons";
+import { BotFace } from "./BotFace";
 import styles from "./AskBox.module.css";
 
 // `content` keeps the raw answer; `bookCall` forces the booking button (used for errors).
@@ -170,7 +170,7 @@ export function AskBox() {
       )}
 
       <form className={styles.box} onSubmit={ask}>
-        <SparklesIcon />
+        <BotFace thinking={pending} />
         <label htmlFor="ask-input" className="visually-hidden">
           Ask anything about Designjoy
         </label>

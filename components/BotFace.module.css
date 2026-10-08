@@ -1,0 +1,58 @@
+.bot {
+  flex: none;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.12));
+}
+
+.face {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition: transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.look {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+}
+
+.eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 5.5s infinite;
+}
+
+/* While an answer is coming in, the bot glances up and around as if thinking. */
+.bot[data-thinking="true"] .look {
+  animation: think 1.8s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes think {
+  0%,
+  100% {
+    transform: translate(-1.5px, -1.5px);
+  }
+  50% {
+    transform: translate(1.5px, -1.8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .face {
+    transition: none;
+  }
+  .eyes,
+  .bot[data-thinking="true"] .look {
+    animation: none;
+  }
+}
