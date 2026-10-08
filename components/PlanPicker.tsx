@@ -41,8 +41,9 @@ function useRollingPrice(target: number) {
   return shown;
 }
 
-/** The pricing page's main card: a plan toggle, price, features and actions. */
-export function PlanPicker() {
+/** A plan toggle, price, features and actions. `embedded` drops the card
+ *  chrome, for showing it inside the ask box panel. */
+export function PlanPicker({ embedded = false }: { embedded?: boolean }) {
   const [index, setIndex] = useState(0);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const plan = plans[index];
@@ -58,7 +59,10 @@ export function PlanPicker() {
   }
 
   return (
-    <section className={styles.card} aria-label="Choose a plan">
+    <section
+      className={embedded ? `${styles.card} ${styles.embedded}` : styles.card}
+      aria-label="Choose a plan"
+    >
       <div
         className={styles.toggle}
         role="group"

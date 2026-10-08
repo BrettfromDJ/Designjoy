@@ -62,9 +62,10 @@ export function CheckoutForm({ plan }: { plan: Plan }) {
           if (!ok || !data.clientSecret) throw new Error("Checkout unavailable");
           return data.clientSecret;
         })
-        .catch((error) => {
+        .catch(() => {
+          // Show the "book a call" fallback instead; the form never loads.
           setFailed(true);
-          throw error;
+          return new Promise<string>(() => {});
         }),
     [plan.id],
   );

@@ -9,6 +9,13 @@
   box-shadow: var(--shadow-card);
 }
 
+.embedded {
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
 /* Segmented toggle; the white pill slides under the chosen plan. */
 .toggle {
   position: relative;

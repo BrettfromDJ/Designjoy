@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/content/site";
-import { OPEN_FAQ_EVENT } from "./AskBox";
+import { OPEN_FAQ_EVENT, OPEN_PRICING_EVENT } from "./AskBox";
+
+// Links that open in the ask box instead of going to a page.
+const OPENS_IN_ASK_BOX: Record<string, string> = {
+  "/faqs": OPEN_FAQ_EVENT,
+  "/pricing": OPEN_PRICING_EVENT,
+};
 import styles from "./Nav.module.css";
 
 export function Nav() {
@@ -41,12 +47,12 @@ export function Nav() {
                   }
                   aria-current={active ? "page" : undefined}
                   onClick={
-                    // FAQs open in the ask box, right where you are (except on
-                    // checkout, where the ask box is hidden).
-                    link.href === "/faqs" && pathname !== "/checkout"
+                    // FAQs and Pricing open in the ask box, right where you are
+                    // (except on checkout, where the ask box is hidden).
+                    OPENS_IN_ASK_BOX[link.href] && pathname !== "/checkout"
                       ? (e) => {
                           e.preventDefault();
-                          window.dispatchEvent(new Event(OPEN_FAQ_EVENT));
+                          window.dispatchEvent(new Event(OPENS_IN_ASK_BOX[link.href]));
                         }
                       : undefined
                   }

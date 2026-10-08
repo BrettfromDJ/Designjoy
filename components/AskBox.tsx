@@ -7,14 +7,21 @@ import { calTrigger } from "@/lib/cal";
 import { parseAnswer } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
 import { BotFace } from "./BotFace";
+import { PlanPicker } from "./PlanPicker";
 import styles from "./AskBox.module.css";
 
 // `content` keeps the raw answer; `bookCall` forces the booking button (used for errors);
 // `typing` shows dots while a FAQ answer is "being typed".
-type Message = { role: "user" | "assistant"; content: string; bookCall?: boolean; typing?: boolean };
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+  bookCall?: boolean;
+  typing?: boolean;
+};
 
-/** Opens the ask box as the FAQ, from anywhere (e.g. the nav's FAQs link). */
+/** Open the ask box as the FAQ or as pricing, from anywhere (e.g. the nav). */
 export const OPEN_FAQ_EVENT = "designjoy:open-faq";
+export const OPEN_PRICING_EVENT = "designjoy:open-pricing";
 const FAQ_TYPING_MS = 900;
 
 const PLACEHOLDER = "Ask anything about Designjoy";
@@ -26,7 +33,9 @@ const FADE_MS = 300;
  * Sample questions from the knowledge base, plus the placeholder, keeping
  * only text that fits the input without cutting off.
  */
-function useSampleQuestions(inputRef: React.RefObject<HTMLInputElement | null>) {
+function useSampleQuestions(
+  inputRef: React.RefObject<HTMLInputElement | null>,
+) {
   const [all, setAll] = useState<string[]>([]);
   const [fitting, setFitting] = useState<string[]>([]);
   const [placeholder, setPlaceholder] = useState(PLACEHOLDER);
@@ -49,7 +58,8 @@ function useSampleQuestions(inputRef: React.RefObject<HTMLInputElement | null>) 
       const room = input.clientWidth - 2;
       // measureText ignores letter-spacing, so add it per character.
       const spacing = parseFloat(style.letterSpacing) || 0;
-      const fits = (text: string) => ctx.measureText(text).width + spacing * text.length <= room;
+      const fits = (text: string) =>
+        ctx.measureText(text).width + spacing * text.length <= room;
       setPlaceholder(fits(PLACEHOLDER) ? PLACEHOLDER : SHORT_PLACEHOLDER);
       setFitting(all.filter(fits));
     };
@@ -68,6 +78,8 @@ export function AskBox() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
+  // What the open panel shows: the conversation (with the FAQ), or the plans.
+  const [mode, setMode] = useState<"chat" | "pricing">("chat");
   const [pending, setPending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -108,17 +120,39 @@ export function AskBox() {
     log.scrollTo({ top: Math.min(top, log.scrollHeight), behavior: "smooth" });
   }, [messages, open]);
 
-  // Opens from the nav's FAQs link, or from /?faq (where /faqs redirects).
+  // Opens from the nav's FAQs and Pricing links, or from /?faq and /?pricing
+  // (where the old /faqs and /pricing pages redirect).
   useEffect(() => {
-    const show = () => setOpen(true);
-    window.addEventListener(OPEN_FAQ_EVENT, show);
+    const showChat = () => {
+      setMode("chat");
+      setOpen(true);
+    };
+    const showPricing = () => {
+      setMode("pricing");
+      setOpen(true);
+    };
+    window.addEventListener(OPEN_FAQ_EVENT, showChat);
+    window.addEventListener(OPEN_PRICING_EVENT, showPricing);
     const url = new URL(window.location.href);
-    if (url.searchParams.has("faq")) {
-      show();
-      url.searchParams.delete("faq");
-      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    const param = url.searchParams.has("pricing")
+      ? "pricing"
+      : url.searchParams.has("faq")
+        ? "faq"
+        : null;
+    if (param) {
+      if (param === "pricing") showPricing();
+      else showChat();
+      url.searchParams.delete(param);
+      window.history.replaceState(
+        null,
+        "",
+        url.pathname + url.search + url.hash,
+      );
     }
-    return () => window.removeEventListener(OPEN_FAQ_EVENT, show);
+    return () => {
+      window.removeEventListener(OPEN_FAQ_EVENT, showChat);
+      window.removeEventListener(OPEN_PRICING_EVENT, showPricing);
+    };
   }, []);
 
   // Escape closes it.
@@ -130,7 +164,9 @@ export function AskBox() {
   }, [open]);
 
   // FAQ questions not yet asked, offered as chips under the conversation.
-  const asked = new Set(messages.filter((m) => m.role === "user").map((m) => m.content));
+  const asked = new Set(
+    messages.filter((m) => m.role === "user").map((m) => m.content),
+  );
   const remaining = faqs.filter((f) => !asked.has(f.question));
   // Scroll target: the visitor's latest question, so it and its answer show.
   const lastUser = messages.findLastIndex((m) => m.role === "user");
@@ -138,10 +174,16 @@ export function AskBox() {
   // A known FAQ is answered from the list, after a short "typing" pause.
   function askFaq(faq: Faq) {
     if (pending) return;
-    const history: Message[] = [...messages, { role: "user", content: faq.question }];
+    setMode("chat");
+    const history: Message[] = [
+      ...messages,
+      { role: "user", content: faq.question },
+    ];
     setMessages([...history, { role: "assistant", content: "", typing: true }]);
     setPending(true);
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     setTimeout(
       () => {
         setMessages([...history, { role: "assistant", content: faq.answer }]);
@@ -157,7 +199,10 @@ export function AskBox() {
     const question = input.trim() || (idle ? (sample ?? "") : "");
     if (!question || pending) return;
 
-    const history: Message[] = [...messages, { role: "user", content: question }];
+    const history: Message[] = [
+      ...messages,
+      { role: "user", content: question },
+    ];
     setMessages([...history, { role: "assistant", content: "" }]);
     // The model doesn't need to see its own tags again.
     const outgoing = history.map(({ role, content }) => ({
@@ -165,6 +210,7 @@ export function AskBox() {
       content: role === "assistant" ? parseAnswer(content).text : content,
     }));
     setInput("");
+    setMode("chat");
     setOpen(true);
     setPending(true);
 
@@ -175,7 +221,9 @@ export function AskBox() {
       await streamChat(outgoing, (text) => setAnswer(text));
     } catch (error) {
       setAnswer(
-        error instanceof ChatError ? error.message : "Something went wrong. Please try again.",
+        error instanceof ChatError
+          ? error.message
+          : "Something went wrong. Please try again.",
         error instanceof ChatError && error.bookCall,
       );
     } finally {
@@ -187,7 +235,13 @@ export function AskBox() {
 
   return (
     <>
-      {open && <div className={styles.backdrop} onClick={() => setOpen(false)} aria-hidden="true" />}
+      {open && (
+        <div
+          className={styles.backdrop}
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <div className={styles.wrapper}>
         {/* Closed, this is just the ask pill. Open, the pill grows up into a
             panel with the conversation, and the pill stays as its bottom row. */}
@@ -195,81 +249,121 @@ export function AskBox() {
           className={styles.shell}
           data-open={open}
           role={open ? "dialog" : undefined}
-          aria-label={open ? "Questions about Designjoy" : undefined}
+          aria-label={
+            open
+              ? mode === "pricing"
+                ? "Pricing"
+                : "Questions about Designjoy"
+              : undefined
+          }
         >
           {open && (
             <>
               <div className={styles.top}>
-                <p className={styles.label}>FAQ</p>
-                <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label="Close">
+                <p className={styles.label}>
+                  {mode === "pricing" ? "Pricing" : "FAQ"}
+                </p>
+                <button
+                  type="button"
+                  className={styles.close}
+                  onClick={() => setOpen(false)}
+                  aria-label="Close"
+                >
                   ✕
                 </button>
               </div>
-              <div ref={logRef} className={styles.log} aria-live="polite">
-                <p className={`${styles.bubble} ${styles.dj}`}>Hi! Tap a question below, or type your own.</p>
-                {messages.map((message, i) => {
-                  if (message.role === "user") {
-                    return (
-                      <p key={i} className={`${styles.bubble} ${styles.me}`} data-last={lastUser === i || undefined}>
-                        {message.content}
-                      </p>
-                    );
-                  }
-                  if (message.typing || (!message.content && pending)) {
-                    return (
-                      <span key={i} className={`${styles.bubble} ${styles.dj} ${styles.typing}`} aria-label="Typing">
-                        <i />
-                        <i />
-                        <i />
-                      </span>
-                    );
-                  }
-                  const { text, bookCall, billing } = parseAnswer(message.content);
-                  const done = !(pending && i === messages.length - 1);
-                  return (
-                    <div key={i} className={styles.answer}>
-                      <p className={`${styles.bubble} ${styles.dj}`}>{text}</p>
-                      {done && (bookCall || message.bookCall) && (
-                        <button
-                          type="button"
-                          className={styles.action}
-                          onClick={() => setOpen(false)}
-                          {...calTrigger}
+              {mode === "pricing" ? (
+                <div className={styles.log}>
+                  <PlanPicker embedded />
+                </div>
+              ) : (
+                <div ref={logRef} className={styles.log} aria-live="polite">
+                  <p className={`${styles.bubble} ${styles.dj}`}>
+                    Hi! Tap a question below, or type your own.
+                  </p>
+                  {messages.map((message, i) => {
+                    if (message.role === "user") {
+                      return (
+                        <p
+                          key={i}
+                          className={`${styles.bubble} ${styles.me}`}
+                          data-last={lastUser === i || undefined}
                         >
-                          Book a 15 min intro call
+                          {message.content}
+                        </p>
+                      );
+                    }
+                    if (message.typing || (!message.content && pending)) {
+                      return (
+                        <span
+                          key={i}
+                          className={`${styles.bubble} ${styles.dj} ${styles.typing}`}
+                          aria-label="Typing"
+                        >
+                          <i />
+                          <i />
+                          <i />
+                        </span>
+                      );
+                    }
+                    const { text, bookCall, billing } = parseAnswer(
+                      message.content,
+                    );
+                    const done = !(pending && i === messages.length - 1);
+                    return (
+                      <div key={i} className={styles.answer}>
+                        <p className={`${styles.bubble} ${styles.dj}`}>
+                          {text}
+                        </p>
+                        {done && (bookCall || message.bookCall) && (
+                          <button
+                            type="button"
+                            className={styles.action}
+                            onClick={() => setOpen(false)}
+                            {...calTrigger}
+                          >
+                            Book a 15 min intro call
+                          </button>
+                        )}
+                        {done && billing && (
+                          <a
+                            href="/billing"
+                            target="_blank"
+                            rel="noopener"
+                            className={styles.action}
+                          >
+                            Manage billing →
+                          </a>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {remaining.length > 0 && (
+                    <div className={styles.chips} aria-label="Common questions">
+                      {remaining.map((faq, n) => (
+                        <button
+                          key={faq.question}
+                          type="button"
+                          style={{ animationDelay: `${150 + n * 25}ms` }}
+                          disabled={pending}
+                          onClick={() => askFaq(faq)}
+                        >
+                          {faq.question}
                         </button>
-                      )}
-                      {done && billing && (
-                        <a href="/billing" target="_blank" rel="noopener" className={styles.action}>
-                          Manage billing →
-                        </a>
-                      )}
+                      ))}
                     </div>
-                  );
-                })}
-                {remaining.length > 0 && (
-                  <div className={styles.chips} aria-label="Common questions">
-                    {remaining.map((faq, n) => (
-                      <button
-                        key={faq.question}
-                        type="button"
-                        style={{ animationDelay: `${150 + n * 25}ms` }}
-                        disabled={pending}
-                        onClick={() => askFaq(faq)}
-                      >
-                        {faq.question}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </>
           )}
 
           <form
             className={styles.box}
             onSubmit={ask}
-            onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
+            onPointerEnter={(e) =>
+              e.pointerType === "mouse" && setHovered(true)
+            }
             onPointerLeave={() => setHovered(false)}
           >
             <BotFace
@@ -296,7 +390,10 @@ export function AskBox() {
                 }}
                 onFocus={() => {
                   setFocused(true);
-                  if (messages.length > 0) setOpen(true);
+                  if (messages.length > 0) {
+                    setMode("chat");
+                    setOpen(true);
+                  }
                 }}
                 onBlur={() => setFocused(false)}
               />
