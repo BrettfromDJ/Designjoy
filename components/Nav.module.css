@@ -87,22 +87,21 @@
   opacity: 1;
 }
 
-/* "Book a call": a white pill, tucked toward the nav's right edge. */
+/* "Book a call": a subtle dark grey pill, tucked toward the nav's right edge. */
 .cta,
 .cta:hover {
   height: 33px;
   margin-right: -14px;
   padding: 0 14px;
   border-radius: 999px;
-  background: #fff;
-  color: #000;
-  font-weight: 500;
+  background: #1f1f1f;
+  color: #fff;
   opacity: 1;
   transition: background-color 0.15s ease;
 }
 
 .cta:hover {
-  background: #e8e8e8;
+  background: #2a2a2a;
 }
 
 /* Phones: span the same width as the content below (16px from each edge). */
