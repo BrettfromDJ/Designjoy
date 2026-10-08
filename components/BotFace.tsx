@@ -118,9 +118,9 @@ export function BotFace({
       >
         <defs>
           <radialGradient id="bot-ball" cx="38%" cy="32%" r="75%">
-            <stop offset="0" stopColor="#fff6a8" />
-            <stop offset="0.5" stopColor="#ffd60a" />
-            <stop offset="1" stopColor="#e09b00" />
+            <stop offset="0" stopColor="#e8e8e8" />
+            <stop offset="0.55" stopColor="#bcbcbc" />
+            <stop offset="1" stopColor="#707070" />
           </radialGradient>
           <clipPath id="bot-clip">
             <circle cx="12" cy="12" r="11" />
@@ -163,7 +163,7 @@ export function BotFace({
           aria-hidden="true"
           onAnimationEnd={() => setSparkles((current) => current.filter((x) => x.id !== s.id))}
         >
-          <path d="M5 0c.3 2.6 1.4 3.7 4 4-2.6.3-3.7 1.4-4 4-.3-2.6-1.4-3.7-4-4 2.6-.3 3.7-1.4 4-4Z" fill="#ffe55c" />
+          <path d="M5 0c.3 2.6 1.4 3.7 4 4-2.6.3-3.7 1.4-4 4-.3-2.6-1.4-3.7-4-4 2.6-.3 3.7-1.4 4-4Z" fill="#fff" />
         </svg>
       ))}
     </span>
