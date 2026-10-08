@@ -179,7 +179,16 @@ export const faqs: Faq[] = [
     answer:
       "Most requests are delivered in about 48 hours. Bigger requests are broken into smaller pieces so you see progress every couple of days.",
   },
-  { question: "Can I pause or cancel?", answer: "Yes, pause or cancel anytime. There's no lock-in." },
+  {
+    question: "Can I pause or cancel?",
+    answer:
+      "Yes, pause or cancel anytime. There's no lock-in. To pause, just let us know. You can cancel yourself at designjoy.co/billing. [billing]",
+  },
+  {
+    question: "How do I manage billing?",
+    answer:
+      "Go to designjoy.co/billing and sign in with the code we email you. From there you can update your card, download invoices, switch plans or cancel. [billing]",
+  },
   {
     question: "What kind of design do you do?",
     answer:

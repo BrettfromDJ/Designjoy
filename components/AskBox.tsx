@@ -149,7 +149,7 @@ export function AskBox() {
                   </p>
                 );
               }
-              const { text, bookCall } = parseAnswer(message.content);
+              const { text, bookCall, billing } = parseAnswer(message.content);
               const done = !(pending && i === messages.length - 1);
               return (
                 <div key={i} className={styles.answer}>
@@ -165,6 +165,11 @@ export function AskBox() {
                     >
                       Book a 15 min intro call
                     </button>
+                  )}
+                  {done && billing && (
+                    <a href="/billing" target="_blank" rel="noopener" className={styles.bookCall}>
+                      Manage billing →
+                    </a>
                   )}
                 </div>
               );

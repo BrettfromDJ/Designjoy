@@ -72,6 +72,8 @@
 }
 
 .bookCall {
+  display: inline-flex;
+  align-items: center;
   height: 34px;
   padding: 0 16px;
   border: 0;

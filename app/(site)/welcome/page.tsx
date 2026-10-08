@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CheckIcon } from "@/components/Icons";
-import { billingPortalUrl, plans, trelloInviteEta } from "@/content/site";
+import { plans, trelloInviteEta } from "@/content/site";
 import { getStripe } from "@/lib/stripe";
 import styles from "./page.module.css";
 
@@ -96,7 +96,7 @@ export default async function Welcome({
       </section>
 
       <section className={styles.card} aria-label="Billing and help">
-        <a href={billingPortalUrl} className={styles.link} target="_blank" rel="noopener noreferrer">
+        <a href={details?.email ? `/billing?email=${encodeURIComponent(details.email)}` : "/billing"} className={styles.link} target="_blank" rel="noopener">
           Manage billing <span aria-hidden="true">→</span>
         </a>
         <p className={styles.stepBody}>Update your card, download invoices, or cancel anytime.</p>
