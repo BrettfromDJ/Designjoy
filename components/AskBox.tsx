@@ -272,7 +272,7 @@ export function AskBox() {
           {open && (
             <>
               <div className={styles.top}>
-                <p className={styles.label}>{VIEW_LABELS[mode]}</p>
+                {mode !== "booking" && <p className={styles.label}>{VIEW_LABELS[mode]}</p>}
                 <button
                   type="button"
                   className={styles.close}
