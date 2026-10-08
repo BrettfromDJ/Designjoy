@@ -4,30 +4,6 @@
   gap: 18px;
 }
 
-.back {
-  align-self: flex-start;
-  display: inline-flex;
-  gap: 6px;
-  padding: 0;
-  background: none;
-  border: 0;
-  font-size: 13px;
-  letter-spacing: -0.39px;
-  color: var(--text-nav);
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.back:hover {
-  color: #fff;
-}
-
-/* Sits level with the close button in the corner. */
-.back {
-  height: 26px;
-  align-items: center;
-}
-
 .summary {
   display: flex;
   flex-direction: column;

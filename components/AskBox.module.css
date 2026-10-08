@@ -225,17 +225,26 @@
 
 .shell[data-view="booking"] .log,
 .shell[data-view="checkout"] .log {
-  padding: 20px;
+  padding: 12px 20px 20px;
 }
 
-/* No label there either: the close button floats in the corner. */
-.shell[data-view="booking"] .top,
-.shell[data-view="checkout"] .top {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 2;
-  padding: 20px 20px 0 0;
+/* Back to plans, in checkout's top bar. */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: 13px;
+  letter-spacing: -0.39px;
+  color: var(--text-nav);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.back:hover {
+  color: #fff;
 }
 
 .top {

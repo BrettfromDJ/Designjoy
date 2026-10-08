@@ -4,15 +4,12 @@ import { plans, type Plan } from "@/content/site";
 import { CheckoutForm } from "./CheckoutForm";
 import styles from "./CheckoutPanel.module.css";
 
-/** Checkout inside the ask box: back to plans, the plan you're buying, and payment. */
-export function CheckoutPanel({ planId, onBack }: { planId: Plan["id"]; onBack: () => void }) {
+/** Checkout inside the ask box: the plan you're buying, and payment. (Back to plans is in the panel's top bar.) */
+export function CheckoutPanel({ planId }: { planId: Plan["id"] }) {
   const plan = plans.find((p) => p.id === planId) ?? plans[0];
 
   return (
     <div className={styles.panel}>
-      <button type="button" className={styles.back} onClick={onBack}>
-        <span aria-hidden="true">←</span> Plans
-      </button>
       <div className={styles.summary}>
         <div className={styles.row}>
           <h2 className={styles.name}>

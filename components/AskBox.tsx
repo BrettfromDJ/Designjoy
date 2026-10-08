@@ -282,7 +282,17 @@ export function AskBox() {
           {open && (
             <>
               <div className={styles.top}>
-                {!BARE_VIEWS.includes(mode) && (
+                {mode === "checkout" ? (
+                  <button
+                    type="button"
+                    className={styles.back}
+                    onClick={() => setMode("pricing")}
+                  >
+                    <span aria-hidden="true">←</span> Plans
+                  </button>
+                ) : BARE_VIEWS.includes(mode) ? (
+                  <span />
+                ) : (
                   <p className={styles.label}>{VIEW_LABELS[mode]}</p>
                 )}
                 <button
@@ -304,10 +314,7 @@ export function AskBox() {
                 </div>
               ) : mode === "checkout" ? (
                 <div className={styles.log}>
-                  <CheckoutPanel
-                    planId={checkoutPlan}
-                    onBack={() => setMode("pricing")}
-                  />
+                  <CheckoutPanel planId={checkoutPlan} />
                 </div>
               ) : (
                 <div ref={logRef} className={styles.log} aria-live="polite">
