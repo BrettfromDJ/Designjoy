@@ -1,4 +1,5 @@
-/* One column, the same width as the nav and ask box (412px + 16px gutters). */
+/* Phones: one column, the same width as the nav and ask box (412px + 16px gutters).
+   Wider screens: two columns under a centred heading. */
 .page {
   /* Above the nav's shadow (but below the nav), so the shadow never darkens the text. */
   position: relative;
@@ -11,8 +12,10 @@
 .header {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
   margin-bottom: 28px;
+  text-align: center;
 }
 
 .label {
@@ -129,6 +132,25 @@
   line-height: 1.2;
   letter-spacing: -0.36px;
   color: var(--text-muted);
+}
+
+@media (min-width: 900px) {
+  .page {
+    max-width: 960px;
+    padding-top: 128px;
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  /* Two columns: calendar on the left (wider, so it has room), what to expect on the right. */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
 }
 
 @media (max-width: 559px) {

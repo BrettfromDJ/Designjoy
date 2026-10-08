@@ -1,4 +1,5 @@
-/* One column, the same width as the nav and ask box (412px + 16px gutters). */
+/* Phones: one column, the same width as the nav and ask box (412px + 16px gutters).
+   Wider screens: two columns under a centred heading. */
 .page {
   /* Above the nav's shadow (but below the nav), so the shadow never darkens the text. */
   position: relative;
@@ -11,8 +12,10 @@
 .header {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
   margin-bottom: 28px;
+  text-align: center;
 }
 
 .label {
@@ -81,6 +84,25 @@
   letter-spacing: -0.3px;
   color: var(--text-nav);
   white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .page {
+    max-width: 880px;
+    padding-top: 128px;
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  /* Two columns: plan picker on the left, testimonial and services on the right. */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
 }
 
 @media (max-width: 559px) {
