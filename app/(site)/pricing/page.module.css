@@ -1,5 +1,6 @@
+/* One column, the same width as the FAQ page. */
 .page {
-  max-width: 952px;
+  max-width: 632px;
   margin: 0 auto;
   padding: 112px 16px 140px;
 }
@@ -41,13 +42,7 @@
   color: var(--text-muted);
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
+.layout,
 .side {
   display: flex;
   flex-direction: column;
@@ -83,12 +78,6 @@
   letter-spacing: -0.3px;
   color: var(--text-nav);
   white-space: nowrap;
-}
-
-@media (max-width: 759px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 559px) {
