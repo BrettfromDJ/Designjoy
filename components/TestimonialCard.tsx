@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { testimonials, type Testimonial } from "@/content/site";
 import styles from "./TestimonialCard.module.css";
 
-const SHOW_MS = 6500;
-const TYPING_MS = 1300;
+const SHOW_MS = 4200;
+const TYPING_MS = 800;
 
 const quoted = (text: string) => `\u201c${text}\u201d`;
 
