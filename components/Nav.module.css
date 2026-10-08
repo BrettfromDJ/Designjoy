@@ -53,6 +53,7 @@
 .links {
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
   margin: 0;
@@ -86,6 +87,24 @@
   opacity: 1;
 }
 
+/* "Book a call": a white pill, tucked toward the nav's right edge. */
+.cta,
+.cta:hover {
+  height: 33px;
+  margin-right: -14px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-weight: 500;
+  opacity: 1;
+  transition: background-color 0.15s ease;
+}
+
+.cta:hover {
+  background: #e8e8e8;
+}
+
 /* Phones: span the same width as the content below (16px from each edge). */
 @media (max-width: 559px) {
   .shadow {
@@ -116,5 +135,12 @@
   .link {
     font-size: clamp(10.5px, 3.3vw, 13px);
     letter-spacing: -0.3px;
+  }
+
+  .cta,
+  .cta:hover {
+    height: 30px;
+    margin-right: 0;
+    padding: 0 clamp(8px, 2.6vw, 12px);
   }
 }

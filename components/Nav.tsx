@@ -43,9 +43,13 @@ export function Nav() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={
-                    active ? `${styles.link} ${styles.active}` : styles.link
-                  }
+                  className={[
+                    styles.link,
+                    active && styles.active,
+                    "cta" in link && link.cta && styles.cta,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   aria-current={active ? "page" : undefined}
                   onClick={
                     // FAQs, Pricing and Book a call open in the ask box, right where you are

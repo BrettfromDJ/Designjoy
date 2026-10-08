@@ -6,7 +6,8 @@ export const navLinks = [
   { label: "Home", href: "/" },
   { label: "FAQs", href: "/faqs" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Book a call", href: "/intro-call" },
+  // Shown as a white pill so it stands out as the call to action.
+  { label: "Book a call", href: "/intro-call", cta: true },
 ];
 
 export type Plan = {
