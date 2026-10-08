@@ -215,6 +215,15 @@
   display: none;
 }
 
+/* Booking is just the calendar: no ask row underneath. */
+.shell[data-view="booking"] .box {
+  display: none;
+}
+
+.shell[data-view="booking"] .log {
+  padding-bottom: 20px;
+}
+
 .top {
   display: flex;
   align-items: center;

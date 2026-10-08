@@ -27,7 +27,6 @@ const SHORT_PLACEHOLDER = "Ask about Designjoy";
 // Shown while pricing or booking is open (the short one on narrow phones).
 const VIEW_HINTS: Partial<Record<AskBoxView, string>> = {
   pricing: "Not sure which plan? Just ask",
-  booking: "Any questions first? Just ask",
 };
 const SHORT_VIEW_HINT = "Questions? Just ask";
 const VIEW_LABELS: Record<AskBoxView, string> = {
@@ -260,6 +259,7 @@ export function AskBox() {
         <div
           className={styles.shell}
           data-open={open}
+          data-view={open ? mode : undefined}
           role={open ? "dialog" : undefined}
           aria-label={
             open
