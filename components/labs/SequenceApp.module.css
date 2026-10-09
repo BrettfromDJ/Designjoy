@@ -415,36 +415,48 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
 }
 
-.drop {
+.artboard {
+  position: relative;
   display: grid;
-  justify-items: center;
-  gap: 10px;
-  width: min(440px, 100%);
-  padding: 72px 24px;
-  background: rgba(10, 10, 10, 0.8);
-  border: 1px dashed var(--line-strong);
-  border-radius: 12px;
-  color: var(--text);
-  cursor: pointer;
-  transition: border-color 0.15s ease;
-}
-
-.drop:hover {
-  border-color: var(--text-nav);
-}
-
-.dropTitle {
-  font-family: var(--font-display);
-  font-size: 20px;
-  letter-spacing: -0.6px;
-}
-
-.dropHint {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  place-items: center;
+  width: min(560px, 100%);
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
   color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.artboard:hover,
+.app[data-dropping] .artboard {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.artboardLabel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.artboardHint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.artboard:hover .artboardHint {
+  color: var(--text-nav);
 }
 
 .segs {

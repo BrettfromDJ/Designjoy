@@ -441,12 +441,13 @@ export function SequenceApp() {
         </div>
         <div className={styles.stage}>
           {empty ? (
-            <button type="button" className={styles.drop} onClick={() => inputRef.current?.click()}>
-              <span className={styles.dropTitle}>Drop images anywhere</span>
-              <span className={styles.dropHint}>
-                or click to choose, or paste with <kbd>⌘</kbd>
-                <kbd>V</kbd>
+            // An empty artboard, labelled like a frame in a design tool.
+            <button type="button" className={styles.artboard} onClick={() => inputRef.current?.click()}>
+              <span className={styles.artboardLabel}>
+                <span>{fileName}</span>
+                <span>{size === "original" ? "Original" : `${size} × —`}</span>
               </span>
+              <span className={styles.artboardHint}>Drop, paste or click to add images</span>
             </button>
           ) : (
             <canvas ref={canvasRef} className={styles.canvas} />
