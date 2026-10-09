@@ -139,13 +139,32 @@
 
 /* The delivered design, on the card. */
 .thumb {
+  position: relative;
   height: 0;
   overflow: hidden;
   border-radius: 5px;
-  background: repeating-linear-gradient(135deg, #2c2c2c 0 6px, #232323 6px 12px);
   transition:
     height 0.4s ease,
     margin-top 0.4s ease;
+}
+
+/* The stripes drift slowly sideways. One stripe repeat is 12px across the
+   diagonal, so 12√2 ≈ 16.97px along the x axis loops seamlessly. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -17px;
+  right: 0;
+  background: repeating-linear-gradient(135deg, #2c2c2c 0 6px, #232323 6px 12px);
+  animation: stripes 1.4s linear infinite;
+}
+
+@keyframes stripes {
+  to {
+    transform: translateX(16.97px);
+  }
 }
 
 .card.done .thumb {
