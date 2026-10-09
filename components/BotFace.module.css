@@ -35,20 +35,10 @@
   transition: transform 0.25s ease;
 }
 
-/* Happy, squinting eyes and a wider smile while hovered. */
+/* Happy, squinting eyes while hovered. */
 .wrap[data-excited="true"] .eyes {
   animation: none;
   transform: translateY(0.8px) scaleY(0.55);
-}
-
-.smile {
-  transform-box: fill-box;
-  transform-origin: center top;
-  transition: transform 0.25s ease;
-}
-
-.wrap[data-excited="true"] .smile {
-  transform: scale(1.12, 1.2);
 }
 
 /* While an answer is coming in, the bot glances up and around as if thinking. */
@@ -80,8 +70,7 @@
 @media (prefers-reduced-motion: reduce) {
   .bot,
   .face,
-  .eyes,
-  .smile {
+  .eyes {
     transition: none;
   }
   .eyes,
