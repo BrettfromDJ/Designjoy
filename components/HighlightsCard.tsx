@@ -5,7 +5,9 @@ import { HighlightIconSvg, type Highlight } from "@/lib/highlight-icons";
 import styles from "./HighlightsCard.module.css";
 
 const SHOW_MS = 3600;
-const SEAL_TEXT = "AWARD-WINNING DESIGN · DESIGNJOY · AWARD-WINNING DESIGN · DESIGNJOY · ";
+// Said twice, and spaced to fill the ring exactly once (2π × 44 ≈ 276).
+const SEAL_TEXT = "BUILT WITH DESIGNJOY · BUILT WITH DESIGNJOY · ";
+const RING_LENGTH = 276;
 
 /**
  * Highlights: a slowly turning seal with the award's icon in the middle,
@@ -40,7 +42,9 @@ export function HighlightsCard({ highlights }: { highlights: Highlight[] }) {
           </defs>
           <circle cx="56" cy="56" r="54" fill="none" stroke="rgba(255,255,255,0.14)" />
           <text className={styles.ringText}>
-            <textPath href="#highlights-seal-path">{SEAL_TEXT}</textPath>
+            <textPath href="#highlights-seal-path" textLength={RING_LENGTH} lengthAdjust="spacing">
+              {SEAL_TEXT}
+            </textPath>
           </text>
         </svg>
         {/* Keyed, so each icon animates in fresh. */}

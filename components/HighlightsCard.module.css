@@ -33,7 +33,6 @@
 .ringText {
   font-family: var(--font-mono);
   font-size: 8.5px;
-  letter-spacing: 3px;
   fill: var(--text-muted);
 }
 
