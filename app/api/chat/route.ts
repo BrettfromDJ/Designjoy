@@ -1,5 +1,7 @@
+import { after } from "next/server";
 import { faqs } from "@/content/site";
-import { BILLING_TAG, BOOK_CALL_TAG } from "@/lib/chat";
+import { BILLING_TAG, BOOK_CALL_TAG, parseAnswer } from "@/lib/chat";
+import { logQuestion, pageFrom } from "@/lib/questions";
 
 const PLANS_TAG = "[plans]";
 const HOW_IT_WORKS_TAG = "[how-it-works]";
@@ -45,16 +47,32 @@ function parseMessages(body: unknown): Message[] | null {
 
 export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
+  const messages = parseMessages(await request.json().catch(() => null));
+  if (!messages) {
+    return Response.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  // Log the visitor's question with the answer, once the answer has finished.
+  const question = messages[messages.length - 1];
+  const page = pageFrom(request);
+  let finished: (answer: string) => void = () => {};
+  const answered = new Promise<string>((resolve) => {
+    finished = resolve;
+    // If the visitor leaves mid-answer the stream never finishes; log anyway.
+    setTimeout(() => resolve("(The answer was cut off.)"), 60_000);
+  });
+  if (question.role === "user") {
+    after(async () =>
+      logQuestion({ question: question.content, answer: await answered, source: "typed", page }),
+    );
+  }
+
   if (!apiKey) {
+    finished("(Chat isn't connected, so no answer was given.)");
     return Response.json(
       { error: "Chat isn't connected yet — please book an intro call with any questions.", bookCall: true },
       { status: 503 },
     );
-  }
-
-  const messages = parseMessages(await request.json().catch(() => null));
-  if (!messages) {
-    return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
   const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -71,6 +89,7 @@ export async function POST(request: Request) {
   });
 
   if (!upstream.ok || !upstream.body) {
+    finished("(The chat failed to answer.)");
     console.error("OpenAI error", upstream.status, await upstream.text().catch(() => ""));
     return Response.json(
       { error: "Sorry, I couldn't answer that right now. Please try again." },
@@ -82,6 +101,7 @@ export async function POST(request: Request) {
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
   let buffer = "";
+  let answer = "";
   const stream = upstream.body.pipeThrough(
     new TransformStream<Uint8Array, Uint8Array>({
       transform(chunk, controller) {
@@ -93,11 +113,17 @@ export async function POST(request: Request) {
           if (!data || data === "[DONE]" || !line.startsWith("data: ")) continue;
           try {
             const text = JSON.parse(data).choices?.[0]?.delta?.content;
-            if (text) controller.enqueue(encoder.encode(text));
+            if (text) {
+              answer += text;
+              controller.enqueue(encoder.encode(text));
+            }
           } catch {
             // Ignore keep-alives and partial frames.
           }
         }
+      },
+      flush() {
+        finished(parseAnswer(answer).text);
       },
     }),
   );

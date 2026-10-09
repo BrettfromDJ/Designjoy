@@ -204,6 +204,13 @@ export function AskBox() {
     ];
     setMessages([...history, { role: "assistant", content: "", typing: true }]);
     setPending(true);
+    // Log the tap for /admin/questions (typed questions are logged by the chat API).
+    fetch("/api/questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: faq.question }),
+      keepalive: true,
+    }).catch(() => {});
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;

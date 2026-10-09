@@ -8,6 +8,7 @@ import { MAX_KNOWLEDGE_LENGTH, saveKnowledge } from "@/lib/knowledge";
 import { HIGHLIGHT_ICON_NAMES, MAX_HIGHLIGHTS, type Highlight } from "@/lib/highlight-icons";
 import { getHighlights, saveHighlights } from "@/lib/highlights";
 import { getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
+import { clearQuestions } from "@/lib/questions";
 
 async function requireAdmin() {
   if (!(await isAdmin())) throw new Error("Not signed in.");
@@ -103,4 +104,10 @@ export async function updateHighlights(input: Highlight[]) {
   revalidatePath("/");
   revalidatePath("/admin/highlights");
   return clean;
+}
+
+export async function clearQuestionLog() {
+  await requireAdmin();
+  await clearQuestions();
+  revalidatePath("/admin/questions");
 }
