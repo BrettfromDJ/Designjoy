@@ -17,6 +17,24 @@
   letter-spacing: -0.66px;
 }
 
+/* On load, each line rises out of a soft blur; the second just after the first. */
+.line {
+  display: inline-block;
+  animation: line-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.line + br + .line {
+  animation-delay: 0.18s;
+}
+
+@keyframes line-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(8px);
+  }
+}
+
 @media (max-width: 559px) {
   .title {
     font-size: 27px;
@@ -191,6 +209,42 @@
   line-height: 1.2;
   letter-spacing: -0.36px;
   color: var(--text-muted);
+}
+
+/* After switching plans, the list re-checks one item at a time. */
+.features[data-cascade] li {
+  animation: item-in 0.4s ease both;
+  animation-delay: calc(var(--i) * 60ms);
+}
+
+.features[data-cascade] li path {
+  stroke-dasharray: 1;
+  animation: tick 0.35s ease-out both;
+  animation-delay: calc(var(--i) * 60ms + 120ms);
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes tick {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .features[data-cascade] li,
+  .features[data-cascade] li path {
+    animation: none;
+  }
 }
 
 .actions {

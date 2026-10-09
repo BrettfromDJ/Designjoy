@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { clientLogos, plans, type Plan } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { startCheckout } from "@/lib/checkout";
@@ -11,6 +11,8 @@ import styles from "./PricingCard.module.css";
 export function PricingCard() {
   const [planId, setPlanId] = useState<Plan["id"]>(plans[0].id);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  // The checklist only cascades in after a switch, not on first load.
+  const [switched, setSwitched] = useState(false);
   const plan = plans.find((p) => p.id === planId) ?? plans[0];
 
   async function subscribe() {
@@ -25,9 +27,9 @@ export function PricingCard() {
   return (
     <section className={styles.card} aria-labelledby="pricing-title">
       <h2 id="pricing-title" className={styles.title}>
-        One subscription.
+        <span className={styles.line}>One subscription.</span>
         <br />
-        <span className={styles.muted}>Endless possibilities.</span>
+        <span className={`${styles.line} ${styles.muted}`}>Endless possibilities.</span>
       </h2>
       <p className={styles.subtitle}>Pause or cancel anytime.</p>
 
@@ -47,6 +49,7 @@ export function PricingCard() {
               onChange={() => {
                 setPlanId(p.id);
                 setStatus("idle");
+                setSwitched(true);
               }}
               className={styles.radio}
             />
@@ -76,9 +79,9 @@ export function PricingCard() {
       </fieldset>
 
       <p className={styles.includedLabel}>Included in {plan.name}</p>
-      <ul className={styles.features}>
-        {plan.features.map((feature) => (
-          <li key={feature}>
+      <ul key={plan.id} className={styles.features} data-cascade={switched || undefined}>
+        {plan.features.map((feature, i) => (
+          <li key={feature} style={{ "--i": i } as CSSProperties}>
             <CheckIcon />
             {feature}
           </li>
