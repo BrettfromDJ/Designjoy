@@ -4,7 +4,7 @@ export type Fit = "fill" | "fit";
 export type Quality = "high" | "medium" | "low";
 
 /** Colors per frame and pixel format for each quality level. */
-const QUALITY: Record<Quality, { colors: number; format: "rgb565" | "rgb444" }> = {
+export const QUALITY: Record<Quality, { colors: number; format: "rgb565" | "rgb444" }> = {
   high: { colors: 256, format: "rgb565" },
   medium: { colors: 128, format: "rgb565" },
   low: { colors: 48, format: "rgb444" },
@@ -54,7 +54,8 @@ export async function encodeGif({
   quality: Quality;
   fit: Fit;
   background: string;
-  onProgress?: (done: number) => void;
+  /** Called after each frame with how long it took to encode, in ms. */
+  onProgress?: (done: number, ms: number) => void;
 }) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -65,12 +66,13 @@ export async function encodeGif({
   const { colors, format } = QUALITY[quality];
   const gif = GIFEncoder();
   for (let i = 0; i < images.length; i++) {
+    const started = performance.now();
     drawFrame(ctx, images[i], width, height, fit, background);
     const { data } = ctx.getImageData(0, 0, width, height);
     const palette = quantize(data, colors, { format });
     const index = applyPalette(data, palette, format);
     gif.writeFrame(index, width, height, { palette, delay, repeat: loop ? 0 : -1 });
-    onProgress?.(i + 1);
+    onProgress?.(i + 1, performance.now() - started);
     // Let the page repaint the progress bar between frames.
     await new Promise((resolve) => setTimeout(resolve, 0));
   }
