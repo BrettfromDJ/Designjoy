@@ -251,6 +251,17 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
       <p className={styles.note}>
         Billed monthly. Pause or cancel anytime. Payments are secured by Stripe.
       </p>
+      <p className={styles.legal}>
+        By subscribing, you agree to our{" "}
+        <a href="/terms" target="_blank" rel="noopener">
+          Terms
+        </a>{" "}
+        and{" "}
+        <a href="/privacy" target="_blank" rel="noopener">
+          Privacy Policy
+        </a>
+        .
+      </p>
     </form>
   );
 }

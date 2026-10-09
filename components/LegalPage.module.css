@@ -1,0 +1,127 @@
+/* A comfortable reading column: wider than the 412px pages, still narrow. */
+.page {
+  /* Above the nav's shadow (but below the nav), so the shadow never darkens the text. */
+  position: relative;
+  z-index: 2;
+  max-width: 672px;
+  margin: 0 auto;
+  padding: 128px 16px 140px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.84px;
+}
+
+.updated {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-card);
+}
+
+.intro {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+.section h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+.section p,
+.section li {
+  font-size: 14px;
+  line-height: 1.65;
+  letter-spacing: -0.2px;
+  color: var(--text-nav);
+}
+
+.section p {
+  margin: 0 0 10px;
+}
+
+.section p:last-child {
+  margin-bottom: 0;
+}
+
+.section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding-left: 18px;
+}
+
+.section ul:last-child {
+  margin-bottom: 0;
+}
+
+.section li::marker {
+  color: var(--text-muted);
+}
+
+.more {
+  margin: 20px 0 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.more a {
+  color: var(--text-nav);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 559px) {
+  .page {
+    padding-top: 96px;
+  }
+
+  .card {
+    padding: 22px 20px;
+    gap: 24px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}

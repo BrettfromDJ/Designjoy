@@ -143,6 +143,20 @@
   color: var(--text-muted);
 }
 
+.legal {
+  margin: -6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.legal a {
+  color: var(--text-nav);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 @media (max-width: 420px) {
   .row {
     grid-template-columns: 1fr;

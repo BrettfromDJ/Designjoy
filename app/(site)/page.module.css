@@ -1,0 +1,20 @@
+/* Small links under the grid, tucked into the space the grid leaves for the
+   ask box, so they sit just above it at the end of the page. */
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: -84px;
+  padding-bottom: 104px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.footer a {
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.footer a:hover {
+  color: var(--text);
+}
