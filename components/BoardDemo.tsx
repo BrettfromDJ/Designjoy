@@ -89,8 +89,10 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
           `<div class="${styles.thumb}"></div>` +
           `<div class="${styles.bars}"><b></b><b></b></div>` +
           `<div class="${styles.meta}"><span class="${styles.tag}">In review</span>` +
+          `<span class="${styles.status}"><i></i>Designing</span>` +
           `<span class="${styles.comments}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1.5h8v5.2H4.2L2 8.6V6.7H1z" fill="none" stroke="currentColor"/></svg> <span data-count>1</span></span>` +
-          `<span class="${styles.avatar}"></span></div>`,
+          `<span class="${styles.avatar}"></span></div>` +
+          `<div class="${styles.progress}"><b></b></div>`,
       );
       stage.append(node);
       cardEls[id] = node;
@@ -140,7 +142,10 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     const reset = () => {
       cols = { backlog: [], current: [], approved: [] };
       for (const node of Object.values(cardEls)) {
-        node.classList.remove(styles.done, styles.review, styles.chat, styles.lift);
+        node.classList.remove(styles.done, styles.review, styles.chat, styles.lift, styles.working);
+        const bar = node.querySelector<HTMLElement>(`.${styles.progress} b`)!;
+        bar.style.transition = "none";
+        bar.style.transform = "scaleX(0)";
         node.querySelector("[data-count]")!.textContent = "1";
       }
       ask.classList.remove(styles.on);
@@ -176,6 +181,27 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       setCursor(end.x + 150, end.y + 90, false);
     };
 
+    // While a card is the current request, it shows work in progress: a
+    // status, a sweep of light, and a bar that fills as the design comes on.
+    const startWork = (id: string) => {
+      const card = cardEls[id];
+      const bar = card.querySelector<HTMLElement>(`.${styles.progress} b`)!;
+      card.classList.add(styles.working);
+      bar.style.transition = "none";
+      bar.style.transform = "scaleX(0)";
+      void bar.offsetWidth;
+      bar.style.transition = "transform 3.4s cubic-bezier(0.25, 0.6, 0.3, 1)";
+      bar.style.transform = "scaleX(0.86)";
+      layout();
+    };
+    const finishWork = async (id: string) => {
+      const bar = cardEls[id].querySelector<HTMLElement>(`.${styles.progress} b`)!;
+      bar.style.transition = "transform 0.45s ease-out";
+      bar.style.transform = "scaleX(1)";
+      await wait(550);
+      cardEls[id].classList.remove(styles.working);
+    };
+
     const steps: (() => Promise<void> | void)[] = [
       async () => {
         reset();
@@ -187,8 +213,13 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
           await wait(450);
         }
       },
-      () => drag("landing", "current"),
       async () => {
+        await drag("landing", "current");
+        startWork("landing");
+      },
+      async () => {
+        await wait(400);
+        await finishWork("landing");
         cardEls.landing.classList.add(styles.done, styles.review);
         await wait(450);
         layout();
@@ -213,7 +244,10 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
         layout();
         await drag("landing", "approved");
       },
-      () => drag("deck", "current"),
+      async () => {
+        await drag("deck", "current");
+        startWork("deck");
+      },
     ];
 
     const run = (i: number) => {

@@ -200,6 +200,80 @@
   display: block;
 }
 
+/* Work in progress on the current request. */
+.status,
+.progress {
+  display: none;
+}
+
+.card.working .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text);
+}
+
+.status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.card.working .progress {
+  display: block;
+  height: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #262626;
+}
+
+.progress b {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* A soft band of light sweeps across the card while it's being designed. */
+.card.working {
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.card.working::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.06) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: sweep 1.6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.card.working .bars b {
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.card.working .bars b:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
 .bubble {
   position: absolute;
   padding: 6px 9px;
@@ -251,7 +325,81 @@
   .card,
   .cursor,
   .thumb,
-  .bubble {
+  /* Work in progress on the current request. */
+.status,
+.progress {
+  display: none;
+}
+
+.card.working .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text);
+}
+
+.status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.card.working .progress {
+  display: block;
+  height: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #262626;
+}
+
+.progress b {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* A soft band of light sweeps across the card while it's being designed. */
+.card.working {
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.card.working::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.06) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: sweep 1.6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.card.working .bars b {
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.card.working .bars b:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.bubble {
     transition: none;
   }
 }
