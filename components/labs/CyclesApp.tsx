@@ -397,7 +397,12 @@ export function CyclesApp() {
                   +
                 </button>
                 {[2, 3, 4].map((n) => (
-                  <span key={n} className={styles.tile} aria-hidden="true">
+                  <span
+                    key={n}
+                    className={styles.tile}
+                    style={{ "--i": n - 1 } as React.CSSProperties}
+                    aria-hidden="true"
+                  >
                     <span className={styles.tileNumber}>{pad(n)}</span>
                   </span>
                 ))}
