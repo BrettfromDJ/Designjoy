@@ -1,5 +1,4 @@
 import { MasonryGrid } from "@/components/MasonryGrid";
-import { Splash } from "@/components/Splash";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getProjects } from "@/lib/projects";
 import Link from "next/link";
@@ -23,7 +22,6 @@ export default async function Home() {
 
   return (
     <main>
-      <Splash />
       <h1 className="visually-hidden">Designjoy</h1>
       <MasonryGrid work={work} />
       <footer className={styles.footer}>
