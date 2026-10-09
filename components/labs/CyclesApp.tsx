@@ -72,8 +72,7 @@ export function CyclesApp() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const rowsRef = useRef<HTMLOListElement>(null);
-  const segsRef = useRef<HTMLDivElement>(null);
+  const trayRef = useRef<HTMLOListElement>(null);
   const clockRef = useRef<HTMLSpanElement>(null);
   const startRef = useRef(0);
   const framesRef = useRef(frames);
@@ -111,7 +110,7 @@ export function CyclesApp() {
       const index = Math.floor(elapsed / ms);
       const progress = (elapsed % ms) / ms;
       setCurrent((c) => (c === index ? c : index));
-      segsRef.current?.querySelectorAll<HTMLElement>("b").forEach((bar, i) => {
+      trayRef.current?.querySelectorAll<HTMLElement>("[data-progress]").forEach((bar, i) => {
         bar.style.transform = `scaleX(${i < index ? 1 : i === index ? progress : 0})`;
       });
       if (clockRef.current) clockRef.current.textContent = `${timecode(elapsed)} / ${timecode(total)}`;
@@ -239,12 +238,12 @@ export function CyclesApp() {
 
   const isFileDrag = (e: DragEvent) => e.dataTransfer.types.includes("Files");
 
-  function onRowKey(e: KeyboardEvent<HTMLLIElement>, index: number, id: string) {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+  function onTileKey(e: KeyboardEvent<HTMLLIElement>, index: number, id: string) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       e.preventDefault();
-      move(index, index + (e.key === "ArrowUp" ? -1 : 1));
+      move(index, index + (e.key === "ArrowLeft" ? -1 : 1));
       requestAnimationFrame(() =>
-        rowsRef.current?.querySelector<HTMLElement>(`[data-id="${id}"]`)?.focus(),
+        trayRef.current?.querySelector<HTMLElement>(`[data-id="${id}"]`)?.focus(),
       );
     } else if (e.key === "Backspace" || e.key === "Delete") {
       e.preventDefault();
@@ -335,105 +334,18 @@ export function CyclesApp() {
         </div>
       </header>
 
-      {/* Frames */}
-      <aside className={styles.left} aria-label="Frames">
+      {/* Canvas */}
+      <main className={styles.center}>
         <div className={styles.bar}>
-          <span className={styles.barTitle}>
-            Frames <span className={styles.mono}>{frames.length}</span>
-          </span>
-          <span className={styles.barActions}>
+          <span className={styles.barLeft}>
+            <span className={styles.mono}>
+              {empty ? "No frames" : `Frame ${pad(current + 1)} / ${pad(frames.length)}`}
+            </span>
             {!empty && (
               <button type="button" className={styles.ghost} onClick={clearAll}>
                 Clear
               </button>
             )}
-            <button type="button" className={styles.ghost} onClick={() => inputRef.current?.click()}>
-              + Add
-            </button>
-          </span>
-        </div>
-        {empty ? (
-          <p className={styles.emptyList}>No frames yet.</p>
-        ) : (
-          <ol className={styles.rows} ref={rowsRef}>
-            {frames.map((frame, i) => (
-              <li
-                key={frame.id}
-                data-id={frame.id}
-                className={styles.row}
-                data-current={i === current || undefined}
-                data-dragging={draggingId === frame.id || undefined}
-                tabIndex={0}
-                aria-label={`Frame ${i + 1}, ${frame.name}. Up and down arrows move it, Delete removes it.`}
-                draggable
-                onClick={() => jumpTo(i)}
-                onDragStart={(e) => {
-                  e.dataTransfer.effectAllowed = "move";
-                  e.dataTransfer.setData("text/plain", frame.id);
-                  setDraggingId(frame.id);
-                }}
-                onDragOver={(e) => {
-                  if (!draggingId) return;
-                  e.preventDefault();
-                  const from = frames.findIndex((f) => f.id === draggingId);
-                  if (from !== i) move(from, i);
-                }}
-                onDrop={(e) => {
-                  if (draggingId) e.preventDefault();
-                }}
-                onDragEnd={() => setDraggingId(null)}
-                onKeyDown={(e) => onRowKey(e, i, frame.id)}
-              >
-                <span className={styles.grip} aria-hidden="true">
-                  ⋮⋮
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={frame.url} alt="" draggable={false} />
-                <span className={styles.rowName}>
-                  {frame.name}
-                  <span className={styles.mono}>
-                    {frame.img.naturalWidth} × {frame.img.naturalHeight}
-                  </span>
-                </span>
-                <span className={styles.rowEnd}>
-                  <span className={styles.mono}>{ms}ms</span>
-                  <button
-                    type="button"
-                    className={styles.remove}
-                    aria-label={`Remove frame ${i + 1}`}
-                    tabIndex={-1}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      remove(frame.id);
-                    }}
-                  >
-                    ×
-                  </button>
-                </span>
-              </li>
-            ))}
-          </ol>
-        )}
-        <div className={styles.keys}>
-          <span>
-            <kbd>⌘</kbd>
-            <kbd>V</kbd> paste
-          </span>
-          <span>
-            <kbd>↑</kbd>
-            <kbd>↓</kbd> move
-          </span>
-          <span>
-            <kbd>⌫</kbd> remove
-          </span>
-        </div>
-      </aside>
-
-      {/* Canvas */}
-      <main className={styles.center}>
-        <div className={styles.bar}>
-          <span className={styles.mono}>
-            {empty ? "No frames" : `Frame ${pad(current + 1)} / ${pad(frames.length)}`}
           </span>
           <span className={styles.mono} ref={clockRef}>
             {timecode(0)} / {timecode(total)}
@@ -463,13 +375,70 @@ export function CyclesApp() {
           ) : (
             <canvas ref={canvasRef} className={styles.canvas} />
           )}
-        </div>
-        <div className={styles.segs} ref={segsRef} aria-hidden="true">
-          {frames.map((f, i) => (
-            <button key={f.id} type="button" tabIndex={-1} onClick={() => jumpTo(i)}>
-              <b />
-            </button>
-          ))}
+
+          {/* The frames, in a floating tray like the homepage ask bar. */}
+          {!empty && (
+            <div className={styles.trayWrap}>
+              <ol className={styles.tray} ref={trayRef} aria-label="Frames">
+                <li>
+                  <button
+                    type="button"
+                    className={`${styles.tile} ${styles.addTile}`}
+                    aria-label="Add images"
+                    onClick={() => inputRef.current?.click()}
+                  >
+                    +
+                  </button>
+                </li>
+                {frames.map((frame, i) => (
+                  <li
+                    key={frame.id}
+                    data-id={frame.id}
+                    className={styles.tile}
+                    data-current={i === current || undefined}
+                    data-dragging={draggingId === frame.id || undefined}
+                    tabIndex={0}
+                    aria-label={`Frame ${i + 1}, ${frame.name}. Left and right arrows move it, Delete removes it.`}
+                    draggable
+                    onClick={() => jumpTo(i)}
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = "move";
+                      e.dataTransfer.setData("text/plain", frame.id);
+                      setDraggingId(frame.id);
+                    }}
+                    onDragOver={(e) => {
+                      if (!draggingId) return;
+                      e.preventDefault();
+                      const from = frames.findIndex((f) => f.id === draggingId);
+                      if (from !== i) move(from, i);
+                    }}
+                    onDrop={(e) => {
+                      if (draggingId) e.preventDefault();
+                    }}
+                    onDragEnd={() => setDraggingId(null)}
+                    onKeyDown={(e) => onTileKey(e, i, frame.id)}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={frame.url} alt="" draggable={false} />
+                    <span className={styles.tileIndex}>{pad(i + 1)}</span>
+                    <button
+                      type="button"
+                      className={styles.remove}
+                      aria-label={`Remove frame ${i + 1}`}
+                      tabIndex={-1}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        remove(frame.id);
+                      }}
+                    >
+                      ×
+                    </button>
+                    <span className={styles.tileProgress} data-progress aria-hidden="true" />
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </div>
       </main>
 

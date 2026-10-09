@@ -10,7 +10,7 @@
   position: fixed;
   inset: 0;
   display: grid;
-  grid-template-columns: 264px minmax(0, 1fr) 280px;
+  grid-template-columns: minmax(0, 1fr) 280px;
   grid-template-rows: 48px minmax(0, 1fr);
   background: #000;
   color: var(--text);
@@ -195,7 +195,6 @@
 }
 
 /* ---------- Panels ---------- */
-.left,
 .right,
 .center {
   display: flex;
@@ -204,13 +203,8 @@
   min-height: 0;
 }
 
-.left,
 .right {
   background: var(--panel);
-}
-
-.left {
-  border-right: 1px solid var(--line);
 }
 
 .right {
@@ -240,12 +234,6 @@
   text-overflow: ellipsis;
 }
 
-.barActions {
-  display: flex;
-  gap: 2px;
-  margin-right: -6px;
-}
-
 .ghost {
   padding: 4px 8px;
   background: none;
@@ -261,140 +249,19 @@
   color: var(--text);
 }
 
-/* ---------- Frames list ---------- */
-.emptyList {
-  flex: 1;
-  margin: 0;
-  padding: 16px 14px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--text-muted);
-}
-
-.rows {
-  flex: 1;
-  overflow: auto;
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 10px 44px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  height: 46px;
-  padding: 0 8px;
-  border-radius: 6px;
-  cursor: grab;
-  outline: none;
-}
-
-.row:hover {
-  background: var(--hover);
-}
-
-.row[data-current] {
-  background: var(--selected);
-}
-
-.row:focus-visible {
-  box-shadow: inset 0 0 0 1px var(--text-nav);
-}
-
-.row[data-dragging] {
-  opacity: 0.35;
-}
-
-.grip {
-  font-size: 10px;
-  letter-spacing: -2px;
-  color: #444;
-}
-
-.row img {
-  display: block;
-  width: 44px;
-  height: 32px;
-  object-fit: cover;
-  border-radius: 3px;
-  background: #111;
-  pointer-events: none;
-}
-
-.rowName {
-  overflow: hidden;
-  font-size: 12px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.rowName .mono {
-  display: block;
-  margin-top: 1px;
-}
-
-.rowEnd {
-  position: relative;
-  display: grid;
-  justify-items: end;
-}
-
-.row[data-current] .rowEnd .mono {
-  color: var(--text);
-}
-
-.remove {
-  position: absolute;
-  inset: 50% 0 auto auto;
-  translate: 0 -50%;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  background: #262626;
-  border: 0;
-  border-radius: 6px;
-  font-size: 14px;
-  line-height: 1;
-  color: var(--text);
-  cursor: pointer;
-  opacity: 0;
-}
-
-.row:hover .remove {
-  opacity: 1;
-}
-
-@media (hover: none) {
-  .remove {
-    opacity: 1;
-  }
-}
-
-.keys {
-  flex: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  padding: 12px 14px;
-  border-top: 1px solid var(--line);
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.keys span {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
 /* ---------- Canvas ---------- */
 .center .bar {
   background: #050505;
 }
 
+.barLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .stage {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: grid;
@@ -496,6 +363,156 @@
   color: var(--text-muted);
 }
 
+/* ---------- Frames tray ---------- */
+.stage:has(.trayWrap) {
+  /* Room for the tray, so it never covers the preview. */
+  padding-bottom: 148px;
+}
+
+.trayWrap {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 48px);
+  background: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  box-shadow: var(--shadow-float);
+}
+
+/* The ask bar's travelling glow round the edge. */
+.trayWrap::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    transparent 160deg,
+    var(--glow) 250deg,
+    transparent 340deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.45;
+  animation: tray-glow 9s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes tray-glow {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+.tray {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 6px;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.tray::-webkit-scrollbar {
+  display: none;
+}
+
+.tray .tile {
+  width: 84px;
+  flex: none;
+  cursor: grab;
+  outline: none;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.tray .tile::after {
+  display: none;
+}
+
+.tray .tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.tray .tile[data-current] {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.tray .tile[data-dragging] {
+  opacity: 0.3;
+}
+
+.tray .tile:focus-visible {
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.tray .addTile {
+  width: 84px;
+  font-size: 20px;
+}
+
+.tileIndex {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text);
+}
+
+.tileProgress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.75);
+  border: 0;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.tile:hover .remove {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .remove {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 559px) {
   .tiles {
     gap: 6px;
@@ -507,48 +524,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tile::after {
+  .tile::after,
+  .trayWrap::before {
     animation: none;
   }
-}
-
-.segs {
-  flex: none;
-  display: flex;
-  gap: 3px;
-  padding: 0 14px 14px;
-  background: #050505;
-}
-
-.segs button {
-  position: relative;
-  flex: 1;
-  height: 10px;
-  padding: 4px 0;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-.segs button::before,
-.segs b {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 4px;
-  height: 2px;
-  border-radius: 2px;
-}
-
-.segs button::before {
-  background: var(--line-strong);
-}
-
-.segs b {
-  background: #fff;
-  transform: scaleX(0);
-  transform-origin: left;
 }
 
 /* ---------- Inspector ---------- */
@@ -808,18 +787,23 @@
     padding: 20px;
   }
 
-  .left,
   .right {
     border: 0;
     border-top: 1px solid var(--line);
   }
 
-  .rows {
-    max-height: 320px;
+  .stage:has(.trayWrap) {
+    padding-bottom: 120px;
   }
 
-  .keys {
-    display: none;
+  .trayWrap {
+    bottom: 12px;
+    max-width: calc(100% - 24px);
+  }
+
+  .tray .tile,
+  .tray .addTile {
+    width: 68px;
   }
 }
 
