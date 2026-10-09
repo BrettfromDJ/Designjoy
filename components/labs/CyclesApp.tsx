@@ -11,7 +11,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { QUALITY, drawFrame, encodeGif, type Fit, type Quality } from "@/lib/labs/gif";
-import styles from "./CycleApp.module.css";
+import styles from "./CyclesApp.module.css";
 
 type Frame = { id: string; name: string; url: string; img: HTMLImageElement };
 type Size = "480" | "800" | "1080" | "original";
@@ -55,7 +55,7 @@ function timecode(ms: number) {
   return `${pad(Math.floor(s / 60))}:${pad(s % 60)}.${String(Math.floor(ms % 1000)).padStart(3, "0")}`;
 }
 
-export function CycleApp() {
+export function CyclesApp() {
   const [frames, setFrames] = useState<Frame[]>([]);
   const [ms, setMs] = useState(1000);
   const [size, setSize] = useState<Size>("original");
@@ -63,7 +63,7 @@ export function CycleApp() {
   const [fit, setFit] = useState<Fit>("fill");
   const [background, setBackground] = useState("#000000");
   const [loop, setLoop] = useState(true);
-  const [name, setName] = useState("cycle");
+  const [name, setName] = useState("cycles");
   const [current, setCurrent] = useState(0);
   const [build, setBuild] = useState<Build>({ state: "idle" });
   const [notice, setNotice] = useState<string | null>(null);
@@ -89,7 +89,7 @@ export function CycleApp() {
   }, [frames, size]);
 
   const total = frames.length * ms;
-  const fileName = `${name.trim() || "cycle"}.gif`;
+  const fileName = `${name.trim() || "cycles"}.gif`;
 
   // Any change makes the last export stale.
   useEffect(() => {
@@ -282,7 +282,7 @@ export function CycleApp() {
     >
       <input
         ref={inputRef}
-        id="cycle-files"
+        id="cycles-files"
         type="file"
         accept="image/*"
         multiple
@@ -304,7 +304,7 @@ export function CycleApp() {
             Labs
           </Link>
           <span className={styles.slash}>/</span>
-          <span className={styles.crumbCurrent}>Cycle</span>
+          <span className={styles.crumbCurrent}>Cycles</span>
         </div>
         <label className={styles.fileName}>
           <span className="visually-hidden">File name</span>
@@ -312,7 +312,7 @@ export function CycleApp() {
           <span className={styles.sizer}>
             <span aria-hidden="true">{name || " "}</span>
             <input
-              id="cycle-name"
+              id="cycles-name"
               value={name}
               onChange={(e) => setName(e.target.value.replace(/[\\/:*?"<>|]/g, ""))}
               spellCheck={false}
@@ -472,13 +472,13 @@ export function CycleApp() {
           <section className={styles.section}>
             <h2 className={styles.label}>Timing</h2>
             <div className={styles.prop}>
-              <label htmlFor="cycle-ms">Frame</label>
+              <label htmlFor="cycles-ms">Frame</label>
               <span className={styles.stepper}>
                 <button type="button" aria-label="Shorter" onClick={() => setDuration(ms - 100)}>
                   −
                 </button>
                 <input
-                  id="cycle-ms"
+                  id="cycles-ms"
                   inputMode="numeric"
                   value={ms}
                   onChange={(e) => {
@@ -498,8 +498,8 @@ export function CycleApp() {
               <span className={styles.value}>{(total / 1000).toFixed(1)} s</span>
             </div>
             <div className={styles.prop}>
-              <label htmlFor="cycle-loop">Loop</label>
-              <select id="cycle-loop" value={loop ? "forever" : "once"} onChange={(e) => setLoop(e.target.value === "forever")}>
+              <label htmlFor="cycles-loop">Loop</label>
+              <select id="cycles-loop" value={loop ? "forever" : "once"} onChange={(e) => setLoop(e.target.value === "forever")}>
                 <option value="forever">∞ Forever</option>
                 <option value="once">Play once</option>
               </select>
@@ -509,8 +509,8 @@ export function CycleApp() {
           <section className={styles.section}>
             <h2 className={styles.label}>Output</h2>
             <div className={styles.prop}>
-              <label htmlFor="cycle-width">Width</label>
-              <select id="cycle-width" value={size} onChange={(e) => setSize(e.target.value as Size)}>
+              <label htmlFor="cycles-width">Width</label>
+              <select id="cycles-width" value={size} onChange={(e) => setSize(e.target.value as Size)}>
                 <option value="480">480 px</option>
                 <option value="800">800 px</option>
                 <option value="1080">1080 px</option>
@@ -522,16 +522,16 @@ export function CycleApp() {
               <span className={styles.value}>{output ? `${output.height} px` : "Auto"}</span>
             </div>
             <div className={styles.prop}>
-              <label htmlFor="cycle-fit">Fit</label>
-              <select id="cycle-fit" value={fit} onChange={(e) => setFit(e.target.value as Fit)}>
+              <label htmlFor="cycles-fit">Fit</label>
+              <select id="cycles-fit" value={fit} onChange={(e) => setFit(e.target.value as Fit)}>
                 <option value="fill">Cover</option>
                 <option value="fit">Contain</option>
               </select>
             </div>
             {fit === "fit" && (
               <div className={styles.prop}>
-                <label htmlFor="cycle-bg">Background</label>
-                <select id="cycle-bg" value={background} onChange={(e) => setBackground(e.target.value)}>
+                <label htmlFor="cycles-bg">Background</label>
+                <select id="cycles-bg" value={background} onChange={(e) => setBackground(e.target.value)}>
                   <option value="#000000">Black</option>
                   <option value="#ffffff">White</option>
                 </select>
@@ -542,8 +542,8 @@ export function CycleApp() {
           <section className={styles.section}>
             <h2 className={styles.label}>Encoding</h2>
             <div className={styles.prop}>
-              <label htmlFor="cycle-colors">Colors</label>
-              <select id="cycle-colors" value={quality} onChange={(e) => setQuality(e.target.value as Quality)}>
+              <label htmlFor="cycles-colors">Colors</label>
+              <select id="cycles-colors" value={quality} onChange={(e) => setQuality(e.target.value as Quality)}>
                 <option value="high">256</option>
                 <option value="medium">128</option>
                 <option value="low">48</option>

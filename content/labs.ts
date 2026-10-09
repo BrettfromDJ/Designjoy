@@ -8,8 +8,8 @@ export type LabTool = {
 
 export const labTools: LabTool[] = [
   {
-    slug: "cycle",
-    name: "Cycle",
+    slug: "cycles",
+    name: "Cycles",
     description: "Drop in a stack of images and get a looping GIF. Set the speed, size and quality.",
   },
 ];
