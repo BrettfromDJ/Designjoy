@@ -320,7 +320,9 @@ export function AskBox() {
                   onClick={() => setOpen(false)}
                   aria-label="Close"
                 >
-                  ✕
+                  <svg width="9" height="9" viewBox="0 0 12 12" aria-hidden="true">
+                    <path d="M1.5 1.5l9 9m0-9-9 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
                 </button>
               </div>
               {mode === "pricing" ? (

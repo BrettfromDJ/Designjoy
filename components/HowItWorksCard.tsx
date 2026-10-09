@@ -79,7 +79,10 @@ export function HowItWorksLightbox() {
             onClick={() => setOpen(false)}
             autoFocus
           >
-            ×
+            {/* Drawn, not the × character, so it sits exactly in the middle. */}
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M1.5 1.5l9 9m0-9-9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
           </button>
           <p className={styles.label}>How it works</p>
           <h2 className={styles.panelTitle}>
