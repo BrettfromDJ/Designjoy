@@ -406,6 +406,25 @@
   background: #e8e8e8;
 }
 
+/* Next steps after an answer: the first is solid, the rest outlined. */
+.nextSteps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  animation: fade-up 0.35s ease both;
+}
+
+.action[data-secondary] {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  font-weight: 400;
+}
+
+.action[data-secondary]:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;

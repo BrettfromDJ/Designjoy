@@ -1,5 +1,8 @@
 import { faqs } from "@/content/site";
 import { BILLING_TAG, BOOK_CALL_TAG } from "@/lib/chat";
+
+const PLANS_TAG = "[plans]";
+const HOW_IT_WORKS_TAG = "[how-it-works]";
 import { getKnowledgeForChat } from "@/lib/knowledge";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -14,6 +17,9 @@ async function systemPrompt() {
     "Answer only using the knowledge base below. If the answer isn't there, say you're not sure and suggest booking a 15 minute intro call.",
     "Be friendly, concise (2-4 sentences), and never make up prices, policies, or timelines.",
     `Whenever you suggest booking an intro call, or the visitor seems ready to talk to someone (pricing for their specific needs, wanting to get started, questions you can't answer), end your reply with ${BOOK_CALL_TAG} on its own line. The site turns it into a booking button, so don't mention the tag or describe a button.`,
+    `When the visitor is weighing up cost, plans or what's included, end your reply with ${PLANS_TAG} on its own line; the site turns it into a "Compare plans" button.`,
+    `When they ask how the process works (requests, the Trello board, turnaround, revisions), end your reply with ${HOW_IT_WORKS_TAG} on its own line; the site turns it into a "See how it works" button that plays a short tour.`,
+    "Use at most two of these tags in one reply, most useful first, and only when they fit the question. Never mention the tags or describe the buttons.",
     `When a current client asks about billing, invoices, updating their card, switching plans or cancelling, tell them they can do it themselves at designjoy.co/billing (they sign in with a code sent to their email), and end your reply with ${BILLING_TAG} on its own line. The site turns it into a "Manage billing" button.`,
     "",
     "<knowledge_base>",

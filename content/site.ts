@@ -168,22 +168,23 @@ export const testimonials: Testimonial[] = [
 export type Faq = { question: string; answer: string };
 
 // Shown on the FAQ page as tappable questions, and given to the chatbot so it
-// answers them the same way everywhere.
+// answers them the same way everywhere. Tags at the end of an answer, like
+// [plans], become next-step buttons (see lib/chat.ts).
 export const faqs: Faq[] = [
   {
     question: "How does the subscription work?",
     answer:
-      "Subscribe to a plan and add as many design requests as you like. We work through them one at a time on Monthly Club, delivering each in about 48 hours on average.",
+      "Subscribe to a plan and add as many design requests as you like. We work through them one at a time on Monthly Club, delivering each in about 48 hours on average. [how-it-works] [plans]",
   },
   {
     question: "How much does it cost?",
     answer:
-      "Monthly Club is $4,995/mo and Design Partner is $7,995/mo. One flat price, no contracts or surprise invoices.",
+      "Monthly Club is $4,995/mo and Design Partner is $7,995/mo. One flat price, no contracts or surprise invoices. [plans]",
   },
   {
     question: "How fast will I get my designs?",
     answer:
-      "Most requests are delivered in about 48 hours. Bigger requests are broken into smaller pieces so you see progress every couple of days.",
+      "Most requests are delivered in about 48 hours. Bigger requests are broken into smaller pieces so you see progress every couple of days. [how-it-works]",
   },
   {
     question: "Can I pause or cancel?",
@@ -198,28 +199,28 @@ export const faqs: Faq[] = [
   {
     question: "What kind of design do you do?",
     answer:
-      "Front-end development, web design, MVP builds, logos, slide decks, branding, social media, UI/UX design, Webflow development, mobile apps, print design, email, display ads, icons and brand guides.",
+      "Front-end development, web design, MVP builds, logos, slide decks, branding, social media, UI/UX design, Webflow development, mobile apps, print design, email, display ads, icons and brand guides. [plans]",
   },
   {
     question: "Is there a limit to how many requests I can make?",
     answer:
-      "No. Add as many requests as you like. They're worked on one at a time, in the order you choose.",
+      "No. Add as many requests as you like. They're worked on one at a time, in the order you choose. [how-it-works]",
   },
   {
     question: "What if I don't love the design?",
-    answer: "Revisions are unlimited. We'll keep refining until it's right.",
+    answer: "Revisions are unlimited. We'll keep refining until it's right. [how-it-works]",
   },
   {
     question: "Can you build the site too?",
-    answer: "Yes. Front-end development and Webflow development are included.",
+    answer: "Yes. Front-end development and Webflow development are included. [plans]",
   },
   {
     question: "Can I use it for more than one brand?",
-    answer: "Yes. Unlimited brands are included in your subscription.",
+    answer: "Yes. Unlimited brands are included in your subscription. [plans]",
   },
   {
     question: "Can I talk to someone first?",
-    answer: "Of course. Book a 15 minute intro call and we'll walk you through how it works.",
+    answer: "Of course. Book a 15 minute intro call and we'll walk you through how it works. [book-call]",
   },
 ];
 

@@ -7,8 +7,9 @@ import {
   type AskBoxView,
   type OpenAskBoxDetail,
 } from "@/lib/ask-box";
-import { parseAnswer } from "@/lib/chat";
+import { NEXT_STEP_LABELS, parseAnswer, type NextStep } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
+import { openHowItWorks } from "@/lib/how-it-works";
 import { BotFace } from "./BotFace";
 import { BookCall, BookCallMeta } from "./BookCall";
 import { CheckoutPanel } from "./CheckoutPanel";
@@ -215,6 +216,16 @@ export function AskBox() {
     );
   }
 
+  // Where each next-step button goes.
+  function goTo(step: NextStep) {
+    if (step === "plans") setMode("pricing");
+    else if (step === "book-call") setMode("booking");
+    else if (step === "how-it-works") {
+      setOpen(false);
+      openHowItWorks();
+    }
+  }
+
   async function ask(event: React.FormEvent) {
     event.preventDefault();
     // With an empty box, Ask sends the sample question on screen.
@@ -347,33 +358,45 @@ export function AskBox() {
                         </span>
                       );
                     }
-                    const { text, bookCall, billing } = parseAnswer(
-                      message.content,
-                    );
+                    const parsed = parseAnswer(message.content);
+                    // Errors can ask for the booking button without a tag.
+                    const steps: NextStep[] =
+                      message.bookCall && !parsed.steps.includes("book-call")
+                        ? [...parsed.steps, "book-call"]
+                        : parsed.steps;
                     const done = !(pending && i === messages.length - 1);
                     return (
                       <div key={i} className={styles.answer}>
                         <p className={`${styles.bubble} ${styles.dj}`}>
-                          {text}
+                          {parsed.text}
                         </p>
-                        {done && (bookCall || message.bookCall) && (
-                          <button
-                            type="button"
-                            className={styles.action}
-                            onClick={() => setMode("booking")}
-                          >
-                            Book a 15 min intro call
-                          </button>
-                        )}
-                        {done && billing && (
-                          <a
-                            href="/billing"
-                            target="_blank"
-                            rel="noopener"
-                            className={styles.action}
-                          >
-                            Manage billing →
-                          </a>
+                        {done && steps.length > 0 && (
+                          <div className={styles.nextSteps}>
+                            {steps.map((step, n) =>
+                              step === "billing" ? (
+                                <a
+                                  key={step}
+                                  href="/billing"
+                                  target="_blank"
+                                  rel="noopener"
+                                  className={styles.action}
+                                  data-secondary={n > 0 || undefined}
+                                >
+                                  {NEXT_STEP_LABELS[step]}
+                                </a>
+                              ) : (
+                                <button
+                                  key={step}
+                                  type="button"
+                                  className={styles.action}
+                                  data-secondary={n > 0 || undefined}
+                                  onClick={() => goTo(step)}
+                                >
+                                  {NEXT_STEP_LABELS[step]}
+                                </button>
+                              ),
+                            )}
+                          </div>
                         )}
                       </div>
                     );
