@@ -10,7 +10,9 @@ export const NEXT_STEPS = {
 export type NextStep = (typeof NEXT_STEPS)[keyof typeof NEXT_STEPS]["id"];
 export const BOOK_CALL_TAG = "[book-call]";
 export const BILLING_TAG = "[billing]";
-const TAGS = Object.keys(NEXT_STEPS) as (keyof typeof NEXT_STEPS)[];
+/** Never shown: marks an answer the knowledge base didn't cover, for /admin/questions. */
+export const UNSURE_TAG = "[unsure]";
+const TAGS = [...(Object.keys(NEXT_STEPS) as (keyof typeof NEXT_STEPS)[]), UNSURE_TAG] as const;
 
 export const NEXT_STEP_LABELS = Object.fromEntries(
   Object.values(NEXT_STEPS).map((s) => [s.id, s.label]),
@@ -20,8 +22,9 @@ export const NEXT_STEP_LABELS = Object.fromEntries(
  * Strips the tags (and, mid-stream, any half-written start of one) from an
  * answer, and returns the next steps they ask for, in the order written.
  */
-export function parseAnswer(raw: string): { text: string; steps: NextStep[] } {
-  const steps = TAGS.filter((tag) => raw.includes(tag))
+export function parseAnswer(raw: string): { text: string; steps: NextStep[]; unsure: boolean } {
+  const steps = (Object.keys(NEXT_STEPS) as (keyof typeof NEXT_STEPS)[])
+    .filter((tag) => raw.includes(tag))
     .sort((a, b) => raw.indexOf(a) - raw.indexOf(b))
     .map((tag) => NEXT_STEPS[tag].id);
   let text = raw;
@@ -34,5 +37,5 @@ export function parseAnswer(raw: string): { text: string; steps: NextStep[] } {
       }
     }
   }
-  return { text: text.trimEnd(), steps };
+  return { text: text.trimEnd(), steps, unsure: raw.includes(UNSURE_TAG) };
 }

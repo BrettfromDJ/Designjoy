@@ -172,6 +172,76 @@
   white-space: pre-wrap;
 }
 
+/* Questions the chatbot couldn't answer. */
+.needs {
+  display: grid;
+  gap: 12px;
+}
+
+.needsTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+.needsTitle .count {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+}
+
+.flagged {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-card);
+}
+
+.flagged .question {
+  font-size: 15px;
+}
+
+.flagged .meta {
+  margin: -4px 0 4px;
+}
+
+.flagged .label {
+  margin: 4px 0 0;
+}
+
+.answerField {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  resize: vertical;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+.answerField:focus {
+  outline: none;
+  border-color: var(--text-nav);
+}
+
+.flaggedActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 559px) {
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));

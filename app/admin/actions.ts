@@ -4,11 +4,11 @@ import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdmin, signIn, signOut } from "@/lib/auth";
-import { MAX_KNOWLEDGE_LENGTH, saveKnowledge } from "@/lib/knowledge";
+import { MAX_KNOWLEDGE_LENGTH, addToKnowledge, saveKnowledge } from "@/lib/knowledge";
 import { HIGHLIGHT_ICON_NAMES, MAX_HIGHLIGHTS, type Highlight } from "@/lib/highlight-icons";
 import { getHighlights, saveHighlights } from "@/lib/highlights";
 import { getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
-import { clearQuestions } from "@/lib/questions";
+import { clearQuestions, resolveQuestion } from "@/lib/questions";
 
 async function requireAdmin() {
   if (!(await isAdmin())) throw new Error("Not signed in.");
@@ -109,5 +109,37 @@ export async function updateHighlights(input: Highlight[]) {
 export async function clearQuestionLog() {
   await requireAdmin();
   await clearQuestions();
+  revalidatePath("/admin/questions");
+}
+
+/** Approves an answer for a question the chatbot couldn't answer. */
+// Returns a message rather than throwing, since thrown messages are hidden in production.
+export async function approveAnswer(
+  url: string,
+  question: string,
+  answer: string,
+): Promise<{ error?: string }> {
+  await requireAdmin();
+  if (!isBlobUrl(url)) return { error: "That question couldn't be found." };
+  const q = String(question).trim().slice(0, 500);
+  const a = String(answer).trim().slice(0, 2000);
+  if (!q || !a) return { error: "Write an answer first." };
+  if (/\[[^\]]+\]/.test(a)) return { error: "Fill in the [bracketed] parts first." };
+  try {
+    await addToKnowledge(q, a);
+    await resolveQuestion(url, "added");
+  } catch (error) {
+    console.error("Could not approve answer", error);
+    return { error: "That didn't save. Try again." };
+  }
+  revalidatePath("/admin/questions");
+  revalidatePath("/admin/knowledge");
+  return {};
+}
+
+export async function dismissQuestion(url: string) {
+  await requireAdmin();
+  if (!isBlobUrl(url)) throw new Error("Invalid question.");
+  await resolveQuestion(url, "dismissed");
   revalidatePath("/admin/questions");
 }

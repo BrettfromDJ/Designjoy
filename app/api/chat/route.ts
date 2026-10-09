@@ -1,7 +1,8 @@
 import { after } from "next/server";
 import { faqs } from "@/content/site";
-import { BILLING_TAG, BOOK_CALL_TAG, parseAnswer } from "@/lib/chat";
+import { BILLING_TAG, BOOK_CALL_TAG, UNSURE_TAG, parseAnswer } from "@/lib/chat";
 import { logQuestion, pageFrom } from "@/lib/questions";
+import { suggestAnswer } from "@/lib/suggest";
 
 const PLANS_TAG = "[plans]";
 const HOW_IT_WORKS_TAG = "[how-it-works]";
@@ -21,6 +22,7 @@ async function systemPrompt() {
     `Whenever you suggest booking an intro call, or the visitor seems ready to talk to someone (pricing for their specific needs, wanting to get started, questions you can't answer), end your reply with ${BOOK_CALL_TAG} on its own line. The site turns it into a booking button, so don't mention the tag or describe a button.`,
     `When the visitor is weighing up cost, plans or what's included, end your reply with ${PLANS_TAG} on its own line; the site turns it into a "Compare plans" button.`,
     `When they ask how the process works (requests, the Trello board, turnaround, revisions), end your reply with ${HOW_IT_WORKS_TAG} on its own line; the site turns it into a "See how it works" button that plays a short tour.`,
+    `If the knowledge base doesn't answer the question, also end your reply with ${UNSURE_TAG} on its own line. The site hides it; it flags the question so the owner can add an answer.`,
     "Use at most two of these tags in one reply, most useful first, and only when they fit the question. Never mention the tags or describe the buttons.",
     `When a current client asks about billing, invoices, updating their card, switching plans or cancelling, tell them they can do it themselves at designjoy.co/billing (they sign in with a code sent to their email), and end your reply with ${BILLING_TAG} on its own line. The site turns it into a "Manage billing" button.`,
     "",
@@ -55,20 +57,29 @@ export async function POST(request: Request) {
   // Log the visitor's question with the answer, once the answer has finished.
   const question = messages[messages.length - 1];
   const page = pageFrom(request);
-  let finished: (answer: string) => void = () => {};
-  const answered = new Promise<string>((resolve) => {
+  let finished: (answer: { text: string; unsure: boolean }) => void = () => {};
+  const answered = new Promise<{ text: string; unsure: boolean }>((resolve) => {
     finished = resolve;
     // If the visitor leaves mid-answer the stream never finishes; log anyway.
-    setTimeout(() => resolve("(The answer was cut off.)"), 60_000);
+    setTimeout(() => resolve({ text: "(The answer was cut off.)", unsure: false }), 60_000);
   });
   if (question.role === "user") {
-    after(async () =>
-      logQuestion({ question: question.content, answer: await answered, source: "typed", page }),
-    );
+    after(async () => {
+      const { text, unsure } = await answered;
+      // Questions it couldn't answer get flagged, with a drafted answer to approve.
+      const suggestion = unsure ? await suggestAnswer(question.content) : undefined;
+      await logQuestion({
+        question: question.content,
+        answer: text,
+        source: "typed",
+        page,
+        ...(unsure ? { flagged: true, suggestion } : {}),
+      });
+    });
   }
 
   if (!apiKey) {
-    finished("(Chat isn't connected, so no answer was given.)");
+    finished({ text: "(Chat isn't connected, so no answer was given.)", unsure: false });
     return Response.json(
       { error: "Chat isn't connected yet — please book an intro call with any questions.", bookCall: true },
       { status: 503 },
@@ -89,7 +100,7 @@ export async function POST(request: Request) {
   });
 
   if (!upstream.ok || !upstream.body) {
-    finished("(The chat failed to answer.)");
+    finished({ text: "(The chat failed to answer.)", unsure: false });
     console.error("OpenAI error", upstream.status, await upstream.text().catch(() => ""));
     return Response.json(
       { error: "Sorry, I couldn't answer that right now. Please try again." },
@@ -123,7 +134,8 @@ export async function POST(request: Request) {
         }
       },
       flush() {
-        finished(parseAnswer(answer).text);
+        const { text, unsure } = parseAnswer(answer);
+        finished({ text, unsure });
       },
     }),
   );

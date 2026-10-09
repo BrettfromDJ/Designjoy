@@ -38,3 +38,16 @@ export async function getKnowledgeForChat() {
   cached = { text, at: Date.now() };
   return text;
 }
+
+const ADDED_HEADING = "## Answers added from visitor questions";
+
+/** Adds an approved answer to the knowledge base, under its own heading. */
+export async function addToKnowledge(question: string, answer: string) {
+  const { text } = await getKnowledge();
+  const entry = `**Q: ${question.trim()}**\nA: ${answer.trim()}`;
+  const next = text.includes(ADDED_HEADING)
+    ? `${text.trimEnd()}\n\n${entry}\n`
+    : `${text.trimEnd()}\n\n${ADDED_HEADING}\n\n${entry}\n`;
+  if (next.length > MAX_KNOWLEDGE_LENGTH) throw new Error("The knowledge base is full.");
+  await saveKnowledge(next);
+}

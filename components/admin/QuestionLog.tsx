@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { clearQuestionLog } from "@/app/admin/actions";
-import type { LoggedQuestion } from "@/lib/questions";
+import type { StoredQuestion } from "@/lib/questions";
+import { UnansweredQuestions } from "./UnansweredQuestions";
 import styles from "./QuestionLog.module.css";
 import admin from "./Admin.module.css";
 
@@ -23,7 +24,7 @@ export function QuestionLog({
   total,
   storageReady,
 }: {
-  questions: LoggedQuestion[];
+  questions: StoredQuestion[];
   total: number;
   storageReady: boolean;
 }) {
@@ -101,6 +102,8 @@ export function QuestionLog({
       ) : (
         questions.length > 0 && (
           <>
+            <UnansweredQuestions questions={questions.filter((q) => q.flagged && !q.resolved)} />
+
             <dl className={styles.stats}>
               <div>
                 <dt>All time</dt>
@@ -156,11 +159,16 @@ export function QuestionLog({
 
             <ol className={styles.list}>
               {shown.map((q) => (
-                <li key={q.at + q.question} className={styles.item}>
+                <li key={q.url} className={styles.item}>
                   <details>
                     <summary>
                       <span className={styles.question}>{q.question}</span>
                       <span className={styles.meta}>
+                        {q.flagged && (
+                          <span className={styles.badge}>
+                            {q.resolved === "added" ? "Answer added" : q.resolved === "dismissed" ? "Dismissed" : "Unanswered"}
+                          </span>
+                        )}
                         <span className={styles.badge} data-source={q.source}>
                           {q.source === "typed" ? "Typed" : "FAQ"}
                         </span>
