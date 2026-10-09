@@ -164,8 +164,37 @@
 }
 
 /* The new plan's tag glows softly. */
+/* A dark pill with a light travelling round its edge, like the ask box. */
 .tagGlow {
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+  position: relative;
+  background: #111;
+}
+
+.tagGlow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glow-angle),
+    rgba(255, 255, 255, 0.12) 0 70%,
+    rgba(255, 255, 255, 0.9) 85%,
+    rgba(255, 255, 255, 0.12)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: tag-spin 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes tag-spin {
+  to {
+    --glow-angle: 360deg;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -241,6 +270,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .line,
+  .tagGlow::before,
   .features[data-cascade] li,
   .features[data-cascade] li path {
     animation: none;
