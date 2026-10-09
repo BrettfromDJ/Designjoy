@@ -17,16 +17,6 @@
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.25));
 }
 
-/* Each keystroke: a quick squash-and-stretch bounce. */
-/* Two identical animations, alternated, so every keystroke restarts it. */
-.bot[data-bounce="a"] {
-  animation: bounce-a 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.bot[data-bounce="b"] {
-  animation: bounce-b 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
 .face {
   transform-box: view-box;
   transform-origin: 12px 12px;
@@ -66,49 +56,6 @@
   animation: think 1.8s ease-in-out infinite;
 }
 
-.sparkle {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -5px 0 0 -5px;
-  pointer-events: none;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
-  animation: sparkle 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-@keyframes sparkle {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(0) rotate(0deg);
-  }
-  35% {
-    opacity: 1;
-    transform: translate(var(--x), var(--y)) scale(1) rotate(45deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(calc(var(--x) * 1.25), calc(var(--y) * 1.25 - 4px)) scale(0.2) rotate(110deg);
-  }
-}
-
-@keyframes bounce-a {
-  40% {
-    transform: scale(1.08, 0.92);
-  }
-  70% {
-    transform: scale(0.96, 1.05) translateY(-1px);
-  }
-}
-
-@keyframes bounce-b {
-  40% {
-    transform: scale(1.08, 0.92);
-  }
-  70% {
-    transform: scale(0.96, 1.05) translateY(-1px);
-  }
-}
-
 @keyframes blink {
   0%,
   92%,
@@ -138,8 +85,7 @@
     transition: none;
   }
   .eyes,
-  .bot[data-thinking="true"] .look,
-  .bot[data-bounce] {
+  .bot[data-thinking="true"] .look {
     animation: none;
   }
 }

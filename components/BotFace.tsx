@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./BotFace.module.css";
 
 // How far (in the icon's 24-unit space) the face can slide toward the
@@ -13,49 +13,26 @@ const AT_REST = `scale(${FACE_SCALE})`;
 // While typing, it watches the text to its right.
 const LOOK_AT_TEXT = `translate(3.2px, 0.6px) scale(${FACE_SCALE})`;
 
-type Sparkle = { id: number; x: number; y: number; size: number; delay: number };
-
-let sparkleId = 0;
-function burst(count: number): Sparkle[] {
-  return Array.from({ length: count }, (_, i) => {
-    // Spread around the top half of the ball, where there's room inside the pill.
-    const angle = -Math.PI * (0.15 + (0.7 * (i + Math.random() * 0.8)) / count);
-    const distance = 20 + Math.random() * 8;
-    return {
-      id: sparkleId++,
-      x: Math.cos(angle) * distance,
-      y: Math.sin(angle) * distance * 0.7,
-      size: 7 + Math.random() * 5,
-      delay: i * 40,
-    };
-  });
-}
-
 /**
  * The ask box's mascot: a ball with pill eyes and the Designjoy smile.
  * The face slides around the ball to look at the pointer and blinks. It
- * perks up with sparkles when the box is hovered, watches the text while
- * you type, and bounces on each keystroke (`poke` changes).
+ * perks up when the box is hovered and watches the text while you type.
  */
 export function BotFace({
   size = 24,
   thinking = false,
   typing = false,
   excited = false,
-  poke = 0,
 }: {
   size?: number;
   thinking?: boolean;
   typing?: boolean;
   excited?: boolean;
-  poke?: number;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const faceRef = useRef<SVGGElement>(null);
   const typingRef = useRef(typing);
   const lastLook = useRef(AT_REST);
-  const [sparkles, setSparkles] = useState<Sparkle[]>([]);
-  const [bounce, setBounce] = useState(0);
 
   // Look at the pointer, or at the text while typing.
   useEffect(() => {
@@ -92,27 +69,12 @@ export function BotFace({
     };
   }, []);
 
-  // Sparkles: a burst on hover, and now and then while typing.
-  const add = (list: Sparkle[]) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setSparkles((current) => [...current, ...list].slice(-12));
-  };
-  useEffect(() => {
-    if (excited) add(burst(4));
-  }, [excited]);
-  useEffect(() => {
-    if (!poke) return;
-    setBounce((n) => n + 1);
-    if (Math.random() < 0.35) add(burst(1));
-  }, [poke]);
-
   return (
     <span className={styles.wrap} style={{ width: size, height: size }} data-excited={excited}>
       <svg
         ref={svgRef}
         className={styles.bot}
         data-thinking={thinking}
-        data-bounce={bounce === 0 ? undefined : bounce % 2 ? "a" : "b"}
         width={size}
         height={size}
         viewBox="0 0 24 24"
@@ -143,26 +105,6 @@ export function BotFace({
           </g>
         </g>
       </svg>
-      {sparkles.map((s) => (
-        <svg
-          key={s.id}
-          className={styles.sparkle}
-          style={
-            {
-              "--x": `${s.x}px`,
-              "--y": `${s.y}px`,
-              width: s.size,
-              height: s.size,
-              animationDelay: `${s.delay}ms`,
-            } as React.CSSProperties
-          }
-          viewBox="0 0 10 10"
-          aria-hidden="true"
-          onAnimationEnd={() => setSparkles((current) => current.filter((x) => x.id !== s.id))}
-        >
-          <path d="M5 0c.3 2.6 1.4 3.7 4 4-2.6.3-3.7 1.4-4 4-.3-2.6-1.4-3.7-4-4 2.6-.3 3.7-1.4 4-4Z" fill="#fff" />
-        </svg>
-      ))}
     </span>
   );
 }

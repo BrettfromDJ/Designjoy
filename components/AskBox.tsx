@@ -97,7 +97,6 @@ export function AskBox() {
   const [pending, setPending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [keystrokes, setKeystrokes] = useState(0);
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -412,7 +411,6 @@ export function AskBox() {
               thinking={pending}
               typing={focused && input.length > 0}
               excited={hovered && !input}
-              poke={keystrokes}
             />
             <label htmlFor="ask-input" className="visually-hidden">
               Ask anything about Designjoy
@@ -425,10 +423,7 @@ export function AskBox() {
                 placeholder={idle ? "" : hint}
                 autoComplete="off"
                 value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  setKeystrokes((n) => n + 1);
-                }}
+                onChange={(e) => setInput(e.target.value)}
                 onFocus={() => {
                   setFocused(true);
                   if (messages.length > 0) {
