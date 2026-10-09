@@ -17,6 +17,13 @@
   letter-spacing: -0.66px;
 }
 
+@media (max-width: 559px) {
+  .title {
+    font-size: 27px;
+    letter-spacing: -0.81px;
+  }
+}
+
 .muted {
   color: var(--text-muted);
 }
