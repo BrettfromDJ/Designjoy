@@ -16,26 +16,22 @@
   box-shadow: none;
 }
 
-/* Segmented toggle; the white pill slides under the chosen plan. */
+/* Two tabs with no container around them; the white pill slides under the chosen plan. */
 .toggle {
   position: relative;
   isolation: isolate;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-  padding: 4px;
-  background: var(--bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
 }
 
 .toggle i {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  /* One column: half of what's left after the padding and the 6px gap. */
-  width: calc((100% - 14px) / 2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  /* One column: half of the width after the 6px gap. */
+  width: calc((100% - 6px) / 2);
   border-radius: 999px;
   background: #fff;
   transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
@@ -47,9 +43,9 @@
 
 .toggle button {
   position: relative;
-  height: 34px;
+  height: 38px;
   padding: 0;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 999px;
   background: none;
   font-size: 13px;
