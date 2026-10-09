@@ -124,6 +124,11 @@ export function PricingCard() {
           />
         </div>
       )}
+
+      <p className={styles.availability}>
+        <span className={styles.liveDot} aria-hidden="true" />
+        Spots available · Start today
+      </p>
     </section>
   );
 }
