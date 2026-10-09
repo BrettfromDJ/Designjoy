@@ -69,6 +69,8 @@ export function CyclesApp() {
   const [notice, setNotice] = useState<string | null>(null);
   const [dropping, setDropping] = useState(false);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  // Which ends of the tray have frames scrolled out of view.
+  const [overflow, setOverflow] = useState<{ start: boolean; end: boolean }>({ start: false, end: false });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -88,6 +90,36 @@ export function CyclesApp() {
   }, [frames, size]);
 
   const total = frames.length * ms;
+
+  // Fade the tray's ends only where frames run off them.
+  const measureTray = useCallback(() => {
+    const tray = trayRef.current;
+    if (!tray) return;
+    const start = tray.scrollLeft > 1;
+    const end = tray.scrollLeft + tray.clientWidth < tray.scrollWidth - 1;
+    setOverflow((o) => (o.start === start && o.end === end ? o : { start, end }));
+  }, []);
+
+  useEffect(() => {
+    const tray = trayRef.current;
+    if (!tray) return;
+    measureTray();
+    const observer = new ResizeObserver(measureTray);
+    observer.observe(tray);
+    return () => observer.disconnect();
+  }, [frames.length, measureTray]);
+
+  // Keep the playing frame in view as it plays.
+  useEffect(() => {
+    const tray = trayRef.current;
+    const tile = tray?.querySelector<HTMLElement>(`[data-id="${frames[current]?.id}"]`);
+    if (!tray || !tile || draggingId) return;
+    const left = tile.offsetLeft - tray.offsetLeft;
+    const right = left + tile.offsetWidth;
+    if (left < tray.scrollLeft + 24) tray.scrollTo({ left: left - 24, behavior: "smooth" });
+    else if (right > tray.scrollLeft + tray.clientWidth - 24)
+      tray.scrollTo({ left: right - tray.clientWidth + 24, behavior: "smooth" });
+  }, [current, frames, draggingId]);
   const fileName = `${name.trim() || "cycles"}.gif`;
 
   // Any change makes the last export stale.
@@ -379,7 +411,14 @@ export function CyclesApp() {
           {/* The frames, in a floating tray like the homepage ask bar. */}
           {!empty && (
             <div className={styles.trayWrap}>
-              <ol className={styles.tray} ref={trayRef} aria-label="Frames">
+              <ol
+                className={styles.tray}
+                ref={trayRef}
+                aria-label="Frames"
+                data-fade-start={overflow.start || undefined}
+                data-fade-end={overflow.end || undefined}
+                onScroll={measureTray}
+              >
                 <li>
                   <button
                     type="button"

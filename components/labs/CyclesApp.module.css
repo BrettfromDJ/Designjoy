@@ -412,6 +412,8 @@
 }
 
 .tray {
+  --fade-start: 0px;
+  --fade-end: 0px;
   display: flex;
   gap: 6px;
   margin: 0;
@@ -419,6 +421,30 @@
   overflow-x: auto;
   list-style: none;
   scrollbar-width: none;
+  /* Clip to the tray's own rounded shape, and soften the ends that scroll. */
+  border-radius: 15px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+.tray[data-fade-start] {
+  --fade-start: 48px;
+}
+
+.tray[data-fade-end] {
+  --fade-end: 48px;
 }
 
 .tray::-webkit-scrollbar {
