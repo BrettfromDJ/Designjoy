@@ -48,7 +48,7 @@
 .column {
   position: absolute;
   top: 44px;
-  width: 188px;
+  width: 256px;
   height: 336px;
   background: #0f0f0f;
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -94,7 +94,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 164px;
+  width: 232px;
   padding: 10px;
   background: #161616;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -118,11 +118,6 @@
 .cardTitle {
   font-size: 12px;
   line-height: 1.25;
-}
-
-.card.guide .cardTitle::before {
-  content: "◦ ";
-  color: var(--text-muted);
 }
 
 .bars {

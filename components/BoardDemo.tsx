@@ -5,7 +5,6 @@ import styles from "./BoardDemo.module.css";
 
 /** What each step of the demo shows, in order. */
 export const BOARD_STEPS = [
-  "Your board comes with a few guides to get started.",
   "Add every request to Backlog. There's no limit.",
   "Move one into Current request. That's what we're designing.",
   "Most designs land on the card in about 48 hours.",
@@ -13,28 +12,25 @@ export const BOARD_STEPS = [
   "Happy with it? Move it to Approved.",
   "Then the next request moves up, and we start on it.",
 ];
-const STEP_MS = [2600, 3400, 2800, 3000, 3600, 2800, 3000];
+const STEP_MS = [3400, 2800, 3000, 3600, 2800, 3000];
 
 // The board is laid out at a fixed size and scaled to fit its container.
 const W = 800;
 const H = 380;
-const COL_W = 188;
+const COL_W = 256;
 const GAP = 16;
 const TOP = 44;
 const HEAD = 38;
 const CARD_GAP = 8;
 
 const COLUMNS = [
-  { id: "start", name: "Start here" },
   { id: "backlog", name: "Backlog" },
   { id: "current", name: "Current request", limit: 1 },
   { id: "approved", name: "Approved" },
 ] as const;
 type ColumnId = (typeof COLUMNS)[number]["id"];
 
-const CARDS: Record<string, { title: string; guide?: boolean }> = {
-  how: { title: "How to use this board", guide: true },
-  brand: { title: "Branding assets", guide: true },
+const CARDS: Record<string, { title: string }> = {
   landing: { title: "Landing page redesign" },
   deck: { title: "Series A pitch deck" },
   ads: { title: "Launch social ads" },
@@ -88,7 +84,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     for (const [id, card] of Object.entries(CARDS)) {
       const node = el(
         "div",
-        `${styles.card} ${styles.hidden}${card.guide ? ` ${styles.guide}` : ""}`,
+        `${styles.card} ${styles.hidden}`,
         `<div class="${styles.cardTitle}">${card.title}</div>` +
           `<div class="${styles.thumb}"></div>` +
           `<div class="${styles.bars}"><b></b><b></b></div>` +
@@ -108,7 +104,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     );
     stage.append(ask, reply, cursor);
 
-    let cols: Record<ColumnId, string[]> = { start: [], backlog: [], current: [], approved: [] };
+    let cols: Record<ColumnId, string[]> = { backlog: [], current: [], approved: [] };
     let timers: number[] = [];
     let next = 0;
     const wait = (ms: number) =>
@@ -142,14 +138,14 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       }
     };
     const reset = () => {
-      cols = { start: ["how", "brand"], backlog: [], current: [], approved: [] };
+      cols = { backlog: [], current: [], approved: [] };
       for (const node of Object.values(cardEls)) {
         node.classList.remove(styles.done, styles.review, styles.chat, styles.lift);
         node.querySelector("[data-count]")!.textContent = "1";
       }
       ask.classList.remove(styles.on);
       reply.classList.remove(styles.on);
-      setCursor(560, 330, false);
+      setCursor(700, 330, false);
     };
 
     // The cursor picks a card up and drops it at the end of another column.
@@ -181,11 +177,10 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     };
 
     const steps: (() => Promise<void> | void)[] = [
-      () => {
+      async () => {
         reset();
         layout();
-      },
-      async () => {
+        await wait(300);
         for (const id of ["landing", "deck", "ads"]) {
           cols.backlog.push(id);
           layout();
@@ -244,7 +239,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       cols.current = ["landing"];
       cardEls.landing.classList.add(styles.done, styles.review);
       layout();
-      onStepRef.current?.(3);
+      onStepRef.current?.(2);
     } else {
       run(0);
     }
