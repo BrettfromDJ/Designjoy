@@ -1,0 +1,113 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--text-nav);
+  outline-offset: 2px;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.title {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.66px;
+  text-wrap: balance;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* The frames sit on top of each other and cut from one to the next, like a GIF. */
+.preview {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bg);
+  border-radius: 8px;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.frame[data-on] {
+  opacity: 1;
+}
+
+.counter {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolName {
+  display: block;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.42px;
+}
+
+.toolDescription {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.36px;
+  color: var(--text-muted);
+}
+
+.arrow {
+  color: var(--text-nav);
+  transition: transform 0.2s ease;
+}
+
+.card:hover .arrow {
+  transform: translateX(3px);
+}

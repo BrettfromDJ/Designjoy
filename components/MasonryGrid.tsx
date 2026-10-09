@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from "react";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import { layoutMasonry } from "@/lib/masonry";
 import { InfoCard } from "./InfoCard";
+import { LabsCard } from "./LabsCard";
 import { Lightbox } from "./Lightbox";
 import { PricingCard } from "./PricingCard";
 import { ScopeBoard } from "./ScopeBoard";
@@ -63,6 +64,9 @@ export function MasonryGrid({ work }: { work: WorkItem[] }) {
               }
               if (cell.card.kind === "scope") {
                 return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
+              }
+              if (cell.card.kind === "labs") {
+                return <LabsCard key={cell.card.id} work={work} />;
               }
               if (cell.card.kind === "pricing") {
                 return <PricingCard key={cell.card.id} />;
