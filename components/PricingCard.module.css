@@ -384,7 +384,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #4ade80;
+  background: #fff;
 }
 
 .liveDot::after {
@@ -392,7 +392,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: #4ade80;
+  background: #fff;
   animation: live-pulse 1.8s ease-out infinite;
 }
 
