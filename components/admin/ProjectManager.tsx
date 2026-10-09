@@ -1,13 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { upload } from "@vercel/blob/client";
-import { addProject, deleteProject, moveProject, renameProject } from "@/app/admin/actions";
+import { addProject, deleteProject, renameProject, reorderProjects } from "@/app/admin/actions";
 import { ALLOWED_TYPES, MAX_UPLOAD_BYTES } from "@/lib/media";
 import type { Project } from "@/lib/projects";
 import styles from "./Admin.module.css";
 
 type Upload = { key: string; name: string; progress: number; error?: string };
+
+type Drag = {
+  id: string;
+  from: number;
+  to: number;
+  startY: number;
+  /** Top and bottom of each row when the drag started. */
+  rows: { top: number; bottom: number }[];
+  /** How far the other rows slide to make room: the dragged row's height plus the gap. */
+  step: number;
+  pointerId: number;
+  started: boolean;
+};
+
+/** Pixels the pointer has to travel before a press becomes a drag. */
+const DRAG_THRESHOLD = 4;
 
 function measure(file: File): Promise<{ width: number; height: number }> {
   const url = URL.createObjectURL(file);
@@ -44,6 +60,11 @@ export function ProjectManager({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [drag, setDrag] = useState<{ id: string; from: number; to: number; dy: number; step: number } | null>(
+    null,
+  );
+  const listRef = useRef<HTMLOListElement>(null);
+  const dragRef = useRef<Drag | null>(null);
 
   const patchUpload = (key: string, patch: Partial<Upload>) =>
     setUploads((list) => list.map((u) => (u.key === key ? { ...u, ...patch } : u)));
@@ -93,13 +114,113 @@ export function ProjectManager({
     }
   }
 
+  function saveOrder(next: Project[], id: string) {
+    const previous = projects;
+    setProjects(next);
+    setBusyId(id);
+    setError(null);
+    reorderProjects(next.map((p) => p.id))
+      .then(setProjects)
+      .catch(() => {
+        setProjects(previous);
+        setError("That change didn't save. Refresh the page and try again.");
+      })
+      .finally(() => setBusyId(null));
+  }
+
+  function move(from: number, to: number) {
+    if (from === to || to < 0 || to >= projects.length) return;
+    const next = [...projects];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    saveOrder(next, item.id);
+  }
+
+  function onPointerDown(e: PointerEvent<HTMLLIElement>, index: number) {
+    if (busyId !== null || e.button !== 0) return;
+    const target = e.target as HTMLElement;
+    if (target.closest("input, button, a")) return;
+    // Touch drags start from the handle only, so the list still scrolls.
+    if (e.pointerType !== "mouse" && !target.closest("[data-handle]")) return;
+
+    const items = Array.from(listRef.current?.children ?? []) as HTMLElement[];
+    const rows = items.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { top: r.top, bottom: r.bottom };
+    });
+    const gap = rows.length > 1 ? rows[1].top - rows[0].bottom : 0;
+    dragRef.current = {
+      id: projects[index].id,
+      from: index,
+      to: index,
+      startY: e.clientY,
+      rows,
+      step: rows[index].bottom - rows[index].top + gap,
+      pointerId: e.pointerId,
+      started: false,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: PointerEvent<HTMLLIElement>) {
+    const d = dragRef.current;
+    if (!d || e.pointerId !== d.pointerId) return;
+    const dy = e.clientY - d.startY;
+    if (!d.started) {
+      if (Math.abs(dy) < DRAG_THRESHOLD) return;
+      d.started = true;
+    }
+    e.preventDefault();
+
+    // The dragged row lands wherever its middle now sits among the others.
+    const own = d.rows[d.from];
+    const middle = (own.top + own.bottom) / 2 + dy;
+    let to = 0;
+    d.rows.forEach((row, i) => {
+      if (i !== d.from && middle > (row.top + row.bottom) / 2) to++;
+    });
+    d.to = to;
+    setDrag({ id: d.id, from: d.from, to, dy, step: d.step });
+  }
+
+  function onPointerUp(e: PointerEvent<HTMLLIElement>) {
+    const d = dragRef.current;
+    if (!d || e.pointerId !== d.pointerId) return;
+    dragRef.current = null;
+    setDrag(null);
+    if (d.started) move(d.from, d.to);
+  }
+
+  function onHandleKey(e: KeyboardEvent<HTMLSpanElement>, index: number) {
+    if (busyId !== null) return;
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const to = index + (e.key === "ArrowUp" ? -1 : 1);
+      move(index, to);
+      // Keep focus on the same project's handle after it moves.
+      const id = projects[index]?.id;
+      requestAnimationFrame(() =>
+        listRef.current?.querySelector<HTMLElement>(`[data-handle="${id}"]`)?.focus(),
+      );
+    }
+  }
+
+  /** Where each row should sit while a drag is in progress. */
+  function offset(index: number) {
+    if (!drag) return undefined;
+    if (index === drag.from) return drag.dy;
+    if (drag.from < index && index <= drag.to) return -drag.step;
+    if (drag.to <= index && index < drag.from) return drag.step;
+    return 0;
+  }
+
   return (
     <div className={styles.manager}>
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>Projects</h1>
           <p className={styles.hint}>
-            {projects.length} on the homepage, newest first. Drag in PNG, JPG, GIF, or MP4 files.
+            {projects.length} on the homepage, in this order. Drag a project to move it.
           </p>
         </div>
       </header>
@@ -175,9 +296,34 @@ export function ProjectManager({
           No projects yet. Until you upload one, the homepage shows the sample Ordin work.
         </p>
       ) : (
-        <ol className={styles.list}>
+        <ol className={styles.list} ref={listRef} data-dragging={drag !== null || undefined}>
           {projects.map((project, i) => (
-            <li key={project.id} className={styles.item} aria-busy={busyId === project.id}>
+            <li
+              key={project.id}
+              className={styles.item}
+              aria-busy={busyId === project.id}
+              data-lifted={drag?.id === project.id || undefined}
+              style={drag ? { transform: `translateY(${offset(i)}px)` } : undefined}
+              onPointerDown={(e) => onPointerDown(e, i)}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+            >
+              <span
+                className={styles.handle}
+                data-handle={project.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Reorder ${project.title || "project"}. Use the up and down arrow keys to move it.`}
+                onKeyDown={(e) => onHandleKey(e, i)}
+              >
+                <svg width="10" height="16" viewBox="0 0 10 16" aria-hidden="true">
+                  {[2, 8, 14].flatMap((y) => [
+                    <circle key={`l${y}`} cx="2" cy={y} r="1.5" />,
+                    <circle key={`r${y}`} cx="8" cy={y} r="1.5" />,
+                  ])}
+                </svg>
+              </span>
               <div className={styles.thumb}>
                 {project.kind === "video" ? (
                   <video src={project.url} muted loop playsInline autoPlay preload="metadata" />
@@ -205,24 +351,6 @@ export function ProjectManager({
                 </span>
               </div>
               <div className={styles.itemActions}>
-                <button
-                  type="button"
-                  className={styles.icon}
-                  aria-label={`Move ${project.title || "project"} up`}
-                  disabled={i === 0 || busyId !== null}
-                  onClick={() => run(project.id, () => moveProject(project.id, -1))}
-                >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  className={styles.icon}
-                  aria-label={`Move ${project.title || "project"} down`}
-                  disabled={i === projects.length - 1 || busyId !== null}
-                  onClick={() => run(project.id, () => moveProject(project.id, 1))}
-                >
-                  ↓
-                </button>
                 {confirmId === project.id ? (
                   <>
                     <button

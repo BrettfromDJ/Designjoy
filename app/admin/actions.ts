@@ -50,15 +50,14 @@ export async function renameProject(id: string, title: string) {
   return update((projects) => projects.map((p) => (p.id === id ? { ...p, title: clean } : p)));
 }
 
-export async function moveProject(id: string, direction: -1 | 1) {
+export async function reorderProjects(ids: string[]) {
   await requireAdmin();
   return update((projects) => {
-    const from = projects.findIndex((p) => p.id === id);
-    const to = from + direction;
-    if (from < 0 || to < 0 || to >= projects.length) return projects;
-    const next = [...projects];
-    [next[from], next[to]] = [next[to], next[from]];
-    return next;
+    const rank = new Map(ids.map((id, i) => [String(id), i]));
+    // Anything missing from the new order (e.g. added in another tab) keeps
+    // its place at the end rather than being dropped.
+    const at = (p: Project) => rank.get(p.id) ?? ids.length + projects.indexOf(p);
+    return [...projects].sort((a, b) => at(a) - at(b));
   });
 }
 
