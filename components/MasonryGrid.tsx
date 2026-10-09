@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
+import type { Highlight } from "@/lib/highlight-icons";
 import { layoutMasonry } from "@/lib/masonry";
 import { HighlightsCard } from "./HighlightsCard";
 import { HowItWorksCard } from "./HowItWorksCard";
@@ -28,10 +29,17 @@ function getColumnCount(): ColumnCount {
   return 1;
 }
 
-// Info cards with no text yet stay hidden so work fills their slots.
-const visibleFixedCards = fixedCards.filter(
-  (card) => card.kind !== "info" || Boolean(card.eyebrow || card.title || card.body),
-);
+// Info cards with no text yet, and Highlights with no awards yet, stay
+// hidden so work fills their slots.
+function visibleFixedCards(highlights: Highlight[]) {
+  return fixedCards.filter((card) =>
+    card.kind === "info"
+      ? Boolean(card.eyebrow || card.title || card.body)
+      : card.kind === "highlights"
+        ? highlights.length > 0
+        : true,
+  );
+}
 
 function subscribe(onChange: () => void) {
   const lists = QUERIES.map(([query]) => window.matchMedia(query));
@@ -39,9 +47,9 @@ function subscribe(onChange: () => void) {
   return () => lists.forEach((list) => list.removeEventListener("change", onChange));
 }
 
-export function MasonryGrid({ work }: { work: WorkItem[] }) {
+export function MasonryGrid({ work, highlights }: { work: WorkItem[]; highlights: Highlight[] }) {
   const columnCount = useSyncExternalStore(subscribe, getColumnCount, () => 4 as const);
-  const columns = layoutMasonry(columnCount, work, visibleFixedCards);
+  const columns = layoutMasonry(columnCount, work, visibleFixedCards(highlights));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -68,7 +76,7 @@ export function MasonryGrid({ work }: { work: WorkItem[] }) {
                 return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
               }
               if (cell.card.kind === "highlights") {
-                return <HighlightsCard key={cell.card.id} />;
+                return <HighlightsCard key={cell.card.id} highlights={highlights} />;
               }
               if (cell.card.kind === "howItWorks") {
                 return <HowItWorksCard key={cell.card.id} />;

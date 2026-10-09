@@ -133,7 +133,7 @@ export type FixedCard =
   | { id: string; kind: "howItWorks"; minHeight: number; slots: Record<ColumnCount, Slot> }
   // The Designjoy Labs card; it previews the tools in `content/labs.ts`.
   | { id: string; kind: "labs"; minHeight: number; slots: Record<ColumnCount, Slot> }
-  // The "Highlights" card; it shuffles through `highlights`.
+  // The "Highlights" seal; its awards are edited in /admin/highlights.
   | { id: string; kind: "highlights"; minHeight: number; slots: Record<ColumnCount, Slot> }
   // The "Kind words" card; its quotes come from `testimonials`.
   | { id: string; kind: "testimonial"; minHeight: number; slots: Record<ColumnCount, Slot> }
@@ -158,24 +158,6 @@ export type Testimonial = {
   company?: string;
   logo?: string;
 };
-
-export type HighlightIcon = "trophy" | "ribbon" | "star" | "medal";
-export type Highlight = {
-  icon: HighlightIcon;
-  /** The award or recognition, e.g. "Site of the Day". */
-  title: string;
-  /** Who gave it and for what, e.g. "Awwwards · Ordin, 2026". */
-  detail: string;
-};
-
-// Shown one at a time in the "Highlights" card. Replace the [bracketed]
-// placeholders with your real awards before launch.
-export const highlights: Highlight[] = [
-  { icon: "trophy", title: "[Award name]", detail: "[Awarding body] · [Project], [Year]" },
-  { icon: "ribbon", title: "[Award name]", detail: "[Awarding body] · [Project], [Year]" },
-  { icon: "star", title: "[Feature or mention]", detail: "[Publication] · [Project], [Year]" },
-  { icon: "medal", title: "[Award name]", detail: "[Awarding body] · [Project], [Year]" },
-];
 
 // Quotes shown one at a time in the "Kind words" card, in this order.
 export const testimonials: Testimonial[] = [
@@ -297,7 +279,7 @@ export const fixedCards: FixedCard[] = [
   {
     id: "highlights",
     kind: "highlights",
-    minHeight: 230,
+    minHeight: 250,
     slots: {
       4: { column: 2, row: 1 },
       3: { column: 0, row: 1 },

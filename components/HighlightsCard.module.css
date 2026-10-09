@@ -1,54 +1,72 @@
 .card {
   display: flex;
   flex-direction: column;
-  min-height: 230px;
-  padding: 24px;
+  align-items: center;
+  min-height: 240px;
+  padding: 24px 24px 18px;
   background: var(--surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
+  text-align: center;
 }
 
-.head {
-  display: flex;
-  justify-content: space-between;
+/* A stamp: text running round a slowly turning ring, the icon still in the middle. */
+.seal {
+  position: relative;
+  flex: none;
+  width: 112px;
+  height: 112px;
 }
 
-.label,
-.counter {
-  margin: 0;
+.ring {
+  position: absolute;
+  inset: 0;
+  animation: turn 18s linear infinite;
+}
+
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ringText {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.1px;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  font-size: 8.5px;
+  letter-spacing: 3px;
+  fill: var(--text-muted);
 }
 
-.counter {
-  font-variant-numeric: tabular-nums;
+.icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.item {
+.icon img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 9px;
+}
+
+.text {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 28px 0 22px;
-}
-
-/* Each highlight rises out of a soft blur, a beat after the icon. */
-.icon {
-  display: block;
-  margin-bottom: 18px;
-  color: var(--text);
-  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  justify-content: center;
+  padding: 14px 0 12px;
 }
 
 .title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 19px;
   line-height: 1.2;
-  letter-spacing: -0.66px;
+  letter-spacing: -0.57px;
   text-wrap: balance;
   animation: rise 0.6s 0.08s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
@@ -77,46 +95,33 @@
 
 .dots button {
   position: relative;
-  flex: 1;
-  height: 3px;
+  width: 5px;
+  height: 5px;
   padding: 0;
-  overflow: hidden;
-  background: #222;
+  background: #333;
   border: 0;
-  border-radius: 2px;
+  border-radius: 50%;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-/* A bigger hit area than the 3px line. */
+/* A bigger hit area than the dot. */
 .dots button::before {
   content: "";
   position: absolute;
-  inset: -8px 0;
+  inset: -8px -4px;
 }
 
 .dots button[aria-current] {
-  background: #444;
-}
-
-.fill {
-  position: absolute;
-  inset: 0;
   background: #fff;
-  transform-origin: left;
-  animation: fill linear both;
-}
-
-@keyframes fill {
-  from {
-    transform: scaleX(0);
-  }
+  transform: scale(1.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ring,
   .icon,
   .title,
-  .detail,
-  .fill {
+  .detail {
     animation: none;
   }
 }

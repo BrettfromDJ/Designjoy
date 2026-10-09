@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdmin, signIn, signOut } from "@/lib/auth";
 import { MAX_KNOWLEDGE_LENGTH, saveKnowledge } from "@/lib/knowledge";
+import { HIGHLIGHT_ICON_NAMES, MAX_HIGHLIGHTS, type Highlight } from "@/lib/highlight-icons";
+import { getHighlights, saveHighlights } from "@/lib/highlights";
 import { getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
 
 async function requireAdmin() {
@@ -77,4 +79,28 @@ export async function updateKnowledge(text: string) {
   await saveKnowledge(clean);
   revalidatePath("/admin/knowledge");
   return new Date().toISOString();
+}
+
+export async function updateHighlights(input: Highlight[]) {
+  await requireAdmin();
+  if (!Array.isArray(input) || input.length > MAX_HIGHLIGHTS) throw new Error("Too many highlights.");
+  const clean: Highlight[] = input
+    .map((h) => ({
+      id: String(h.id || crypto.randomUUID()).slice(0, 64),
+      title: String(h.title ?? "").trim().slice(0, 80),
+      detail: String(h.detail ?? "").trim().slice(0, 120),
+      icon: HIGHLIGHT_ICON_NAMES.includes(h.icon) ? h.icon : "trophy",
+      ...(h.image && isBlobUrl(h.image) ? { image: h.image } : {}),
+    }))
+    .filter((h) => h.title);
+
+  // Remove uploaded icons that are no longer used.
+  const keep = new Set(clean.map((h) => h.image).filter(Boolean));
+  const dropped = (await getHighlights()).map((h) => h.image).filter((url): url is string => !!url && !keep.has(url));
+
+  await saveHighlights(clean);
+  if (dropped.length) await del(dropped).catch((error) => console.error("Could not delete icons", error));
+  revalidatePath("/");
+  revalidatePath("/admin/highlights");
+  return clean;
 }

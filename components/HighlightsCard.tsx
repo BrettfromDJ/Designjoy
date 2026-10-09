@@ -1,29 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { highlights, type HighlightIcon } from "@/content/site";
+import { HighlightIconSvg, type Highlight } from "@/lib/highlight-icons";
 import styles from "./HighlightsCard.module.css";
 
 const SHOW_MS = 3600;
+const SEAL_TEXT = "AWARD-WINNING DESIGN · DESIGNJOY · AWARD-WINNING DESIGN · DESIGNJOY · ";
 
-// Simple monochrome line icons, drawn on a 32px grid.
-const ICONS: Record<HighlightIcon, React.ReactNode> = {
-  trophy: (
-    <path d="M10 5h12v6a6 6 0 0 1-12 0V5Zm0 2H6v2a4 4 0 0 0 4 4m12-6h4v2a4 4 0 0 1-4 4m-6 4v5m-5 4h10m-8-4h6" />
-  ),
-  ribbon: (
-    <path d="M16 4a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15Zm-4.6 13.4L9 28l7-3.6 7 3.6-2.4-10.6M16 8.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z" />
-  ),
-  star: (
-    <path d="m16 4 3.6 7.6 8.4 1-6.2 5.8 1.6 8.3L16 22.6l-7.4 4.1 1.6-8.3L4 12.6l8.4-1L16 4Z" />
-  ),
-  medal: (
-    <path d="M11 4h10l-3 8h-4l-3-8Zm5 8a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 3.5 1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4 1.2-2.4Z" />
-  ),
-};
-
-/** Shuffles through project highlights: awards, features and mentions. */
-export function HighlightsCard() {
+/**
+ * Highlights: a slowly turning seal with the award's icon in the middle,
+ * and the award underneath, changing every few seconds. Edited in
+ * /admin/highlights.
+ */
+export function HighlightsCard({ highlights }: { highlights: Highlight[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -32,62 +21,57 @@ export function HighlightsCard() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = window.setTimeout(() => setIndex((i) => (i + 1) % highlights.length), SHOW_MS);
     return () => clearTimeout(timer);
-  }, [index, paused]);
+  }, [index, paused, highlights.length]);
 
-  const item = highlights[index];
+  const item = highlights[index % highlights.length];
   if (!item) return null;
 
   return (
     <section
       className={styles.card}
-      aria-labelledby="highlights-title"
+      aria-label="Highlights"
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >
-      <div className={styles.head}>
-        <p id="highlights-title" className={styles.label}>
-          Highlights
-        </p>
-        <p className={styles.counter}>
-          {String(index + 1).padStart(2, "0")} / {String(highlights.length).padStart(2, "0")}
-        </p>
-      </div>
-
-      {/* Keyed, so each highlight animates in fresh. */}
-      <div key={index} className={styles.item} aria-live="polite">
-        <svg
-          className={styles.icon}
-          width="40"
-          height="40"
-          viewBox="0 0 32 32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          {ICONS[item.icon]}
+      <div className={styles.seal}>
+        <svg className={styles.ring} viewBox="0 0 112 112" aria-hidden="true">
+          <defs>
+            <path id="highlights-seal-path" d="M56 56m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0" />
+          </defs>
+          <circle cx="56" cy="56" r="54" fill="none" stroke="rgba(255,255,255,0.14)" />
+          <text className={styles.ringText}>
+            <textPath href="#highlights-seal-path">{SEAL_TEXT}</textPath>
+          </text>
         </svg>
-        <p className={styles.title}>{item.title}</p>
-        <p className={styles.detail}>{item.detail}</p>
+        {/* Keyed, so each icon animates in fresh. */}
+        <span key={`icon-${index}`} className={styles.icon}>
+          {item.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={item.image} alt="" width={36} height={36} />
+          ) : (
+            <HighlightIconSvg icon={item.icon} size={34} />
+          )}
+        </span>
       </div>
 
-      <div className={styles.dots}>
-        {highlights.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Show highlight ${i + 1}`}
-            aria-current={i === index || undefined}
-            onClick={() => setIndex(i)}
-          >
-            {i === index && !paused && (
-              <span className={styles.fill} style={{ animationDuration: `${SHOW_MS}ms` }} />
-            )}
-          </button>
-        ))}
+      <div key={`text-${index}`} className={styles.text} aria-live="polite">
+        <p className={styles.title}>{item.title}</p>
+        {item.detail && <p className={styles.detail}>{item.detail}</p>}
       </div>
+
+      {highlights.length > 1 && (
+        <div className={styles.dots}>
+          {highlights.map((h, i) => (
+            <button
+              key={h.id}
+              type="button"
+              aria-label={`Show ${h.title}`}
+              aria-current={i === index || undefined}
+              onClick={() => setIndex(i)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

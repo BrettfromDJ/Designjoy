@@ -1,5 +1,6 @@
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { sampleWork, type WorkItem } from "@/content/site";
+import { getHighlights } from "@/lib/highlights";
 import { getProjects } from "@/lib/projects";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -8,7 +9,7 @@ import styles from "./page.module.css";
 export const revalidate = 3600;
 
 export default async function Home() {
-  const projects = await getProjects();
+  const [projects, highlights] = await Promise.all([getProjects(), getHighlights()]);
   const work: WorkItem[] = projects.length
     ? projects.map(({ id, title, kind, url, width, height }) => ({
         id,
@@ -23,7 +24,7 @@ export default async function Home() {
   return (
     <main>
       <h1 className="visually-hidden">Designjoy</h1>
-      <MasonryGrid work={work} />
+      <MasonryGrid work={work} highlights={highlights} />
       <footer className={styles.footer}>
         <span>© {new Date().getFullYear()} Designjoy</span>
         <Link href="/terms">Terms</Link>
