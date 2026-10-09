@@ -3,6 +3,7 @@
 import { useState, useSyncExternalStore } from "react";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import { layoutMasonry } from "@/lib/masonry";
+import { HighlightsCard } from "./HighlightsCard";
 import { HowItWorksCard } from "./HowItWorksCard";
 import { InfoCard } from "./InfoCard";
 import { LabsCard } from "./LabsCard";
@@ -65,6 +66,9 @@ export function MasonryGrid({ work }: { work: WorkItem[] }) {
               }
               if (cell.card.kind === "scope") {
                 return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
+              }
+              if (cell.card.kind === "highlights") {
+                return <HighlightsCard key={cell.card.id} />;
               }
               if (cell.card.kind === "howItWorks") {
                 return <HowItWorksCard key={cell.card.id} />;
