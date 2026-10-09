@@ -170,6 +170,12 @@
   animation: grow-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+@keyframes ring-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes grow-up {
   from {
     clip-path: inset(calc(100% - 49px) 0 0 0 round 74px);
@@ -193,7 +199,11 @@
     var(--glow) 250deg,
     transparent 340deg
   );
-  animation: glow-spin 9s linear infinite;
+  /* The light fades in once the panel has grown, so it never streaks
+     across the edge while the panel is still opening. */
+  animation:
+    glow-spin 9s linear infinite,
+    ring-in 0.4s 0.4s ease both;
   opacity: 0.45;
   pointer-events: none;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
