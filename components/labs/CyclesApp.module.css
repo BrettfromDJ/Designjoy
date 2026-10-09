@@ -148,6 +148,8 @@
 }
 
 .ext {
+  /* Tucks under the sizer's caret room. */
+  margin-left: -2px;
   color: var(--text-muted);
 }
 
@@ -415,48 +417,99 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
 }
 
-.artboard {
+.emptyTiles {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.tiles {
+  display: flex;
+  gap: 10px;
+}
+
+.tile {
   position: relative;
+  width: 112px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+/* The same loading shimmer as the homepage tiles, staggered left to right. */
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.tile:nth-child(3)::after {
+  animation-delay: 0.15s;
+}
+
+.tile:nth-child(4)::after {
+  animation-delay: 0.3s;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+.addTile {
   display: grid;
   place-items: center;
-  width: min(560px, 100%);
-  aspect-ratio: 4 / 3;
   padding: 0;
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid var(--line-strong);
-  border-radius: 0;
-  color: var(--text-muted);
+  border-color: rgba(255, 255, 255, 0.25);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text);
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.artboard:hover,
-.app[data-dropping] .artboard {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.025);
+.addTile::after {
+  display: none;
 }
 
-.artboardLabel {
+.addTile:hover,
+.app[data-dropping] .addTile {
+  background: #121212;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.tileNumber {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(100% + 8px);
-  display: flex;
-  justify-content: space-between;
+  left: 8px;
+  bottom: 6px;
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-muted);
 }
 
-.artboardHint {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-muted);
-  transition: color 0.15s ease;
+@media (max-width: 559px) {
+  .tiles {
+    gap: 6px;
+  }
+
+  .tile {
+    width: 72px;
+  }
 }
 
-.artboard:hover .artboardHint {
-  color: var(--text-nav);
+@media (prefers-reduced-motion: reduce) {
+  .tile::after {
+    animation: none;
+  }
 }
 
 .segs {

@@ -353,7 +353,7 @@ export function CyclesApp() {
           </span>
         </div>
         {empty ? (
-          <p className={styles.emptyList}>No frames yet. Drop, paste or add images and they&apos;ll line up here.</p>
+          <p className={styles.emptyList}>No frames yet.</p>
         ) : (
           <ol className={styles.rows} ref={rowsRef}>
             {frames.map((frame, i) => (
@@ -441,14 +441,25 @@ export function CyclesApp() {
         </div>
         <div className={styles.stage}>
           {empty ? (
-            // An empty artboard, labelled like a frame in a design tool.
-            <button type="button" className={styles.artboard} onClick={() => inputRef.current?.click()}>
-              <span className={styles.artboardLabel}>
-                <span>{fileName}</span>
-                <span>{size === "original" ? "Original" : `${size} × —`}</span>
-              </span>
-              <span className={styles.artboardHint}>Drop, paste or click to add images</span>
-            </button>
+            // A row of empty frame tiles, shimmering like the homepage while it loads.
+            <div className={styles.emptyTiles}>
+              <div className={styles.tiles}>
+                <button
+                  type="button"
+                  className={`${styles.tile} ${styles.addTile}`}
+                  aria-label="Add images"
+                  onClick={() => inputRef.current?.click()}
+                >
+                  +
+                </button>
+                {[2, 3, 4].map((n) => (
+                  <span key={n} className={styles.tile} aria-hidden="true">
+                    <span className={styles.tileNumber}>{pad(n)}</span>
+                  </span>
+                ))}
+              </div>
+              <p className={styles.label}>Add two or more images · drag in or paste</p>
+            </div>
           ) : (
             <canvas ref={canvasRef} className={styles.canvas} />
           )}
