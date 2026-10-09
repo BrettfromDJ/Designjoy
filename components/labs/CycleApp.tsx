@@ -58,7 +58,7 @@ function timecode(ms: number) {
 export function CycleApp() {
   const [frames, setFrames] = useState<Frame[]>([]);
   const [ms, setMs] = useState(1000);
-  const [size, setSize] = useState<Size>("800");
+  const [size, setSize] = useState<Size>("original");
   const [quality, setQuality] = useState<Quality>("high");
   const [fit, setFit] = useState<Fit>("fill");
   const [background, setBackground] = useState("#000000");
