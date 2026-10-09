@@ -10,7 +10,7 @@ const FRAME_MS = 900;
 
 /**
  * The Designjoy Labs tile. Its preview plays a few pieces of work as a
- * sequence, the way the Sequence tool turns images into a GIF.
+ * sequence, the way the Cycle tool turns images into a GIF.
  */
 export function LabsCard({ work }: { work: WorkItem[] }) {
   const frames = work.filter((w) => w.kind === "image").slice(0, FRAMES);
@@ -24,7 +24,7 @@ export function LabsCard({ work }: { work: WorkItem[] }) {
   }, [frames.length]);
 
   return (
-    <Link href="/labs/sequence" className={styles.card}>
+    <Link href="/labs/cycle" className={styles.card}>
       <div>
         <p className={styles.label}>Designjoy Labs</p>
         <h2 className={styles.title}>
@@ -51,7 +51,7 @@ export function LabsCard({ work }: { work: WorkItem[] }) {
 
       <div className={styles.tool}>
         <span>
-          <span className={styles.toolName}>Sequence</span>
+          <span className={styles.toolName}>Cycle</span>
           <span className={styles.toolDescription}>Turn images into a GIF</span>
         </span>
         <span className={styles.arrow} aria-hidden="true">
