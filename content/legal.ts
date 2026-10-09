@@ -8,7 +8,7 @@ export const LEGAL = {
   /** Your registered business name, e.g. "Designjoy LLC". */
   company: "[Designjoy LLC]",
   /** Where questions and requests about these documents should go. */
-  email: "[your contact email]",
+  email: "hello@designjoy.co",
   /** The state whose laws govern the Terms, e.g. "Arizona". */
   state: "[your state]",
   updated: "October 9, 2026",
