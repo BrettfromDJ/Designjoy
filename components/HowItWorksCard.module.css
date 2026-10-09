@@ -1,0 +1,209 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--text-nav);
+  outline-offset: 2px;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.title {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.66px;
+  text-wrap: balance;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.preview {
+  display: block;
+  margin-top: 18px;
+  pointer-events: none;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 12px;
+  letter-spacing: -0.36px;
+  color: var(--text-nav);
+}
+
+.play {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding-left: 2px;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .play {
+  transform: scale(1.08);
+}
+
+/* Lightbox, matching the work lightbox. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: overlay-in 0.25s ease;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.panel {
+  position: relative;
+  width: min(980px, 100%);
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  animation: panel-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+    filter: blur(8px);
+  }
+}
+
+.close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: #1a1a1a;
+  border: 0;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.close:hover {
+  background: #262626;
+}
+
+.panelTitle {
+  margin: 6px 0 22px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+}
+
+.caption {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+  min-height: 22px;
+  margin: 22px 0 0;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  text-align: center;
+}
+
+.stepNumber {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dots li {
+  width: 22px;
+  height: 4px;
+  border-radius: 3px;
+  background: #262626;
+  transition: background-color 0.3s ease;
+}
+
+.dots li[data-state="past"],
+.dots li[data-state="now"] {
+  background: #fff;
+}
+
+@media (max-width: 559px) {
+  .panel {
+    padding: 20px 16px;
+  }
+
+  .panelTitle {
+    font-size: 22px;
+    padding-right: 36px;
+  }
+
+  .caption {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .panel {
+    animation: none;
+  }
+}

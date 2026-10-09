@@ -129,6 +129,8 @@ export type FixedCard =
   | { id: string; kind: "pricing"; slots: Record<ColumnCount, Slot> }
   // The "Scope of work" board; its services come from `scopeOfWork`.
   | { id: string; kind: "scope"; minHeight: number; slots: Record<ColumnCount, Slot> }
+  // "How it works": a looping board demo that opens large in a lightbox.
+  | { id: string; kind: "howItWorks"; minHeight: number; slots: Record<ColumnCount, Slot> }
   // The Designjoy Labs card; it previews the tools in `content/labs.ts`.
   | { id: string; kind: "labs"; minHeight: number; slots: Record<ColumnCount, Slot> }
   // The "Kind words" card; its quotes come from `testimonials`.
@@ -270,6 +272,17 @@ export const fixedCards: FixedCard[] = [
       3: { column: 0, row: 3 },
       2: { column: 0, row: 3 },
       1: { column: 0, row: 7 },
+    },
+  },
+  {
+    id: "how-it-works",
+    kind: "howItWorks",
+    minHeight: 330,
+    slots: {
+      4: { column: 0, row: 2 },
+      3: { column: 1, row: 1 },
+      2: { column: 1, row: 2 },
+      1: { column: 0, row: 5 },
     },
   },
   {

@@ -1,0 +1,262 @@
+/* The board is drawn at 800 × 380 and scaled to the width of .fit. */
+.fit {
+  position: relative;
+  width: 100%;
+}
+
+.stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  color: var(--text);
+  font-size: 13px;
+  letter-spacing: -0.2px;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.boardBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.boardBar b {
+  font-weight: 500;
+}
+
+.boardBar i {
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #c4c4c4;
+}
+
+.column {
+  position: absolute;
+  top: 44px;
+  width: 188px;
+  height: 336px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  transition: border-color 0.3s ease;
+}
+
+.column.target {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.columnHead {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.count {
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.count.limit {
+  background: #1f1f1f;
+}
+
+.count.full {
+  background: #fff;
+  color: #000;
+}
+
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 164px;
+  padding: 10px;
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  transition:
+    transform 0.7s cubic-bezier(0.65, 0, 0.25, 1),
+    opacity 0.35s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.card.lift {
+  background: #1c1c1c;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
+}
+
+.card.hidden {
+  opacity: 0;
+}
+
+.cardTitle {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.card.guide .cardTitle::before {
+  content: "◦ ";
+  color: var(--text-muted);
+}
+
+.bars {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.bars b {
+  display: block;
+  height: 4px;
+  border-radius: 3px;
+  background: #2a2a2a;
+}
+
+.bars b:nth-child(2) {
+  width: 60%;
+}
+
+/* The delivered design, on the card. */
+.thumb {
+  height: 0;
+  overflow: hidden;
+  border-radius: 5px;
+  background: repeating-linear-gradient(135deg, #2c2c2c 0 6px, #232323 6px 12px);
+  transition:
+    height 0.4s ease,
+    margin-top 0.4s ease;
+}
+
+.card.done .thumb {
+  height: 54px;
+  margin-top: 8px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.tag,
+.comments,
+.avatar {
+  display: none;
+}
+
+.tag {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+}
+
+.card.review .tag {
+  display: inline-block;
+}
+
+.card.chat .comments {
+  display: inline;
+}
+
+.comments svg {
+  vertical-align: -1px;
+}
+
+.avatar {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #c4c4c4;
+}
+
+.card.review .avatar {
+  display: block;
+}
+
+.bubble {
+  position: absolute;
+  padding: 6px 9px;
+  border-radius: 10px 10px 10px 2px;
+  background: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+  color: #000;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.bubble.reply {
+  border-radius: 10px 10px 2px 10px;
+  background: #262626;
+  color: #fff;
+}
+
+.bubble.on {
+  opacity: 1;
+  transform: none;
+}
+
+.cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  pointer-events: none;
+  transition:
+    transform 0.6s cubic-bezier(0.65, 0, 0.25, 1),
+    opacity 0.3s ease;
+}
+
+.cursor svg {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  transition: transform 0.15s ease;
+}
+
+.cursor.grab svg {
+  transform: scale(0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cursor,
+  .thumb,
+  .bubble {
+    transition: none;
+  }
+}
