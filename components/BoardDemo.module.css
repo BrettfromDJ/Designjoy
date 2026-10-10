@@ -14,40 +14,9 @@
   letter-spacing: -0.2px;
 }
 
-.label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.boardBar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.boardBar b {
-  font-weight: 500;
-}
-
-.boardBar i {
-  width: 18px;
-  height: 18px;
-  margin-left: auto;
-  border-radius: 50%;
-  background: #c4c4c4;
-}
-
 .column {
   position: absolute;
-  top: 44px;
+  top: 0;
   width: 256px;
   height: 336px;
   background: #0f0f0f;

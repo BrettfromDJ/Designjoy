@@ -16,10 +16,10 @@ const STEP_MS = [3400, 2800, 3000, 3600, 2800, 3000];
 
 // The board is laid out at a fixed size and scaled to fit its container.
 const W = 800;
-const H = 380;
+const H = 336;
 const COL_W = 256;
 const GAP = 16;
-const TOP = 44;
+const TOP = 0;
 const HEAD = 38;
 const CARD_GAP = 8;
 
@@ -61,13 +61,6 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     if (!fit || !stage) return;
     stage.innerHTML = "";
 
-    stage.append(
-      el(
-        "div",
-        styles.boardBar,
-        `<b>Your company · Designjoy</b><span class="${styles.label}">Board</span><i></i>`,
-      ),
-    );
     const columnEls = {} as Record<ColumnId, HTMLElement>;
     COLUMNS.forEach((c, i) => {
       const col = el(
