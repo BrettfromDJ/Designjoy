@@ -27,7 +27,7 @@ export default async function Home() {
   return (
     <main>
       <h1 className="visually-hidden">Designjoy</h1>
-      {/* Hero candidates, only shown with ?hero=1…6 in the URL. */}
+      {/* Hero candidates, only shown with ?hero=1…5 in the URL. */}
       <Suspense>
         <HeroPreview />
       </Suspense>
