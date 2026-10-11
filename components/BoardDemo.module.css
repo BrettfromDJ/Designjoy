@@ -72,7 +72,8 @@
     transform 0.7s cubic-bezier(0.65, 0, 0.25, 1),
     opacity 0.35s ease,
     box-shadow 0.3s ease,
-    background-color 0.3s ease;
+    background-color 0.3s ease,
+    border-color 0.5s ease;
 }
 
 .card.lift {
@@ -142,10 +143,12 @@
   margin-top: 8px;
 }
 
+/* Tall enough for the review tag, so the card doesn't grow when it appears. */
 .meta {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 20px;
   margin-top: 8px;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -187,6 +190,32 @@
   display: inline;
 }
 
+/* The review tag, avatar and comment count ease in rather than popping
+   up, and the tag and avatar fade away before the card moves on. */
+.card.review .tag,
+.card.review .avatar,
+.card.chat .comments {
+  animation: meta-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  transition: opacity 0.25s ease;
+}
+
+.card.review .avatar {
+  animation-delay: 0.1s;
+}
+
+.card.leaving .tag,
+.card.leaving .avatar {
+  opacity: 0;
+}
+
+@keyframes meta-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(3px);
+  }
+}
+
 .comments svg {
   vertical-align: -1px;
 }
@@ -221,6 +250,17 @@
   border-radius: 50%;
   background: #fff;
   animation: pulse 1.2s ease-in-out infinite;
+}
+
+.card.wrapping .status {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+
+.status {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .status [data-pct] {
@@ -363,7 +403,10 @@
     transition: none;
   }
 
-  .status i {
+  .status i,
+  .card.review .tag,
+  .card.review .avatar,
+  .card.chat .comments {
     animation: none;
   }
 }

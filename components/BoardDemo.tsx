@@ -138,7 +138,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     const reset = () => {
       cols = { backlog: [], current: [], approved: [] };
       for (const node of Object.values(cardEls)) {
-        node.classList.remove(styles.done, styles.review, styles.chat, styles.lift, styles.working, styles.light);
+        node.classList.remove(styles.done, styles.review, styles.chat, styles.lift, styles.working, styles.light, styles.wrapping, styles.leaving);
         const cover = node.querySelector<HTMLElement>(`.${styles.cover}`)!;
         cover.style.transition = "none";
         cover.style.transform = "";
@@ -204,8 +204,10 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       const cover = cardEls[id].querySelector<HTMLElement>(`.${styles.cover}`)!;
       cover.style.transition = "transform 0.45s ease-out";
       cover.style.transform = "translateY(100%)";
+      // "Rendering 100%" fades out as the last of the design lands.
+      cardEls[id].classList.add(styles.wrapping);
       await wait(550);
-      cardEls[id].classList.remove(styles.working);
+      cardEls[id].classList.remove(styles.working, styles.wrapping);
     };
 
     const steps: (() => Promise<void> | void)[] = [
@@ -248,8 +250,9 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       async () => {
         ask.classList.remove(styles.on);
         reply.classList.remove(styles.on);
-        await wait(250);
-        cardEls.landing.classList.remove(styles.review);
+        cardEls.landing.classList.add(styles.leaving);
+        await wait(300);
+        cardEls.landing.classList.remove(styles.review, styles.leaving);
         layout();
         await drag("landing", "approved");
       },
