@@ -393,6 +393,204 @@
   background: #fff;
 }
 
+/* 7. Bento */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.bentoLead {
+  grid-column: span 2;
+  grid-row: span 2;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 32px;
+}
+
+.bentoStat .big {
+  margin-top: 10px;
+}
+
+/* 8. Ticker */
+.ticker {
+  overflow: hidden;
+  margin: 0 calc(var(--gap) * -1);
+  padding: 22px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.tickerRow {
+  display: flex;
+  width: max-content;
+  animation: ticker 40s linear infinite;
+}
+
+.tickerItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0 40px;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 56px);
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.tickerItem::after {
+  content: "";
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  margin-left: 40px;
+  border-radius: 50%;
+  background: #333;
+}
+
+.tickerValue {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* 9. Stat pills */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 640px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pills li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 13px;
+  letter-spacing: -0.39px;
+  color: var(--text-nav);
+}
+
+.pills b {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* 10. Countdown */
+.clock {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 12vw, 176px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock i {
+  font-style: normal;
+  color: var(--text-muted);
+  animation: tick 1s steps(1) infinite;
+}
+
+@keyframes tick {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* 11. Index */
+.index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index li {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: end;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  transition: padding-left 0.3s ease;
+}
+
+.index li:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.index li:hover {
+  padding-left: 8px;
+}
+
+.index li > .label {
+  align-self: start;
+  padding-top: 4px;
+}
+
+.indexLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  letter-spacing: -0.45px;
+}
+
+/* 12. Drawn stats: each card draws its little picture on load. */
+.art {
+  width: 120px;
+  height: 60px;
+  margin-bottom: 12px;
+  overflow: visible;
+}
+
+.art path,
+.art circle {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.art :not(.track) {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.4s 0.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.art .track {
+  stroke: #262626;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Preview-only switcher, top left. */
 .switcher {
   position: fixed;
@@ -434,7 +632,8 @@
 }
 
 @media (max-width: 1099px) {
-  .cards {
+  .cards,
+  .bento {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -486,13 +685,29 @@
   .card .note {
     display: none;
   }
+
+  .bentoLead {
+    padding: 22px;
+  }
+
+  .art {
+    width: 80px;
+    height: 40px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .rise,
   .spec > div,
-  .liveDot::after {
+  .liveDot::after,
+  .tickerRow,
+  .clock i {
     animation: none;
+  }
+
+  .art :not(.track) {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 
   .cycleItem {

@@ -262,6 +262,228 @@ function Cycle() {
   );
 }
 
+/** 7. A bento of cards: the headline takes a double tile, the stats fill the rest. */
+function Bento() {
+  return (
+    <section className={styles.hero}>
+      <div className={styles.bento}>
+        <div className={`${styles.card} ${styles.bentoLead} ${styles.rise}`}>
+          <Live>Spots available · Start today</Live>
+          <h2 className={styles.title}>
+            One subscription.
+            <br />
+            <span className={styles.muted}>Endless possibilities.</span>
+          </h2>
+          <Buttons />
+        </div>
+        {STATS.map((s, i) => (
+          <div
+            key={s.label}
+            className={`${styles.card} ${styles.bentoStat} ${styles.rise}`}
+            style={{ animationDelay: `${0.15 + i * 0.08}s` }}
+          >
+            <span className={styles.label}>{s.label}</span>
+            <span className={styles.big}>
+              <Count stat={s} />
+            </span>
+            <span className={styles.note}>{s.note}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** 8. The headline, then the stats running past in a big endless ticker. */
+function Ticker() {
+  const items = [
+    ["∞", "requests"],
+    ["48h", "average delivery"],
+    ["$4,995", "a month"],
+    ["0", "contracts"],
+    ["∞", "revisions"],
+    ["∞", "brands"],
+  ];
+  const run = [...items, ...items];
+  return (
+    <section className={styles.hero}>
+      <div className={styles.split}>
+        <h2 className={`${styles.title} ${styles.rise}`}>
+          Senior design,
+          <br />
+          <span className={styles.muted}>on subscription.</span>
+        </h2>
+        <div className={styles.rise} data-delay="1">
+          <Buttons />
+        </div>
+      </div>
+      <div className={`${styles.ticker} ${styles.rise}`} data-delay="2" aria-label="Unlimited requests, 48-hour average delivery, $4,995 a month, no contracts">
+        <div className={styles.tickerRow} aria-hidden="true">
+          {run.map(([v, l], i) => (
+            <span key={i} className={styles.tickerItem}>
+              <span className={styles.tickerValue}>{v}</span>
+              <span className={styles.muted}>{l}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** 9. Minimal: a centred headline with the stats as quiet pills under it. */
+function Pills() {
+  return (
+    <section className={styles.hero}>
+      <div className={styles.center}>
+        <h2 className={`${styles.title} ${styles.rise}`}>
+          One subscription.
+          <br />
+          <span className={styles.muted}>Endless possibilities.</span>
+        </h2>
+        <ul className={`${styles.pills} ${styles.rise}`} data-delay="1">
+          {STATS.map((s) => (
+            <li key={s.label}>
+              <b>{s.value}</b>
+              {s.label}
+            </li>
+          ))}
+        </ul>
+        <div className={styles.rise} data-delay="2">
+          <Buttons center />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/** 10. A live countdown: subscribe now, see your first design in 48 hours. */
+function Countdown() {
+  const [left, setLeft] = useState(48 * 3600);
+  const [day, setDay] = useState("");
+  useEffect(() => {
+    const due = Date.now() + 48 * 3600 * 1000;
+    setDay(DAYS[new Date(due).getDay()]);
+    const t = window.setInterval(() => setLeft(Math.max(0, Math.round((due - Date.now()) / 1000))), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const hh = String(Math.floor(left / 3600)).padStart(2, "0");
+  const mm = String(Math.floor(left / 60) % 60).padStart(2, "0");
+  const ss = String(left % 60).padStart(2, "0");
+  return (
+    <section className={styles.hero}>
+      <div className={styles.center}>
+        <span className={`${styles.label} ${styles.rise}`}>Your first design, in about</span>
+        <span className={`${styles.clock} ${styles.rise}`} data-delay="1">
+          {hh}
+          <i>:</i>
+          {mm}
+          <i>:</i>
+          {ss}
+        </span>
+        <p className={`${styles.lede} ${styles.rise}`} data-delay="2">
+          Subscribe today and most requests land {day ? `by ${day}` : "in about two days"}. Unlimited requests,{" "}
+          $4,995 a month, no contracts.
+        </p>
+        <div className={styles.rise} data-delay="3">
+          <Buttons center />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** 11. An editorial index: numbered rows, each stat large on the right. */
+function Index() {
+  return (
+    <section className={styles.hero}>
+      <div className={styles.feature}>
+        <div className={styles.featureMain}>
+          <h2 className={`${styles.title} ${styles.rise}`}>
+            Everything you need
+            <br />
+            <span className={styles.muted}>to know.</span>
+          </h2>
+          <p className={`${styles.lede} ${styles.rise}`} data-delay="1">
+            A senior design team on subscription. Add requests, get designs, repeat.
+          </p>
+          <div className={styles.rise} data-delay="2">
+            <Buttons />
+          </div>
+        </div>
+        <ol className={`${styles.index} ${styles.rise}`} data-delay="1">
+          {STATS.map((s, i) => (
+            <li key={s.label}>
+              <span className={styles.label}>{String(i + 1).padStart(2, "0")}</span>
+              <span className={styles.indexLabel}>
+                {s.label}
+                <span className={styles.note}>{s.note}</span>
+              </span>
+              <span className={styles.mid}>
+                <Count stat={s} />
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/** 12. Stat cards, each with a small animated drawing of what it means. */
+function Visual() {
+  return (
+    <section className={styles.hero}>
+      <div className={styles.split}>
+        <h2 className={`${styles.title} ${styles.rise}`}>
+          Design on tap,
+          <br />
+          <span className={styles.muted}>not on payroll.</span>
+        </h2>
+        <div className={styles.rise} data-delay="1">
+          <Buttons />
+        </div>
+      </div>
+      <div className={styles.cards}>
+        {STATS.map((s, i) => (
+          <div key={s.label} className={`${styles.card} ${styles.rise}`} style={{ animationDelay: `${0.2 + i * 0.08}s` }}>
+            <svg className={styles.art} viewBox="0 0 120 60" aria-hidden="true">
+              {i === 0 && (
+                <path pathLength={1} d="M60 30c-10-14-32-14-32 0s22 14 32 0 32-14 32 0-22 14-32 0Z" />
+              )}
+              {i === 1 && (
+                <>
+                  <circle cx="60" cy="30" r="24" className={styles.track} />
+                  <circle pathLength={1} cx="60" cy="30" r="24" transform="rotate(-90 60 30)" />
+                </>
+              )}
+              {i === 2 && (
+                <>
+                  <path d="M8 52H112" className={styles.track} />
+                  <path pathLength={1} d="M8 30H112" />
+                </>
+              )}
+              {i === 3 && (
+                <>
+                  <path d="M44 6h24l10 10v38H44Z" className={styles.track} />
+                  <path pathLength={1} d="M38 48 82 12" />
+                </>
+              )}
+            </svg>
+            <span className={styles.label}>{s.label}</span>
+            <span className={styles.big}>
+              <Count stat={s} />
+            </span>
+            <span className={styles.note}>{s.note}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 const VARIANTS = [
   { name: "Hairlines", Hero: Hairlines },
   { name: "Stat cards", Hero: Cards },
@@ -269,7 +491,14 @@ const VARIANTS = [
   { name: "Feature number", Hero: Feature },
   { name: "Spec sheet", Hero: Spec },
   { name: "Cycling number", Hero: Cycle },
+  { name: "Bento", Hero: Bento },
+  { name: "Ticker", Hero: Ticker },
+  { name: "Stat pills", Hero: Pills },
+  { name: "Countdown", Hero: Countdown },
+  { name: "Index", Hero: Index },
+  { name: "Drawn stats", Hero: Visual },
 ];
+
 
 export function HeroPreview() {
   const params = useSearchParams();
