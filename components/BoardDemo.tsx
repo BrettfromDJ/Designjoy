@@ -12,7 +12,7 @@ export const BOARD_STEPS = [
   "Happy with it? Move it to Approved.",
   "Then the next request moves up, and we start on it.",
 ];
-const STEP_MS = [3400, 2800, 3000, 3600, 2800, 3000];
+const STEP_MS = [3400, 2800, 3000, 4400, 2800, 3000];
 
 // The board is laid out at a fixed size and scaled to fit its container.
 const W = 800;
@@ -31,7 +31,7 @@ const COLUMNS = [
 type ColumnId = (typeof COLUMNS)[number]["id"];
 
 const CARDS: Record<string, { title: string }> = {
-  landing: { title: "Landing page redesign" },
+  landing: { title: "Logo design" },
   deck: { title: "Series A pitch deck" },
   ads: { title: "Launch social ads" },
 };
@@ -79,7 +79,9 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
         "div",
         `${styles.card} ${styles.hidden}`,
         `<div class="${styles.cardTitle}">${card.title}</div>` +
-          `<div class="${styles.thumb}"></div>` +
+          (id === "landing"
+            ? `<div class="${styles.thumb}"><img src="/demo/logo-dark.webp" alt="" draggable="false"><img src="/demo/logo-light.webp" alt="" draggable="false"></div>`
+            : `<div class="${styles.thumb}"></div>`) +
           `<div class="${styles.bars}"><b></b><b></b></div>` +
           `<div class="${styles.meta}"><span class="${styles.tag}">In review</span>` +
           `<span class="${styles.status}"><i></i>Designing</span>` +
@@ -90,8 +92,8 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       stage.append(node);
       cardEls[id] = node;
     }
-    const ask = el("div", styles.bubble, "Can we try a darker hero?");
-    const reply = el("div", `${styles.bubble} ${styles.reply}`, "On it, updated ✓");
+    const ask = el("div", styles.bubble, "Love it! Can we see a light mode version?");
+    const reply = el("div", `${styles.bubble} ${styles.reply}`, "Done, light mode is up ✓");
     const cursor = el(
       "div",
       styles.cursor,
@@ -135,7 +137,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     const reset = () => {
       cols = { backlog: [], current: [], approved: [] };
       for (const node of Object.values(cardEls)) {
-        node.classList.remove(styles.done, styles.review, styles.chat, styles.lift, styles.working);
+        node.classList.remove(styles.done, styles.review, styles.chat, styles.lift, styles.working, styles.light);
         const bar = node.querySelector<HTMLElement>(`.${styles.progress} b`)!;
         bar.style.transition = "none";
         bar.style.transform = "scaleX(0)";
@@ -228,6 +230,9 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
         Object.assign(reply.style, { left: `${p.x + 40}px`, top: `${p.y + h + 44}px` });
         reply.classList.add(styles.on);
         cardEls.landing.querySelector("[data-count]")!.textContent = "2";
+        // The revision lands on the card: the logo switches to light mode.
+        await wait(500);
+        cardEls.landing.classList.add(styles.light);
       },
       async () => {
         ask.classList.remove(styles.on);
