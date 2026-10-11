@@ -156,8 +156,7 @@
 }
 
 .tag,
-.comments,
-.avatar {
+.comments {
   display: none;
 }
 
@@ -190,21 +189,15 @@
   display: inline;
 }
 
-/* The review tag, avatar and comment count ease in rather than popping
-   up, and the tag and avatar fade away before the card moves on. */
+/* The review tag and comment count ease in rather than popping
+   up, and the tag fades away before the card moves on. */
 .card.review .tag,
-.card.review .avatar,
 .card.chat .comments {
   animation: meta-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   transition: opacity 0.25s ease;
 }
 
-.card.review .avatar {
-  animation-delay: 0.1s;
-}
-
-.card.leaving .tag,
-.card.leaving .avatar {
+.card.leaving .tag {
   opacity: 0;
 }
 
@@ -218,18 +211,6 @@
 
 .comments svg {
   vertical-align: -1px;
-}
-
-.avatar {
-  width: 14px;
-  height: 14px;
-  margin-left: auto;
-  border-radius: 50%;
-  background: #c4c4c4;
-}
-
-.card.review .avatar {
-  display: block;
 }
 
 /* Work in progress on the current request. */
@@ -405,7 +386,6 @@
 
   .status i,
   .card.review .tag,
-  .card.review .avatar,
   .card.chat .comments {
     animation: none;
   }
