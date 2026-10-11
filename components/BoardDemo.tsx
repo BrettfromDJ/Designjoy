@@ -12,7 +12,12 @@ export const BOARD_STEPS = [
   "Happy with it? Move it to Approved.",
   "Then the next request moves up, and we start on it.",
 ];
-const STEP_MS = [3400, 2800, 3000, 4400, 2800, 3000];
+const STEP_MS = [3400, 2800, 3400, 4400, 2800, 3000];
+// How long the thumbnail takes to open, then how long the design takes to
+// render into it, and how long a drag between columns takes.
+const OPEN_MS = 400;
+const RENDER_MS = 2600;
+const DRAG_MS = 1850;
 
 // The board is laid out at a fixed size and scaled to fit its container.
 const W = 800;
@@ -196,25 +201,28 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       card.classList.add(styles.working);
       cover.style.transition = "none";
       cover.style.transform = "translateY(0)";
+      pct.textContent = "0%";
       void cover.offsetWidth;
-      cover.style.transition = "transform 3.4s cubic-bezier(0.4, 0, 0.3, 1)";
-      cover.style.transform = "translateY(90%)";
+      // One steady pass, starting once the thumbnail has opened, so the scan
+      // never changes speed part way.
+      cover.style.transition = `transform ${RENDER_MS}ms cubic-bezier(0.45, 0, 0.4, 1) ${OPEN_MS}ms`;
+      cover.style.transform = "translateY(100%)";
       cancelAnimationFrame(raf);
+      let shown = 0;
       const count = () => {
         const moved = new DOMMatrix(getComputedStyle(cover).transform).m42;
-        pct.textContent = `${Math.round((moved / (cover.offsetHeight || 1)) * 100)}%`;
+        const value = Math.round((moved / (cover.offsetHeight || 1)) * 100);
+        // Only touch the text when the number changes, to keep repaints down.
+        if (value !== shown) pct.textContent = `${(shown = value)}%`;
         if (card.classList.contains(styles.working)) raf = requestAnimationFrame(count);
       };
       raf = requestAnimationFrame(count);
       layout();
     };
     const finishWork = async (id: string) => {
-      const cover = cardEls[id].querySelector<HTMLElement>(`.${styles.cover}`)!;
-      cover.style.transition = "transform 0.45s ease-out";
-      cover.style.transform = "translateY(100%)";
-      // "Rendering 100%" fades out as the last of the design lands.
+      // "Rendering 100%" fades out once the design has landed.
       cardEls[id].classList.add(styles.wrapping);
-      await wait(550);
+      await wait(400);
       cardEls[id].classList.remove(styles.working, styles.wrapping);
     };
 
@@ -240,7 +248,8 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
         startWork("landing");
       },
       async () => {
-        await wait(400);
+        // Wait for the render that started with the last step to finish.
+        await wait(OPEN_MS + RENDER_MS - (STEP_MS[1] - DRAG_MS) + 150);
         await finishWork("landing");
         cardEls.landing.classList.add(styles.done, styles.review);
         await wait(450);

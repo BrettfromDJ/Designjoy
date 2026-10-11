@@ -240,6 +240,7 @@
   border-radius: 50%;
   background: #fff;
   animation: pulse 1.2s ease-in-out infinite;
+  will-change: opacity;
 }
 
 .card.wrapping .status {
@@ -253,8 +254,11 @@
     transform 0.3s ease;
 }
 
+/* The count changes often; on its own layer, only it repaints. */
 .status [data-pct] {
+  display: inline-block;
   font-variant-numeric: tabular-nums;
+  will-change: transform;
 }
 
 @keyframes pulse {
@@ -284,6 +288,9 @@
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 12px 12px;
   font-style: normal;
+  /* Its own layer, so it slides smoothly (even by fractions of a pixel on a
+     scaled-down board) without repainting the card. */
+  will-change: transform;
 }
 
 .cover::before {
