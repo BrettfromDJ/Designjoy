@@ -16,7 +16,7 @@ const STEP_MS = [3400, 2800, 3000, 4400, 2800, 3000];
 
 // The board is laid out at a fixed size and scaled to fit its container.
 const W = 800;
-const H = 336;
+const H = 400;
 const COL_W = 256;
 const GAP = 16;
 const TOP = 0;
