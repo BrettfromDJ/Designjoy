@@ -25,3 +25,8 @@
     padding-top: 81px;
   }
 }
+
+/* With a hero above it, the grid no longer needs room for the nav. */
+:global([data-hero]) + .grid {
+  padding-top: var(--gap);
+}
