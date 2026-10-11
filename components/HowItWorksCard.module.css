@@ -206,8 +206,17 @@
     padding-right: 36px;
   }
 
+  /* Always two lines tall, so the panel (and the board above it) doesn't
+     shift as captions of different lengths come and go. */
   .caption {
+    align-items: flex-start;
+    height: calc(2 * 1.3em);
     font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .stepNumber {
+    line-height: 17px;
   }
 }
 

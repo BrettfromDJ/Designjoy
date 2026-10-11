@@ -59,6 +59,15 @@
   color: #000;
 }
 
+/* Cards and the cursor glide on their own layers. Without this, on a phone
+   (where the board is scaled well down) they snap from pixel to pixel as
+   they move, which reads as jitter. */
+.card,
+.cursor {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
 .card {
   position: absolute;
   left: 0;

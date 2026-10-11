@@ -120,8 +120,17 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
         cols[col].forEach((id, i) => {
           if (id === skip) return;
           const p = pos(col, i);
-          cardEls[id].classList.remove(styles.hidden);
-          cardEls[id].style.transform = `translate(${p.x}px, ${p.y}px)`;
+          const card = cardEls[id];
+          // A card coming into view starts just below its spot and rises in,
+          // rather than sliding over from wherever it was last.
+          if (card.classList.contains(styles.hidden)) {
+            card.style.transition = "none";
+            card.style.transform = `translate(${p.x}px, ${p.y + 10}px)`;
+            void card.offsetWidth;
+            card.style.transition = "";
+            card.classList.remove(styles.hidden);
+          }
+          card.style.transform = `translate(${p.x}px, ${p.y}px)`;
         });
       }
       for (const c of COLUMNS) {
@@ -211,9 +220,15 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
 
     const steps: (() => Promise<void> | void)[] = [
       async () => {
+        // Fade the last round's cards out before resetting them, so their
+        // thumbnails don't visibly fold away.
+        for (const node of Object.values(cardEls)) node.classList.add(styles.hidden);
+        ask.classList.remove(styles.on);
+        reply.classList.remove(styles.on);
+        await wait(400);
         reset();
         layout();
-        await wait(300);
+        await wait(200);
         for (const id of ["landing", "deck", "ads"]) {
           cols.backlog.push(id);
           layout();
