@@ -1,53 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { plans } from "@/content/site";
+import { useState, type CSSProperties } from "react";
+import { plans, type Plan } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { startCheckout } from "@/lib/checkout";
 import { CheckIcon } from "./Icons";
 import styles from "./PlanPicker.module.css";
 
-const amount = (price: string) => Number(price.replace(/[^0-9]/g, ""));
-const format = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
-
-/** Counts the displayed price up or down to `target`. */
-function useRollingPrice(target: number) {
-  const [shown, setShown] = useState(target);
-  const from = useRef(target);
-
-  useEffect(() => {
-    const start = from.current;
-    if (
-      start === target ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      from.current = target;
-      setShown(target);
-      return;
-    }
-    let frame = 0;
-    const began = performance.now();
-    const step = (now: number) => {
-      const t = Math.min((now - began) / 450, 1);
-      const value = start + (target - start) * (1 - Math.pow(1 - t, 3));
-      from.current = value;
-      setShown(value);
-      if (t < 1) frame = requestAnimationFrame(step);
-    };
-    frame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frame);
-  }, [target]);
-
-  return shown;
-}
-
-/** A plan toggle, price, features and actions. `embedded` drops the card
- *  chrome, for showing it inside the ask box panel. */
+/** Both plans as rows; the chosen one opens to show its line and checklist.
+ *  `embedded` drops the card chrome, for showing it inside the ask box panel. */
 export function PlanPicker({ embedded = false }: { embedded?: boolean }) {
-  const [index, setIndex] = useState(0);
+  const [planId, setPlanId] = useState<Plan["id"]>(plans[0].id);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const plan = plans[index];
-  const price = useRollingPrice(amount(plan.price));
+  // The checklist only cascades in after a switch, not on first open.
+  const [switched, setSwitched] = useState(false);
+  const plan = plans.find((p) => p.id === planId) ?? plans[0];
 
   async function subscribe() {
     setStatus("loading");
@@ -63,50 +30,60 @@ export function PlanPicker({ embedded = false }: { embedded?: boolean }) {
       className={embedded ? `${styles.card} ${styles.embedded}` : styles.card}
       aria-label="Choose a plan"
     >
-      <div
-        className={styles.toggle}
-        role="group"
-        aria-label="Plan"
-        data-pick={index}
-      >
-        <i aria-hidden="true" />
-        {plans.map((p, n) => (
-          <button
-            key={p.id}
-            type="button"
-            aria-pressed={n === index}
-            className={p.highlight ? styles.highlight : undefined}
-            onClick={() => {
-              setIndex(n);
-              setStatus("idle");
-            }}
-          >
-            {p.name}
-            {p.tag && <span className={styles.tag}>{p.tag}</span>}
-          </button>
-        ))}
-      </div>
-
-      <p className={styles.price} aria-live="polite">
-        <span className="visually-hidden">{plan.price} per month</span>
-        <span aria-hidden="true">
-          {format(price)}
-          <span className={styles.muted}>/mo</span>
-        </span>
-      </p>
-      <p key={`for-${plan.id}`} className={styles.perfectFor}>
-        {plan.description}
-      </p>
-
-      <p className={styles.label}>What&apos;s included</p>
-      <ul key={plan.id} className={styles.features}>
-        {plan.features.map((feature) => (
-          <li key={feature}>
-            <CheckIcon />
-            {feature}
-          </li>
-        ))}
-      </ul>
+      <fieldset className={styles.plans}>
+        <legend className="visually-hidden">Choose a plan</legend>
+        {plans.map((p) => {
+          const selected = p.id === planId;
+          return (
+            <label key={p.id} className={styles.plan} data-selected={selected}>
+              <span className={styles.head}>
+                <input
+                  type="radio"
+                  name="plan-picker"
+                  value={p.id}
+                  checked={selected}
+                  onChange={() => {
+                    setPlanId(p.id);
+                    setStatus("idle");
+                    setSwitched(true);
+                  }}
+                  className={styles.radio}
+                />
+                <span className={styles.name}>
+                  {p.name}
+                  {p.tag && (
+                    <span className={p.highlight ? `${styles.tag} ${styles.tagGlow}` : styles.tag}>
+                      {p.tag}
+                    </span>
+                  )}
+                </span>
+                <span className={styles.price}>
+                  {p.price}
+                  <span className={styles.muted}>/mo</span>
+                </span>
+              </span>
+              {selected && (
+                <span className={styles.body}>
+                  <span className={styles.description}>{p.description}</span>
+                  <span
+                    role="list"
+                    aria-label={`Included in ${p.name}`}
+                    className={styles.features}
+                    data-cascade={switched || undefined}
+                  >
+                    {p.features.map((feature, i) => (
+                      <span role="listitem" key={feature} style={{ "--i": i } as CSSProperties}>
+                        <CheckIcon />
+                        {feature}
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              )}
+            </label>
+          );
+        })}
+      </fieldset>
 
       <div className={styles.actions}>
         <button
