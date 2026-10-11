@@ -83,7 +83,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
             ? `<div class="${styles.thumb}"><img src="/demo/logo-dark.webp" alt="" draggable="false"><img src="/demo/logo-light.webp" alt="" draggable="false"></div>`
             : `<div class="${styles.thumb}"></div>`) +
           `<div class="${styles.bars}"><b></b><b></b></div>` +
-          `<div class="${styles.meta}"><span class="${styles.tag}">In review</span>` +
+          `<div class="${styles.meta}"><span class="${styles.tag}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.25" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5 2.4A2.6 2.6 0 1 1 2.4 5H5Z" fill="currentColor"/></svg>In review</span>` +
           `<span class="${styles.status}"><i></i>Designing</span>` +
           `<span class="${styles.comments}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1.5h8v5.2H4.2L2 8.6V6.7H1z" fill="none" stroke="currentColor"/></svg> <span data-count>1</span></span>` +
           `<span class="${styles.avatar}"></span></div>` +

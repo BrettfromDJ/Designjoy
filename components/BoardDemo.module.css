@@ -158,15 +158,29 @@
   display: none;
 }
 
+/* A status chip, like a project tool's: a three-quarter "review" ring
+   and the label, quiet on the dark card. */
 .tag {
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: #fff;
-  color: #000;
+  align-items: center;
+  gap: 5px;
+  height: 20px;
+  padding: 0 8px 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: -0.2px;
+  color: #e6e6e6;
+}
+
+.tag svg {
+  flex: none;
+  color: #fff;
 }
 
 .card.review .tag {
-  display: inline-block;
+  display: inline-flex;
 }
 
 .card.chat .comments {
