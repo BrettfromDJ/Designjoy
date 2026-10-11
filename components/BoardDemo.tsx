@@ -79,15 +79,16 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
         "div",
         `${styles.card} ${styles.hidden}`,
         `<div class="${styles.cardTitle}">${card.title}</div>` +
+          `<div class="${styles.thumb}">` +
           (id === "landing"
-            ? `<div class="${styles.thumb}"><img src="/demo/logo-dark.webp" alt="" draggable="false"><img src="/demo/logo-light.webp" alt="" draggable="false"></div>`
-            : `<div class="${styles.thumb}"></div>`) +
+            ? `<img src="/demo/logo-dark.webp" alt="" draggable="false"><img src="/demo/logo-light.webp" alt="" draggable="false">`
+            : `<span class="${styles.slide}"><b></b><b></b><b></b></span>`) +
+          `<i class="${styles.cover}"></i></div>` +
           `<div class="${styles.bars}"><b></b><b></b></div>` +
           `<div class="${styles.meta}"><span class="${styles.tag}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.25" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5 2.4A2.6 2.6 0 1 1 2.4 5H5Z" fill="currentColor"/></svg>In review</span>` +
-          `<span class="${styles.status}"><i></i>Designing</span>` +
+          `<span class="${styles.status}"><i></i>Rendering <span data-pct>0%</span></span>` +
           `<span class="${styles.comments}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1.5h8v5.2H4.2L2 8.6V6.7H1z" fill="none" stroke="currentColor"/></svg> <span data-count>1</span></span>` +
-          `<span class="${styles.avatar}"></span></div>` +
-          `<div class="${styles.progress}"><b></b></div>`,
+          `<span class="${styles.avatar}"></span></div>`,
       );
       stage.append(node);
       cardEls[id] = node;
@@ -138,9 +139,9 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       cols = { backlog: [], current: [], approved: [] };
       for (const node of Object.values(cardEls)) {
         node.classList.remove(styles.done, styles.review, styles.chat, styles.lift, styles.working, styles.light);
-        const bar = node.querySelector<HTMLElement>(`.${styles.progress} b`)!;
-        bar.style.transition = "none";
-        bar.style.transform = "scaleX(0)";
+        const cover = node.querySelector<HTMLElement>(`.${styles.cover}`)!;
+        cover.style.transition = "none";
+        cover.style.transform = "";
         node.querySelector("[data-count]")!.textContent = "1";
       }
       ask.classList.remove(styles.on);
@@ -176,23 +177,33 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
       setCursor(end.x + 150, end.y + 90, false);
     };
 
-    // While a card is the current request, it shows work in progress: a
-    // status, a sweep of light, and a bar that fills as the design comes on.
+    // While a card is the current request, the design renders onto it: the
+    // thumbnail opens on a grid, and a cover with a bright scan line slides
+    // down to reveal the work, with a percentage counting up beside it.
+    let raf = 0;
     const startWork = (id: string) => {
       const card = cardEls[id];
-      const bar = card.querySelector<HTMLElement>(`.${styles.progress} b`)!;
+      const cover = card.querySelector<HTMLElement>(`.${styles.cover}`)!;
+      const pct = card.querySelector<HTMLElement>("[data-pct]")!;
       card.classList.add(styles.working);
-      bar.style.transition = "none";
-      bar.style.transform = "scaleX(0)";
-      void bar.offsetWidth;
-      bar.style.transition = "transform 3.4s cubic-bezier(0.25, 0.6, 0.3, 1)";
-      bar.style.transform = "scaleX(0.86)";
+      cover.style.transition = "none";
+      cover.style.transform = "translateY(0)";
+      void cover.offsetWidth;
+      cover.style.transition = "transform 3.4s cubic-bezier(0.4, 0, 0.3, 1)";
+      cover.style.transform = "translateY(90%)";
+      cancelAnimationFrame(raf);
+      const count = () => {
+        const moved = new DOMMatrix(getComputedStyle(cover).transform).m42;
+        pct.textContent = `${Math.round((moved / (cover.offsetHeight || 1)) * 100)}%`;
+        if (card.classList.contains(styles.working)) raf = requestAnimationFrame(count);
+      };
+      raf = requestAnimationFrame(count);
       layout();
     };
     const finishWork = async (id: string) => {
-      const bar = cardEls[id].querySelector<HTMLElement>(`.${styles.progress} b`)!;
-      bar.style.transition = "transform 0.45s ease-out";
-      bar.style.transform = "scaleX(1)";
+      const cover = cardEls[id].querySelector<HTMLElement>(`.${styles.cover}`)!;
+      cover.style.transition = "transform 0.45s ease-out";
+      cover.style.transform = "translateY(100%)";
       await wait(550);
       cardEls[id].classList.remove(styles.working);
     };
@@ -279,6 +290,7 @@ export function BoardDemo({ onStep }: { onStep?: (step: number) => void }) {
     return () => {
       observer.disconnect();
       clearTimeout(next);
+      cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
       timers = [];
     };

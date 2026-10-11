@@ -204,8 +204,7 @@
 }
 
 /* Work in progress on the current request. */
-.status,
-.progress {
+.status {
   display: none;
 }
 
@@ -224,57 +223,88 @@
   animation: pulse 1.2s ease-in-out infinite;
 }
 
+.status [data-pct] {
+  font-variant-numeric: tabular-nums;
+}
+
 @keyframes pulse {
   50% {
     opacity: 0.25;
   }
 }
 
-.card.working .progress {
-  display: block;
-  height: 3px;
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: #262626;
-}
-
-.progress b {
-  display: block;
-  height: 100%;
-  background: #fff;
-  transform: scaleX(0);
-  transform-origin: left;
-}
-
-/* A soft band of light sweeps across the card while it's being designed. */
 .card.working {
-  overflow: hidden;
   border-color: rgba(255, 255, 255, 0.28);
 }
 
-.card.working::after {
-  content: "";
+/* While designing, the thumbnail is open and the work renders in from the
+   top: a blueprint-grid cover with a bright scan line slides down off it. */
+.card.working .thumb {
+  height: 149px;
+  margin-top: 8px;
+}
+
+.cover {
+  display: none;
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.06) 50%, transparent 65%);
-  transform: translateX(-100%);
-  animation: sweep 1.6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
-  pointer-events: none;
+  background-color: #000;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 12px 12px;
+  font-style: normal;
 }
 
-@keyframes sweep {
-  to {
-    transform: translateX(100%);
-  }
+.cover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.6);
 }
 
-.card.working .bars b {
-  animation: pulse 1.6s ease-in-out infinite;
+.card.working .cover {
+  display: block;
 }
 
-.card.working .bars b:nth-child(2) {
-  animation-delay: 0.3s;
+/* The pitch deck's "design": a wireframe slide. */
+.slide {
+  position: absolute;
+  inset: 22px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 4px;
+  background: #1c1c1c;
+}
+
+.slide b {
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: #3a3a3a;
+}
+
+.slide b:first-child {
+  width: 55%;
+  height: 10px;
+  background: #e6e6e6;
+}
+
+.slide b:nth-child(2) {
+  width: 80%;
+}
+
+.slide b:last-child {
+  flex: 1;
+  margin-top: 4px;
+  border-radius: 3px;
+  background: #2a2a2a;
 }
 
 .bubble {
@@ -324,80 +354,6 @@
   transform: scale(0.85);
 }
 
-/* Work in progress on the current request. */
-.status,
-.progress {
-  display: none;
-}
-
-.card.working .status {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--text);
-}
-
-.status i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fff;
-  animation: pulse 1.2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.25;
-  }
-}
-
-.card.working .progress {
-  display: block;
-  height: 3px;
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: #262626;
-}
-
-.progress b {
-  display: block;
-  height: 100%;
-  background: #fff;
-  transform: scaleX(0);
-  transform-origin: left;
-}
-
-/* A soft band of light sweeps across the card while it's being designed. */
-.card.working {
-  overflow: hidden;
-  border-color: rgba(255, 255, 255, 0.28);
-}
-
-.card.working::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.06) 50%, transparent 65%);
-  transform: translateX(-100%);
-  animation: sweep 1.6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
-  pointer-events: none;
-}
-
-@keyframes sweep {
-  to {
-    transform: translateX(100%);
-  }
-}
-
-.card.working .bars b {
-  animation: pulse 1.6s ease-in-out infinite;
-}
-
-.card.working .bars b:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .card,
   .cursor,
@@ -407,9 +363,7 @@
     transition: none;
   }
 
-  .status i,
-  .card.working::after,
-  .card.working .bars b {
+  .status i {
     animation: none;
   }
 }
