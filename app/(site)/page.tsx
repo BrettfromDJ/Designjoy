@@ -11,13 +11,14 @@ export const revalidate = 3600;
 export default async function Home() {
   const [projects, highlights] = await Promise.all([getProjects(), getHighlights()]);
   const work: WorkItem[] = projects.length
-    ? projects.map(({ id, title, kind, url, width, height }) => ({
+    ? projects.map(({ id, title, kind, url, width, height, frames }) => ({
         id,
         title,
         kind,
         src: url,
         width,
         height,
+        ...(kind === "image" && frames?.length ? { frames } : {}),
       }))
     : sampleWork;
 

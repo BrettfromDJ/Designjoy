@@ -9,7 +9,12 @@ export type Project = {
   url: string;
   width: number;
   height: number;
+  /** Extra images shown after `url` in a loop, like a GIF. Images only. */
+  frames?: string[];
 };
+
+/** How many images a project can cycle through, counting the first. */
+export const MAX_FRAMES = 24;
 
 const PREFIX = "data/projects";
 

@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { WorkItem } from "@/content/site";
+import { useFrameCycle } from "@/lib/use-frame-cycle";
 import styles from "./WorkCard.module.css";
+
+const SIZES = "(min-width: 1100px) 25vw, (min-width: 820px) 33vw, (min-width: 560px) 50vw, 100vw";
+const isGif = (src: string) => src.toLowerCase().split("?")[0].endsWith(".gif");
 
 export function WorkCard({
   item,
@@ -19,6 +23,9 @@ export function WorkCard({
 }) {
   const [loaded, setLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLElement>(null);
+  const frames = item.kind === "image" ? [item.src, ...(item.frames ?? [])] : [item.src];
+  const frame = useFrameCycle(frames.length, cardRef);
 
   // A video that finished loading before hydration never fires the event.
   useEffect(() => {
@@ -27,6 +34,7 @@ export function WorkCard({
 
   return (
     <figure
+      ref={cardRef}
       className={styles.card}
       data-loaded={loaded}
       style={
@@ -51,19 +59,35 @@ export function WorkCard({
           onLoadedData={() => setLoaded(true)}
         />
       ) : (
-        <Image
-          src={item.src}
-          alt={item.title}
-          width={item.width}
-          height={item.height}
-          sizes="(min-width: 1100px) 25vw, (min-width: 820px) 33vw, (min-width: 560px) 50vw, 100vw"
-          priority={priority}
-          // Resizing would drop a GIF's animation.
-          unoptimized={item.src.toLowerCase().split("?")[0].endsWith(".gif")}
-          className={styles.media}
-          onLoad={() => setLoaded(true)}
-          onError={() => setLoaded(true)}
-        />
+        <>
+          <Image
+            src={item.src}
+            alt={item.title}
+            width={item.width}
+            height={item.height}
+            sizes={SIZES}
+            priority={priority}
+            // Resizing would drop a GIF's animation.
+            unoptimized={isGif(item.src)}
+            className={styles.media}
+            data-hidden={frame !== 0 || undefined}
+            onLoad={() => setLoaded(true)}
+            onError={() => setLoaded(true)}
+          />
+          {/* Extra frames sit on top of the first and cut in turn, like a GIF. */}
+          {frames.slice(1).map((src, i) => (
+            <Image
+              key={src}
+              src={src}
+              alt=""
+              fill
+              sizes={SIZES}
+              unoptimized={isGif(src)}
+              className={styles.frame}
+              data-hidden={frame !== i + 1 || undefined}
+            />
+          ))}
+        </>
       )}
       {onOpen && (
         <button

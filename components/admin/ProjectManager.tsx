@@ -2,9 +2,9 @@
 
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { upload } from "@vercel/blob/client";
-import { addProject, deleteProject, renameProject, reorderProjects } from "@/app/admin/actions";
+import { addFrames, addProject, deleteProject, removeFrame, renameProject, reorderProjects } from "@/app/admin/actions";
 import { ALLOWED_TYPES, MAX_UPLOAD_BYTES } from "@/lib/media";
-import type { Project } from "@/lib/projects";
+import { MAX_FRAMES, type Project } from "@/lib/projects";
 import styles from "./Admin.module.css";
 
 type Upload = { key: string; name: string; progress: number; error?: string };
@@ -47,6 +47,60 @@ function titleFromName(name: string) {
   return name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim();
 }
 
+/** The images a project cycles through, with a button to add more. */
+function Frames({
+  project,
+  busy,
+  uploading,
+  onAdd,
+  onRemove,
+}: {
+  project: Project;
+  busy: boolean;
+  uploading: boolean;
+  onAdd: (files: File[]) => void;
+  onRemove: (url: string) => void;
+}) {
+  const frames = project.frames ?? [];
+  return (
+    <div className={styles.frames}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={project.url} alt="" className={styles.frameThumb} />
+      {frames.map((url, i) => (
+        <span key={url} className={styles.frameItem}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={url} alt="" className={styles.frameThumb} />
+          <button
+            type="button"
+            className={styles.frameRemove}
+            aria-label={`Remove frame ${i + 2}`}
+            disabled={busy}
+            onClick={() => onRemove(url)}
+          >
+            ×
+          </button>
+        </span>
+      ))}
+      {frames.length < MAX_FRAMES - 1 && (
+        <label className={styles.frameAdd} data-busy={busy || undefined}>
+          <input
+            type="file"
+            multiple
+            accept="image/png,image/jpeg,image/gif"
+            className="visually-hidden"
+            disabled={busy}
+            onChange={(e) => {
+              onAdd(Array.from(e.target.files ?? []));
+              e.target.value = "";
+            }}
+          />
+          {uploading ? "Uploading…" : frames.length ? "+ Add" : "+ Add frames"}
+        </label>
+      )}
+    </div>
+  );
+}
+
 export function ProjectManager({
   initialProjects,
   storageReady,
@@ -60,6 +114,7 @@ export function ProjectManager({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [frameUploads, setFrameUploads] = useState<string | null>(null);
   const [drag, setDrag] = useState<{ id: string; from: number; to: number; dy: number; step: number } | null>(
     null,
   );
@@ -101,6 +156,35 @@ export function ProjectManager({
     }
   }
 
+  // Extra images for a project to cycle through, like a GIF.
+  async function uploadFrames(project: Project, files: File[]) {
+    const room = MAX_FRAMES - 1 - (project.frames?.length ?? 0);
+    const images = files.filter((f) => f.type.startsWith("image/")).slice(0, room);
+    if (!images.length) return;
+    setFrameUploads(project.id);
+    setError(null);
+    try {
+      const urls: string[] = [];
+      for (const file of images) {
+        if (!ALLOWED_TYPES.includes(file.type)) throw new Error("type");
+        const blob = await upload(`projects/${file.name}`, file, {
+          access: "public",
+          handleUploadUrl: "/api/admin/upload",
+        });
+        urls.push(blob.url);
+      }
+      setProjects(await addFrames(project.id, urls));
+    } catch (err) {
+      setError(
+        err instanceof Error && err.message === "type"
+          ? "Frames can be PNG, JPG or GIF images."
+          : "Those frames didn't upload. Try again.",
+      );
+    } finally {
+      setFrameUploads(null);
+    }
+  }
+
   async function run(id: string, action: () => Promise<Project[]>) {
     setBusyId(id);
     setError(null);
@@ -139,7 +223,7 @@ export function ProjectManager({
   function onPointerDown(e: PointerEvent<HTMLLIElement>, index: number) {
     if (busyId !== null || e.button !== 0) return;
     const target = e.target as HTMLElement;
-    if (target.closest("input, button, a")) return;
+    if (target.closest("input, button, a, label")) return;
     // Touch drags start from the handle only, so the list still scrolls.
     if (e.pointerType !== "mouse" && !target.closest("[data-handle]")) return;
 
@@ -348,7 +432,17 @@ export function ProjectManager({
                 />
                 <span className={styles.hint}>
                   {project.kind === "video" ? "Video" : "Image"} · {project.width}×{project.height}
+                  {project.frames?.length ? ` · cycles through ${project.frames.length + 1} images` : ""}
                 </span>
+                {project.kind === "image" && (
+                  <Frames
+                    project={project}
+                    busy={busyId !== null || frameUploads === project.id}
+                    uploading={frameUploads === project.id}
+                    onAdd={(files) => uploadFrames(project, files)}
+                    onRemove={(url) => run(project.id, () => removeFrame(project.id, url))}
+                  />
+                )}
               </div>
               <div className={styles.itemActions}>
                 {confirmId === project.id ? (

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { WorkItem } from "@/content/site";
+import { useFrameCycle } from "@/lib/use-frame-cycle";
 import styles from "./Lightbox.module.css";
 
 const isGif = (src: string) => src.toLowerCase().split("?")[0].endsWith(".gif");
@@ -23,6 +24,8 @@ export function Lightbox({
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const touchX = useRef<number | null>(null);
+  const stageRef = useRef<HTMLElement>(null);
+  const frame = useFrameCycle(item.kind === "image" ? 1 + (item.frames?.length ?? 0) : 1, stageRef, item.id);
 
   const go = (step: number) => onIndex((index + step + count) % count);
 
@@ -101,6 +104,7 @@ export function Lightbox({
 
       <figure
         key={item.id}
+        ref={stageRef}
         className={styles.stage}
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
@@ -119,18 +123,35 @@ export function Lightbox({
             aria-label={item.title}
           />
         ) : (
-          <Image
-            src={item.src}
-            alt={item.title}
-            width={item.width}
-            height={item.height}
-            sizes="90vw"
-            quality={90}
-            unoptimized={isGif(item.src)}
-            className={styles.media}
-            style={{ "--ratio": item.width / item.height } as React.CSSProperties}
-            priority
-          />
+          <span className={styles.frames}>
+            <Image
+              src={item.src}
+              alt={item.title}
+              width={item.width}
+              height={item.height}
+              sizes="90vw"
+              quality={90}
+              unoptimized={isGif(item.src)}
+              className={styles.media}
+              style={{ "--ratio": item.width / item.height } as React.CSSProperties}
+              data-hidden={frame !== 0 || undefined}
+              priority
+            />
+            {/* Extra frames cut in turn on top of the first, like a GIF. */}
+            {(item.frames ?? []).map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt=""
+                fill
+                sizes="90vw"
+                quality={90}
+                unoptimized={isGif(src)}
+                className={styles.frame}
+                data-hidden={frame !== i + 1 || undefined}
+              />
+            ))}
+          </span>
         )}
         <figcaption className={styles.caption}>
           {item.title && <span>{item.title}</span>}

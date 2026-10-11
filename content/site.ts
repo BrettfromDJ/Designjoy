@@ -101,6 +101,8 @@ export type WorkItem = {
   src: string;
   width: number;
   height: number;
+  /** More images after `src`, cycled through like a GIF. */
+  frames?: string[];
 };
 
 // Sample portfolio pieces, shown until projects are uploaded at /admin.

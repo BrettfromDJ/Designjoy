@@ -446,3 +446,78 @@
   cursor: text;
   user-select: text;
 }
+
+/* Images a project cycles through on the homepage, like a GIF. */
+.frames {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.frameItem {
+  position: relative;
+  display: block;
+}
+
+.frameThumb {
+  display: block;
+  width: 36px;
+  height: 27px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--bg);
+}
+
+.frameRemove {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #333;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.frameItem:hover .frameRemove,
+.frameRemove:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .frameRemove {
+    opacity: 1;
+  }
+}
+
+.frameAdd {
+  display: inline-flex;
+  align-items: center;
+  height: 27px;
+  padding: 0 10px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text-nav);
+  cursor: pointer;
+}
+
+.frameAdd:hover,
+.frameAdd:focus-within {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--text);
+}
+
+.frameAdd[data-busy] {
+  opacity: 0.5;
+  pointer-events: none;
+}

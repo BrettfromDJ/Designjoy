@@ -145,3 +145,20 @@
     animation: none;
   }
 }
+
+/* Projects with several images: the extra frames sit exactly over the
+   first and are switched with visibility, so each change is a hard cut. */
+.frames {
+  position: relative;
+  display: block;
+}
+
+.frame {
+  object-fit: cover;
+  border-radius: var(--radius-card);
+}
+
+.media[data-hidden],
+.frame[data-hidden] {
+  visibility: hidden;
+}

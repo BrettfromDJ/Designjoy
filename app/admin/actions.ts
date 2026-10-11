@@ -7,7 +7,7 @@ import { isAdmin, signIn, signOut } from "@/lib/auth";
 import { MAX_KNOWLEDGE_LENGTH, addToKnowledge, saveKnowledge } from "@/lib/knowledge";
 import { HIGHLIGHT_ICON_NAMES, MAX_HIGHLIGHTS, type Highlight } from "@/lib/highlight-icons";
 import { getHighlights, saveHighlights } from "@/lib/highlights";
-import { getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
+import { MAX_FRAMES, getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
 import { clearQuestions, resolveQuestion } from "@/lib/questions";
 
 async function requireAdmin() {
@@ -68,7 +68,33 @@ export async function deleteProject(id: string) {
   await requireAdmin();
   const target = (await getProjects()).find((p) => p.id === id);
   const projects = await update((list) => list.filter((p) => p.id !== id));
-  if (target) await del(target.url).catch((error) => console.error("Could not delete file", error));
+  if (target) {
+    await del([target.url, ...(target.frames ?? [])]).catch((error) =>
+      console.error("Could not delete files", error),
+    );
+  }
+  return projects;
+}
+
+/** Adds images to cycle through after a project's first image. */
+export async function addFrames(id: string, urls: string[]) {
+  await requireAdmin();
+  const clean = urls.map(String).filter(isBlobUrl);
+  return update((projects) =>
+    projects.map((p) =>
+      p.id === id && p.kind === "image"
+        ? { ...p, frames: [...(p.frames ?? []), ...clean].slice(0, MAX_FRAMES - 1) }
+        : p,
+    ),
+  );
+}
+
+export async function removeFrame(id: string, url: string) {
+  await requireAdmin();
+  const projects = await update((list) =>
+    list.map((p) => (p.id === id ? { ...p, frames: (p.frames ?? []).filter((f) => f !== url) } : p)),
+  );
+  if (isBlobUrl(url)) await del(url).catch((error) => console.error("Could not delete file", error));
   return projects;
 }
 
