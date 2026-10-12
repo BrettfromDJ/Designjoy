@@ -3,18 +3,18 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
-  padding: 180px var(--gap) 56px;
+  gap: 24px;
+  padding: 136px var(--gap) 40px;
 }
 
 .headline {
-  max-width: 1180px;
+  max-width: 600px;
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(36px, 5.6vw, 80px);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
+  font-size: clamp(24px, 2.3vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .muted {
@@ -138,13 +138,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
   width: 100%;
   text-align: center;
 }
 
 .narrow {
-  max-width: 1000px;
+  max-width: 560px;
 }
 
 .dayPill {
@@ -159,7 +159,8 @@
 /* 3. Split */
 .split {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: minmax(0, 600px) minmax(0, 420px);
+  justify-content: space-between;
   align-items: end;
   gap: 48px;
   width: 100%;
@@ -168,7 +169,7 @@
 .side {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
 }
 
 .terms {
@@ -182,9 +183,9 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 0;
+  padding: 12px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 18px;
+  font-size: 14px;
   letter-spacing: -0.5px;
 }
 
@@ -211,7 +212,7 @@
 .underlined path {
   fill: none;
   stroke: #fff;
-  stroke-width: 3;
+  stroke-width: 1.5;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 1;
@@ -232,7 +233,8 @@
   gap: 24px;
   flex-wrap: wrap;
   width: 100%;
-  padding-top: 24px;
+  max-width: 600px;
+  padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
@@ -240,7 +242,7 @@
   display: flex;
   flex-wrap: wrap;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: -0.4px;
   color: var(--text-nav);
 }
@@ -259,9 +261,10 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
   width: 100%;
-  padding: 32px;
+  max-width: 660px;
+  padding: 24px;
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-card);
@@ -349,9 +352,9 @@
 
 @media (max-width: 559px) {
   .hero {
-    gap: 24px;
-    padding-top: 126px;
-    padding-bottom: 32px;
+    gap: 20px;
+    padding-top: 112px;
+    padding-bottom: 24px;
   }
 
   .center {
@@ -359,16 +362,16 @@
   }
 
   .card {
-    gap: 28px;
-    padding: 22px;
+    gap: 20px;
+    padding: 20px;
   }
 
   .terms li {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .row {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .row span + span::before {
