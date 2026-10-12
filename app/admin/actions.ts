@@ -53,6 +53,14 @@ export async function renameProject(id: string, title: string) {
   return update((projects) => projects.map((p) => (p.id === id ? { ...p, title: clean } : p)));
 }
 
+/** Turns the card background and stroke on or off for a project. */
+export async function setFramed(id: string, framed: boolean) {
+  await requireAdmin();
+  return update((projects) =>
+    projects.map((p) => (p.id === id ? { ...p, framed: Boolean(framed) || undefined } : p)),
+  );
+}
+
 export async function reorderProjects(ids: string[]) {
   await requireAdmin();
   return update((projects) => {

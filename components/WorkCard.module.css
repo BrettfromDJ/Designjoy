@@ -7,6 +7,19 @@
   background: var(--surface);
 }
 
+/* Framed: the stroke the site's other cards have, drawn over the artwork so
+   the card stays the same size. The background is already the card colour,
+   so transparent PNGs sit on it. */
+.card[data-framed]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 1px solid var(--border-subtle);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
 /* Loading: a soft highlight sweeps across the empty tile. */
 .card::before {
   content: "";

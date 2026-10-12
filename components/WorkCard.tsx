@@ -39,6 +39,7 @@ export function WorkCard({
       ref={cardRef}
       className={styles.card}
       data-loaded={loaded}
+      data-framed={item.framed || undefined}
       style={
         {
           "--reveal-delay": `${Math.min(order, 12) * 60}ms`,

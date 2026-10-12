@@ -103,6 +103,8 @@ export type WorkItem = {
   height: number;
   /** More images after `src`, cycled through like a GIF. */
   frames?: string[];
+  /** Sits on the card background with its stroke, like the other cards. */
+  framed?: boolean;
 };
 
 // Sample portfolio pieces, shown until projects are uploaded at /admin.

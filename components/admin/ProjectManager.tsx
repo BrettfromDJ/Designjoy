@@ -2,7 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { upload } from "@vercel/blob/client";
-import { addFrames, addProject, deleteProject, removeFrame, renameProject, reorderProjects } from "@/app/admin/actions";
+import { addFrames, addProject, deleteProject, removeFrame, renameProject, reorderProjects, setFramed } from "@/app/admin/actions";
 import { ALLOWED_TYPES, MAX_UPLOAD_BYTES } from "@/lib/media";
 import { MAX_FRAMES, type Project } from "@/lib/projects";
 import styles from "./Admin.module.css";
@@ -461,6 +461,19 @@ export function ProjectManager({
                   {project.kind === "video" ? "Video" : "Image"} · {project.width}×{project.height}
                   {project.frames?.length ? ` · cycles through ${project.frames.length + 1} images` : ""}
                 </span>
+                <label className={styles.check}>
+                  <input
+                    type="checkbox"
+                    checked={Boolean(project.framed)}
+                    disabled={busyId === project.id}
+                    onChange={(e) => {
+                      const framed = e.target.checked;
+                      setProjects((list) => list.map((p) => (p.id === project.id ? { ...p, framed } : p)));
+                      run(project.id, () => setFramed(project.id, framed));
+                    }}
+                  />
+                  Card background and stroke
+                </label>
                 {project.kind === "image" && (
                   <Frames
                     project={project}

@@ -11,6 +11,8 @@ export type Project = {
   height: number;
   /** Extra images shown after `url` in a loop, like a GIF. Images only. */
   frames?: string[];
+  /** Shows the card's background and stroke, like the site's other cards (for PNGs with transparency). */
+  framed?: boolean;
 };
 
 /** How many images a project can cycle through, counting the first. */
