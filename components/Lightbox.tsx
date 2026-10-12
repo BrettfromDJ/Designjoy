@@ -130,7 +130,7 @@ export function Lightbox({
               width={item.width}
               height={item.height}
               sizes="90vw"
-              quality={90}
+              quality={95}
               unoptimized={isGif(item.src)}
               className={styles.media}
               style={{ "--ratio": item.width / item.height } as React.CSSProperties}
@@ -145,7 +145,7 @@ export function Lightbox({
                 alt=""
                 fill
                 sizes="90vw"
-                quality={90}
+                quality={95}
                 unoptimized={isGif(src)}
                 className={styles.frame}
                 data-hidden={frame !== i + 1 || undefined}

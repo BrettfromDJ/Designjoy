@@ -7,6 +7,8 @@ import { useFrameCycle } from "@/lib/use-frame-cycle";
 import styles from "./WorkCard.module.css";
 
 const SIZES = "(min-width: 1100px) 25vw, (min-width: 820px) 33vw, (min-width: 560px) 50vw, 100vw";
+// Above Next's default of 75, which visibly softened the artwork.
+const QUALITY = 90;
 const isGif = (src: string) => src.toLowerCase().split("?")[0].endsWith(".gif");
 
 export function WorkCard({
@@ -66,6 +68,7 @@ export function WorkCard({
             width={item.width}
             height={item.height}
             sizes={SIZES}
+            quality={QUALITY}
             priority={priority}
             // Resizing would drop a GIF's animation.
             unoptimized={isGif(item.src)}
@@ -82,6 +85,7 @@ export function WorkCard({
               alt=""
               fill
               sizes={SIZES}
+              quality={QUALITY}
               unoptimized={isGif(src)}
               className={styles.frame}
               data-hidden={frame !== i + 1 || undefined}
