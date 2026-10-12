@@ -1,6 +1,7 @@
-// Anywhere on the site can open the "How it works" board tour.
-export const OPEN_HOW_IT_WORKS_EVENT = "designjoy:how-it-works";
+import { openAskBox } from "./ask-box";
 
+// Anywhere on the site can open the "How it works" board tour, which plays
+// inside the ask box.
 export function openHowItWorks() {
-  window.dispatchEvent(new CustomEvent(OPEN_HOW_IT_WORKS_EVENT));
+  openAskBox("tour");
 }

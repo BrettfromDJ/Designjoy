@@ -9,10 +9,10 @@ import {
 } from "@/lib/ask-box";
 import { NEXT_STEP_LABELS, parseAnswer, type NextStep } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
-import { openHowItWorks } from "@/lib/how-it-works";
 import { BotFace } from "./BotFace";
 import { BookCall, BookCallMeta } from "./BookCall";
 import { CheckoutPanel } from "./CheckoutPanel";
+import { Tour } from "./HowItWorksCard";
 import { PlanPicker } from "./PlanPicker";
 import styles from "./AskBox.module.css";
 
@@ -32,6 +32,7 @@ const SHORT_PLACEHOLDER = "Ask about Designjoy";
 // Shown while pricing or booking is open (the short one on narrow phones).
 const VIEW_HINTS: Partial<Record<AskBoxView, string>> = {
   pricing: "Not sure which plan? Just ask",
+  tour: "Any questions? Just ask",
 };
 const SHORT_VIEW_HINT = "Questions? Just ask";
 const VIEW_LABELS: Record<AskBoxView, string> = {
@@ -39,6 +40,7 @@ const VIEW_LABELS: Record<AskBoxView, string> = {
   pricing: "Pricing",
   booking: "Book a call",
   checkout: "Checkout",
+  tour: "How it works",
 };
 // Views shown without a label or the ask row: just the content and the close button.
 const BARE_VIEWS: AskBoxView[] = ["booking", "checkout"];
@@ -164,6 +166,7 @@ export function AskBox() {
       ["pricing", "pricing"],
       ["book", "booking"],
       ["checkout", "checkout"],
+      ["how-it-works", "tour"],
     ];
     const found = params.find(([param]) => url.searchParams.has(param));
     if (found) {
@@ -227,10 +230,7 @@ export function AskBox() {
   function goTo(step: NextStep) {
     if (step === "plans") setMode("pricing");
     else if (step === "book-call") setMode("booking");
-    else if (step === "how-it-works") {
-      setOpen(false);
-      openHowItWorks();
-    }
+    else if (step === "how-it-works") setMode("tour");
   }
 
   async function ask(event: React.FormEvent) {
@@ -280,7 +280,7 @@ export function AskBox() {
           aria-hidden="true"
         />
       )}
-      <div className={styles.wrapper}>
+      <div className={styles.wrapper} data-wide={(open && mode === "tour") || undefined}>
         {/* Closed, this is just the ask pill. Open, the pill grows up into a
             panel with the conversation, and the pill stays as its bottom row. */}
         <div
@@ -332,6 +332,10 @@ export function AskBox() {
               ) : mode === "booking" ? (
                 <div className={styles.log}>
                   <BookCall />
+                </div>
+              ) : mode === "tour" ? (
+                <div className={styles.log}>
+                  <Tour />
                 </div>
               ) : mode === "checkout" ? (
                 <div className={styles.log}>

@@ -7,6 +7,11 @@
   width: min(412px, calc(100vw - 32px));
 }
 
+/* The How it works tour needs room for the board. */
+.wrapper[data-wide] {
+  width: min(760px, calc(100vw - 32px));
+}
+
 .box {
   position: relative;
   display: flex;

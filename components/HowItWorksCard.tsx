@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { OPEN_HOW_IT_WORKS_EVENT, openHowItWorks } from "@/lib/how-it-works";
+import { useState } from "react";
+import { openHowItWorks } from "@/lib/how-it-works";
 import { BOARD_STEPS, BoardDemo } from "./BoardDemo";
 import styles from "./HowItWorksCard.module.css";
 
 /**
  * "How it works": a homepage tile with a small looping preview of a client's
- * Trello board. Clicking it opens the tour.
+ * Trello board. Clicking it opens the tour in the ask box.
  */
 export function HowItWorksCard() {
   return (
@@ -33,73 +32,25 @@ export function HowItWorksCard() {
 }
 
 /**
- * The tour: the board large in a lightbox, with each step explained
- * underneath. Mounted once for the whole site, so the tile and the ask box
- * can both open it (with `openHowItWorks`).
+ * The tour, shown inside the ask box: the board, with one line underneath
+ * that swaps for each step, and small progress dashes.
  */
-export function HowItWorksLightbox() {
-  const [open, setOpen] = useState(false);
+export function Tour() {
   const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    const show = () => {
-      setStep(0);
-      setOpen(true);
-    };
-    window.addEventListener(OPEN_HOW_IT_WORKS_EVENT, show);
-    return () => window.removeEventListener(OPEN_HOW_IT_WORKS_EVENT, show);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = overflow;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  if (!open) return null;
-  return createPortal(
-      <div
-        className={styles.overlay}
-        role="dialog"
-        aria-modal="true"
-        aria-label="How it works"
-        onClick={(e) => e.target === e.currentTarget && setOpen(false)}
-      >
-        <div className={styles.panel}>
-          <button
-            type="button"
-            className={styles.close}
-            aria-label="Close"
-            onClick={() => setOpen(false)}
-            autoFocus
-          >
-            {/* Drawn, not the × character, so it sits exactly in the middle. */}
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-              <path d="M1.5 1.5l9 9m0-9-9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-          <p className={styles.label}>How it works</p>
-          <h2 className={styles.panelTitle}>
-            Your Trello board, <span className={styles.muted}>start to finish.</span>
-          </h2>
-          <BoardDemo onStep={setStep} />
-          <p className={styles.caption} aria-live="polite">
-            <span className={styles.stepNumber}>{String(step + 1).padStart(2, "0")}</span>
-            {BOARD_STEPS[step]}
-          </p>
-          <ol className={styles.dots} aria-hidden="true">
-            {BOARD_STEPS.map((_, i) => (
-              <li key={i} data-state={i < step ? "past" : i === step ? "now" : undefined} />
-            ))}
-          </ol>
-        </div>
-      </div>,
-      document.body,
+  return (
+    <div className={styles.tour}>
+      <BoardDemo onStep={setStep} />
+      <p className={styles.line} aria-live="polite">
+        <span className={styles.stepNumber}>{String(step + 1).padStart(2, "0")}</span>
+        <span key={step} className={styles.lineText}>
+          {BOARD_STEPS[step]}
+        </span>
+        <span className={styles.dashes} aria-hidden="true">
+          {BOARD_STEPS.map((_, i) => (
+            <i key={i} data-on={i <= step || undefined} />
+          ))}
+        </span>
+      </p>
+    </div>
   );
 }
