@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-import { Hero, HeroSection } from "@/components/Hero";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
@@ -27,9 +25,6 @@ export default async function Home() {
   return (
     <main>
       <h1 className="visually-hidden">Designjoy</h1>
-      <Suspense fallback={<HeroSection />}>
-        <Hero />
-      </Suspense>
       <MasonryGrid work={work} highlights={highlights} />
       <footer className={styles.footer}>
         <span>© {new Date().getFullYear()} Designjoy</span>
