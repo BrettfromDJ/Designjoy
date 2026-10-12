@@ -112,7 +112,6 @@ export function ProjectManager({
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [dragging, setDragging] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [confirmId, setConfirmId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [frameUploads, setFrameUploads] = useState<string | null>(null);
   const [drag, setDrag] = useState<{ id: string; from: number; to: number; dy: number; step: number } | null>(
@@ -194,8 +193,36 @@ export function ProjectManager({
       setError("That change didn't save. Refresh the page and try again.");
     } finally {
       setBusyId(null);
-      setConfirmId(null);
     }
+  }
+
+  // One click deletes: the project leaves the list straight away, and deletes
+  // run one after another so several quick clicks don't overwrite each other.
+  const deletes = useRef<{ queue: Promise<unknown>; pending: number }>({ queue: Promise.resolve(), pending: 0 });
+  function remove(project: Project) {
+    const index = projects.findIndex((p) => p.id === project.id);
+    setProjects((list) => list.filter((p) => p.id !== project.id));
+    setError(null);
+    const d = deletes.current;
+    d.pending += 1;
+    d.queue = d.queue
+      .then(() => deleteProject(project.id))
+      .then((saved) => {
+        // Only the last delete's result is complete; earlier ones would bring back
+        // projects that are still waiting to be deleted.
+        if (d.pending === 1) setProjects(saved);
+      })
+      .catch(() => {
+        setProjects((list) => {
+          const next = [...list];
+          next.splice(Math.min(index, next.length), 0, project);
+          return next;
+        });
+        setError(`Couldn't delete “${project.title || "Untitled"}”. Try again.`);
+      })
+      .finally(() => {
+        d.pending -= 1;
+      });
   }
 
   function saveOrder(next: Project[], id: string) {
@@ -445,25 +472,26 @@ export function ProjectManager({
                 )}
               </div>
               <div className={styles.itemActions}>
-                {confirmId === project.id ? (
-                  <>
-                    <button
-                      type="button"
-                      className={styles.danger}
-                      disabled={busyId !== null}
-                      onClick={() => run(project.id, () => deleteProject(project.id))}
-                    >
-                      Delete
-                    </button>
-                    <button type="button" className={styles.link} onClick={() => setConfirmId(null)}>
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button type="button" className={styles.link} onClick={() => setConfirmId(project.id)}>
-                    Remove
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className={styles.delete}
+                  aria-label={`Delete ${project.title || "project"}`}
+                  title="Delete"
+                  disabled={busyId === project.id}
+                  onClick={() => remove(project)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                    <path
+                      d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5h5.8l.6-8.5M5.8 6v4M8.2 6v4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Delete
+                </button>
               </div>
             </li>
           ))}
