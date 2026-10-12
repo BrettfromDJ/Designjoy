@@ -164,13 +164,143 @@ function Card() {
   );
 }
 
+/** 6. One compact strip: the line on the left, buttons on the right, between hairlines. */
+function Strip() {
+  const day = useDeliveryDay();
+  return (
+    <div className={`${styles.strip} ${styles.rise}`}>
+      <p className={styles.stripText}>
+        Subscribe today and most requests land {by(day)}.{" "}
+        <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
+      </p>
+      <div className={styles.buttons}>
+        <button type="button" className={styles.primary} onClick={() => openAskBox("pricing")}>
+          See plans
+        </button>
+        <button type="button" className={styles.secondary} onClick={() => openAskBox("booking")}>
+          Book a call
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** 7. A short caption centred under the nav, the same width as it. */
+function Caption() {
+  const day = useDeliveryDay();
+  return (
+    <div className={`${styles.center} ${styles.caption}`}>
+      <h2 className={`${styles.captionText} ${styles.rise}`}>
+        Subscribe today and most requests land {by(day)}.{" "}
+        <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
+      </h2>
+      <Buttons center />
+    </div>
+  );
+}
+
+/** 8. A small today → delivery-day track sits above the line. */
+function Track() {
+  const day = useDeliveryDay();
+  return (
+    <>
+      <div className={`${styles.track} ${styles.rise}`} aria-hidden="true">
+        <span>Today</span>
+        <i className={styles.trackLine}>
+          <b />
+        </i>
+        <span className={styles.trackEnd}>{day || "2 days"}</span>
+      </div>
+      <h2 className={`${styles.headline} ${styles.rise}`} data-delay="1">
+        Subscribe today and most requests land {by(day)}.{" "}
+        <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
+      </h2>
+      <Buttons />
+    </>
+  );
+}
+
+/** 9. The line on the left; what happens next, in three steps, on the right. */
+function Steps() {
+  const day = useDeliveryDay();
+  return (
+    <div className={styles.split}>
+      <div className={styles.side}>
+        <h2 className={`${styles.headline} ${styles.rise}`}>
+          Subscribe today and most requests land {by(day)}.{" "}
+          <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
+        </h2>
+        <Buttons />
+      </div>
+      <ol className={`${styles.steps} ${styles.rise}`} data-delay="1">
+        <li>
+          <span className={styles.label}>01 · Today</span>
+          Subscribe and add your requests to Trello.
+        </li>
+        <li>
+          <span className={styles.label}>02 · Tomorrow</span>
+          We design the first one.
+        </li>
+        <li>
+          <span className={styles.label}>03 · {day || "Day two"}</span>
+          It lands on your board, ready for feedback.
+        </li>
+      </ol>
+    </div>
+  );
+}
+
+/** 10. The line types itself out on load, then the terms fade in. */
+function Typed() {
+  const day = useDeliveryDay();
+  const line = `Subscribe today and most requests land ${by(day)}.`;
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (!day) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(line.length);
+      return;
+    }
+    setShown(0);
+    let i = 0;
+    const t = window.setInterval(() => {
+      i += 1;
+      setShown(i);
+      if (i >= line.length) clearInterval(t);
+    }, 32);
+    return () => clearInterval(t);
+  }, [day, line.length]);
+  const done = day && shown >= line.length;
+  return (
+    <>
+      <h2 className={styles.headline} aria-label={`${line} Unlimited requests, $4,995 a month, no contracts.`}>
+        <span aria-hidden="true">
+          {line.slice(0, shown)}
+          {!done && <span className={styles.caret} />}
+          <span className={`${styles.muted} ${styles.typedTail}`} data-in={done || undefined}>
+            {" "}
+            Unlimited requests, $4,995 a month, no contracts.
+          </span>
+        </span>
+      </h2>
+      <Buttons />
+    </>
+  );
+}
+
 const VARIANTS = [
   { name: "Statement", Hero: Statement },
   { name: "Day pill", Hero: Pill },
   { name: "Split", Hero: Split },
   { name: "Underline", Hero: Underline },
   { name: "Card", Hero: Card },
+  { name: "Strip", Hero: Strip },
+  { name: "Caption", Hero: Caption },
+  { name: "Track", Hero: Track },
+  { name: "Next steps", Hero: Steps },
+  { name: "Typed", Hero: Typed },
 ];
+
 
 /** The hero section showing option `n`, with the preview switcher if asked for. */
 export function HeroSection({ n = 1, preview = false }: { n?: number; preview?: boolean }) {
@@ -201,7 +331,7 @@ export function HeroSection({ n = 1, preview = false }: { n?: number; preview?: 
 }
 
 /**
- * The homepage hero, above the grid. Shows option 1; ?hero=1…5 previews the
+ * The homepage hero, above the grid. Shows option 1; ?hero=1…10 previews the
  * others, with a switcher, until one is picked. Render inside <Suspense> with
  * <HeroSection /> as the fallback, so option 1 is in the server HTML.
  */

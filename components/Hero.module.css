@@ -298,6 +298,133 @@
   color: var(--text);
 }
 
+/* 6. Strip */
+.strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.stripText {
+  max-width: 760px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+}
+
+/* 7. Caption, the width of the nav */
+.caption {
+  gap: 20px;
+}
+
+.captionText {
+  max-width: 412px;
+  margin: 0;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.4;
+  letter-spacing: -0.4px;
+}
+
+/* 8. Track */
+.track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.trackLine {
+  position: relative;
+  width: 120px;
+  height: 1px;
+  background: #262626;
+}
+
+.trackLine b {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: left;
+  animation: track-fill 2.4s 0.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes track-fill {
+  from {
+    transform: scaleX(0);
+  }
+  70%,
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.trackEnd {
+  color: var(--text);
+}
+
+/* 9. Next steps */
+.steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 14px;
+  letter-spacing: -0.4px;
+  color: var(--text-nav);
+}
+
+.steps li:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* 10. Typed */
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 2px;
+  vertical-align: -0.1em;
+  background: #fff;
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* The terms wait, blurred out, until the line has finished typing. */
+.typedTail {
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+
+.typedTail:not([data-in]) {
+  opacity: 0;
+  filter: blur(6px);
+}
+
 /* Preview-only switcher. */
 .switcher {
   position: fixed;
@@ -377,11 +504,17 @@
   .row span + span::before {
     margin: 0 10px;
   }
+
+  .stripText {
+    font-size: 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .rise,
-  .liveDot::after {
+  .liveDot::after,
+  .trackLine b,
+  .caret {
     animation: none;
   }
 
