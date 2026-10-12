@@ -1,5 +1,4 @@
-import { Suspense } from "react";
-import { HeroPreview } from "@/components/HeroPreview";
+import { Hero } from "@/components/Hero";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
@@ -27,10 +26,7 @@ export default async function Home() {
   return (
     <main>
       <h1 className="visually-hidden">Designjoy</h1>
-      {/* Hero candidates, only shown with ?hero=1…5 in the URL. */}
-      <Suspense>
-        <HeroPreview />
-      </Suspense>
+      <Hero />
       <MasonryGrid work={work} highlights={highlights} />
       <footer className={styles.footer}>
         <span>© {new Date().getFullYear()} Designjoy</span>
