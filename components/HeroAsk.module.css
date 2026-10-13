@@ -67,6 +67,20 @@
   animation: rise 0.8s 0.08s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.sub {
+  max-width: 460px;
+  margin: -6px 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -0.4px;
+  color: var(--text);
+  animation: rise 0.8s 0.12s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
 /* The ask pill, bigger, with the same travelling edge light. */
 .box {
   position: relative;
@@ -223,6 +237,7 @@
   .logo,
   .status,
   .title,
+  .sub,
   .box,
   .chips,
   .box::before,

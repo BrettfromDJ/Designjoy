@@ -6,6 +6,8 @@ import { askQuestion } from "@/lib/ask-box";
 import { BotFace } from "./BotFace";
 import styles from "./HeroAsk.module.css";
 
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 // The questions offered as chips under the box: the first few FAQs.
 const CHIPS = faqs.slice(0, 4);
 
@@ -18,6 +20,9 @@ export function HeroAsk() {
   const ref = useRef<HTMLElement>(null);
   const [input, setInput] = useState("");
   const [focused, setFocused] = useState(false);
+  // The weekday 48 hours from now, set after mount so it's the visitor's own.
+  const [day, setDay] = useState("");
+  useEffect(() => setDay(DAYS[new Date(Date.now() + 48 * 3600 * 1000).getDay()]), []);
 
   useEffect(() => {
     const el = ref.current;
@@ -55,8 +60,12 @@ export function HeroAsk() {
         Spots available · Start today
       </p>
       <h1 id="hero-title" className={styles.title}>
-        What do you need designed?
+        Design, on subscription.
       </h1>
+      <p className={styles.sub}>
+        Subscribe today and most requests land {day ? `by ${day}` : "in about two days"}.{" "}
+        <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
+      </p>
       <form className={styles.box} onSubmit={submit}>
         <BotFace size={30} typing={focused && input.length > 0} />
         <label htmlFor="hero-ask" className="visually-hidden">
