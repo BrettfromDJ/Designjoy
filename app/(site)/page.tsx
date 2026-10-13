@@ -26,7 +26,11 @@ export default async function Home() {
 
   return (
     <main>
-      <HeroAsk />
+      <HeroAsk
+        art={work
+          .filter((w) => w.kind === "image")
+          .map(({ src, width, height }) => ({ src, width, height }))}
+      />
       <MasonryGrid work={work} highlights={highlights} />
       <footer className={styles.footer}>
         <span>© {new Date().getFullYear()} Designjoy</span>
