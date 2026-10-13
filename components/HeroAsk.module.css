@@ -8,6 +8,14 @@
   text-align: center;
 }
 
+/* The smile at 2× the nav's. Its SVG canvas leaves room for the glow (about
+   10px each side and 46px below at this size), which the margins cancel out. */
+.logo {
+  display: block;
+  margin: 0 -10px -46px;
+  animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 .status {
   display: inline-flex;
   align-items: center;
@@ -212,6 +220,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .logo,
   .status,
   .title,
   .box,
