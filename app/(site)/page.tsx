@@ -1,3 +1,4 @@
+import { HeroAsk } from "@/components/HeroAsk";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
@@ -25,7 +26,7 @@ export default async function Home() {
 
   return (
     <main>
-      <h1 className="visually-hidden">Designjoy</h1>
+      <HeroAsk />
       <MasonryGrid work={work} highlights={highlights} />
       <footer className={styles.footer}>
         <span>© {new Date().getFullYear()} Designjoy</span>

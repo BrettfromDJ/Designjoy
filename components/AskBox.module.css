@@ -1,10 +1,28 @@
+/* Fixed to the top of the screen; the nav sits at the bottom. */
 .wrapper {
   position: fixed;
   left: 50%;
-  bottom: 32px;
+  top: 32px;
   transform: translateX(-50%);
   z-index: 20;
   width: min(412px, calc(100vw - 32px));
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* On the homepage the big ask box in the hero stands in for this one, so it
+   stays tucked away until the hero has scrolled out of view (or it's opened). */
+:global(body[data-hero-ask]) .wrapper:not([data-open]) {
+  opacity: 0;
+  transform: translate(-50%, -24px);
+  pointer-events: none;
+}
+
+@media (max-width: 559px) {
+  .wrapper {
+    top: 16px;
+  }
 }
 
 /* The How it works tour needs room for the board. */
@@ -162,7 +180,7 @@
   position: relative;
 }
 
-/* Open: the pill grows up into a panel that fits its content (up to a limit),
+/* Open: the pill grows down into a panel that fits its content (up to a limit),
    with the travelling edge light around the whole thing. */
 .shell[data-open="true"] {
   display: flex;
@@ -183,7 +201,7 @@
 
 @keyframes grow-up {
   from {
-    clip-path: inset(calc(100% - 49px) 0 0 0 round 74px);
+    clip-path: inset(0 0 calc(100% - 49px) 0 round 74px);
   }
   to {
     clip-path: inset(-2px round 26px);
@@ -216,14 +234,15 @@
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
 
-/* The pill becomes the panel's bottom row. */
+/* The pill becomes the panel's top row. */
 .shell[data-open="true"] .box {
+  order: -1;
   flex: none;
   height: 48px;
   background: transparent;
   border: 0;
-  border-top: 1px solid var(--border-subtle);
-  border-radius: 0 0 26px 26px;
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 26px 26px 0 0;
   box-shadow: none;
 }
 

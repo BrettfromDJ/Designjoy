@@ -145,6 +145,18 @@ export function AskBox() {
     log.scrollTo({ top: Math.min(top, log.scrollHeight), behavior: "smooth" });
   }, [messages, open]);
 
+  // A question asked from elsewhere (the homepage hero): a FAQ gets its
+  // written answer, anything else goes to the chat. Kept in a ref so the
+  // listener below always uses the current conversation.
+  const askRef = useRef<(question: string) => void>(() => {});
+  askRef.current = (question: string) => {
+    const faq = faqs.find((f) => f.question === question);
+    if (faq) {
+      setOpen(true);
+      askFaq(faq);
+    } else send(question);
+  };
+
   // Opens from the nav (FAQs, Pricing, Book a call) and other buttons, or
   // from /?faq, /?pricing and /?book (where the old pages redirect).
   useEffect(() => {
@@ -158,6 +170,7 @@ export function AskBox() {
     const onOpen = (e: Event) => {
       const detail = (e as CustomEvent<OpenAskBoxDetail>).detail;
       show(detail?.view ?? "chat", detail?.plan);
+      if (detail?.question) askRef.current(detail.question);
     };
     window.addEventListener(OPEN_ASK_BOX_EVENT, onOpen);
     const url = new URL(window.location.href);
@@ -236,7 +249,10 @@ export function AskBox() {
   async function ask(event: React.FormEvent) {
     event.preventDefault();
     // With an empty box, Ask sends the sample question on screen.
-    const question = input.trim() || (idle ? (sample ?? "") : "");
+    send(input.trim() || (idle ? (sample ?? "") : ""));
+  }
+
+  async function send(question: string) {
     if (!question || pending) return;
 
     const history: Message[] = [
@@ -280,9 +296,13 @@ export function AskBox() {
           aria-hidden="true"
         />
       )}
-      <div className={styles.wrapper} data-wide={(open && mode === "tour") || undefined}>
-        {/* Closed, this is just the ask pill. Open, the pill grows up into a
-            panel with the conversation, and the pill stays as its bottom row. */}
+      <div
+        className={styles.wrapper}
+        data-open={open || undefined}
+        data-wide={(open && mode === "tour") || undefined}
+      >
+        {/* Closed, this is just the ask pill at the top of the screen. Open, the
+            pill grows down into a panel, and the pill stays as its top row. */}
         <div
           className={styles.shell}
           data-open={open}
