@@ -52,9 +52,6 @@ export function HeroAsk() {
 
   return (
     <section ref={ref} data-hero className={styles.hero} aria-labelledby="hero-title">
-      {/* The logo leads the page, now the nav sits at the bottom. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/icons/smile.svg" alt="Designjoy" width={72} height={72} className={styles.logo} />
       <p className={styles.status}>
         <span className={styles.liveDot} aria-hidden="true" />
         Spots available · Start today
