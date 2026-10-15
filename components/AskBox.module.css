@@ -35,6 +35,33 @@
   :global(body[data-sidebar]) .wrapper[data-wide] {
     width: min(760px, calc(100vw - 388px));
   }
+
+  /* With the sidebar, it sits at the bottom of the work, where the nav was,
+     and opens upward: the ask row stays at the bottom of the panel. */
+  :global(body[data-sidebar]) .wrapper {
+    top: auto;
+    bottom: 32px;
+  }
+
+  :global(body[data-sidebar]) .shell[data-open="true"] {
+    animation-name: grow-from-bottom;
+  }
+
+  :global(body[data-sidebar]) .shell[data-open="true"] .box {
+    order: 1;
+    border-bottom: 0;
+    border-top: 1px solid var(--border-subtle);
+    border-radius: 0 0 26px 26px;
+  }
+}
+
+@keyframes grow-from-bottom {
+  from {
+    clip-path: inset(calc(100% - 49px) 0 0 0 round 74px);
+  }
+  to {
+    clip-path: inset(-2px round 26px);
+  }
 }
 
 /* The How it works tour needs room for the board. */

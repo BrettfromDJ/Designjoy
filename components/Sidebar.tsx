@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { plans, scopeOfWork, testimonials, type WorkItem } from "@/content/site";
-import { askQuestion, openAskBox } from "@/lib/ask-box";
+import { openAskBox } from "@/lib/ask-box";
 import { openHowItWorks } from "@/lib/how-it-works";
 import { BoardDemo } from "./BoardDemo";
-import { BotFace } from "./BotFace";
 import styles from "./Sidebar.module.css";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -28,13 +27,10 @@ const quoted = (text: string) => `“${text}”`;
 
 /**
  * Everything that isn't artwork, in one fixed column on the left: the
- * headline, the ask box, the How it works board, and the homepage tiles as
+ * headline, the How it works board, and the homepage tiles as
  * compact rows that open in place. The artwork scrolls on the right.
  */
 export function Sidebar({ work }: { work: WorkItem[] }) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [input, setInput] = useState("");
-  const [focused, setFocused] = useState(false);
   const [open, setOpen] = useState<Section | null>(null);
   const [day, setDay] = useState("");
   useEffect(() => setDay(DAYS[new Date(Date.now() + 48 * 3600 * 1000).getDay()]), []);
@@ -44,33 +40,14 @@ export function Sidebar({ work }: { work: WorkItem[] }) {
   const frames = work.filter((w) => w.kind === "image").slice(0, 4);
   const frame = useTicker(frames.length, 900);
 
-  // This page has no floating nav, and the small ask pill stays tucked away
-  // while this column's ask box is on screen.
+  // On wider screens this page has no floating nav, and the ask box sits at
+  // the bottom of the work instead of the top (see AskBox.module.css).
   useEffect(() => {
     document.body.dataset.sidebar = "";
-    const el = formRef.current;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) document.body.dataset.heroAsk = "";
-        else delete document.body.dataset.heroAsk;
-      },
-      { rootMargin: "-40px 0px 0px 0px" },
-    );
-    if (el) observer.observe(el);
     return () => {
-      observer.disconnect();
       delete document.body.dataset.sidebar;
-      delete document.body.dataset.heroAsk;
     };
   }, []);
-
-  function submit(event: React.FormEvent) {
-    event.preventDefault();
-    const question = input.trim();
-    if (!question) return;
-    setInput("");
-    askQuestion(question);
-  }
 
   const toggle = (s: Section) => setOpen((o) => (o === s ? null : s));
   const t = testimonials[quote];
@@ -96,26 +73,6 @@ export function Sidebar({ work }: { work: WorkItem[] }) {
             <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
           </p>
         </div>
-
-        <form ref={formRef} className={styles.ask} onSubmit={submit}>
-          <BotFace size={26} typing={focused && input.length > 0} />
-          <label htmlFor="sidebar-ask" className="visually-hidden">
-            Ask anything about Designjoy
-          </label>
-          <input
-            id="sidebar-ask"
-            className={styles.input}
-            placeholder="Ask anything"
-            autoComplete="off"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-          />
-          <button type="submit" className={styles.submit} disabled={!input.trim()}>
-            Ask
-          </button>
-        </form>
 
         <button type="button" className={styles.board} onClick={openHowItWorks}>
           <span className={styles.boardHead}>
