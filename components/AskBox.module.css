@@ -28,7 +28,7 @@
 /* With the sidebar, it opens centred over the work instead of the whole screen. */
 @media (min-width: 820px) {
   :global(body[data-sidebar]) .wrapper {
-    left: calc(50% + 178px);
+    left: calc(50% - 178px);
     width: min(412px, calc(100vw - 388px));
   }
 
@@ -536,13 +536,5 @@
   .input,
   .sample {
     font-size: 16px;
-  }
-}
-
-/* Nav option 6: the ask box shares the bottom with the nav, on the right. */
-@media (min-width: 820px) {
-  :global(body[data-sidebar][data-nav="6"]) .wrapper:not([data-open]) {
-    width: min(412px, calc((100vw - 412px) / 2));
-    transform: translateX(6px);
   }
 }

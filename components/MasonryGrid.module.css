@@ -31,30 +31,14 @@
   padding-top: var(--gap);
 }
 
-/* Beside the fixed sidebar: starts after it, and right at the top. */
+/* Beside the fixed sidebar on the right, starting right at the top. */
 .beside {
-  margin-left: var(--sidebar);
+  margin-right: var(--sidebar);
   padding-top: var(--gap);
 }
 
 @media (max-width: 819px) {
   .beside {
-    margin-left: 0;
-  }
-}
-
-/* Nav options that sit in a band across the top of the work make room for it. */
-@media (min-width: 820px) {
-  :global(body[data-nav="2"]) .beside {
-    padding-top: 84px;
-  }
-
-  :global(body[data-nav="3"]) .beside,
-  :global(body[data-nav="4"]) .beside {
-    padding-top: 81px;
-  }
-
-  :global(body[data-nav="7"]) .beside {
-    padding-top: 72px;
+    margin-right: 0;
   }
 }

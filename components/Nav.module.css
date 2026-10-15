@@ -145,146 +145,13 @@
   }
 }
 
-/* With the sidebar on wider screens, the nav sits at the top of the work,
-   centred over it, and the ask box takes its place at the bottom. */
+/* With the sidebar on wider screens, the nav sits at the top of it, above
+   the pricing card. */
 @media (min-width: 820px) {
-  :global(body[data-sidebar]) .nav,
-  :global(body[data-sidebar]) .shadow {
-    top: 32px;
-    bottom: auto;
-    left: calc(50% + 178px);
-  }
-}
-
-/* ---------- Nav options for the sidebar homepage (?nav=1…7) ---------- */
-
-@media (min-width: 820px) {
-  /* 2. A full-width bar across the top of the work; links on the right. */
-  :global(body[data-sidebar][data-nav="2"]) .nav {
-    top: 16px;
-    left: calc(var(--gap) * 2 + 340px);
-    right: var(--gap);
-    width: auto;
-    height: 52px;
-    transform: none;
-    border-radius: var(--radius-card);
-    box-shadow: none;
-    background: var(--surface);
-  }
-
-  :global(body[data-sidebar][data-nav="2"]) .links {
-    justify-content: flex-end;
-    gap: 28px;
-  }
-
-  /* 3. Pills: each link its own outlined pill, like filter chips. */
-  :global(body[data-sidebar][data-nav="3"]) .nav {
-    top: 16px;
-    left: calc(var(--gap) * 2 + 340px);
-    width: auto;
-    transform: none;
-    gap: 8px;
-    padding: 0;
-    background: none;
-    border: 0;
-    box-shadow: none;
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .logo {
-    display: grid;
-    place-items: center;
-    width: 49px;
-    height: 49px;
-    border-radius: 50%;
-    background: var(--surface-raised);
-    border: 1px solid var(--border-subtle);
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .smile {
-    top: 7px;
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .links {
-    flex: none;
-    gap: 8px;
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .link {
-    height: 40px;
-    padding: 0 16px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--bg);
-    opacity: 1;
-    color: var(--text-nav);
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .link:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: var(--text);
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .active {
-    background: #fff;
-    border-color: #fff;
-    color: #000;
-  }
-
-  :global(body[data-sidebar][data-nav="3"]) .cta {
-    margin: 0;
-    background: #1f1f1f;
-    border-color: #1f1f1f;
-    color: #fff;
-  }
-
-  /* 4. Split: the logo in its own circle on the left, the links on the right. */
-  :global(body[data-sidebar][data-nav="4"]) .nav {
-    top: 16px;
-    left: calc(var(--gap) * 2 + 340px);
-    right: var(--gap);
-    width: auto;
-    transform: none;
-    justify-content: space-between;
-    padding: 0;
-    background: none;
-    border: 0;
-    box-shadow: none;
-  }
-
-  :global(body[data-sidebar][data-nav="4"]) .logo {
-    display: grid;
-    place-items: center;
-    width: 49px;
-    height: 49px;
-    border-radius: 50%;
-    background: var(--surface-raised);
-    border: 1px solid var(--border-subtle);
-    box-shadow: var(--shadow-float);
-  }
-
-  :global(body[data-sidebar][data-nav="4"]) .smile {
-    top: 7px;
-  }
-
-  :global(body[data-sidebar][data-nav="4"]) .links {
-    flex: none;
-    gap: 28px;
-    height: 49px;
-    padding: 0 24px;
-    background: var(--surface-raised);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-float);
-  }
-
-  :global(body[data-sidebar][data-nav="4"]) .cta {
-    margin-right: -16px;
-  }
-
-  /* 5. In the sidebar, above the pricing card. */
-  :global(body[data-sidebar][data-nav="5"]) .nav {
+  :global(body[data-sidebar]) .nav {
     top: var(--gap);
-    left: var(--gap);
+    right: var(--gap);
+    left: auto;
     width: 340px;
     gap: 20px;
     padding: 0 20px;
@@ -293,85 +160,11 @@
     background: var(--surface);
   }
 
-  :global(body[data-sidebar][data-nav="5"]) .links {
+  :global(body[data-sidebar]) .shadow {
+    display: none;
+  }
+
+  :global(body[data-sidebar]) .links {
     gap: 12px;
-  }
-
-  /* 6. At the bottom of the work, side by side with the ask box. */
-  :global(body[data-sidebar][data-nav="6"]) .nav {
-    top: auto;
-    bottom: 32px;
-    width: min(400px, calc((100vw - 412px) / 2));
-    transform: translateX(calc(-100% - 6px));
-  }
-
-  /* 7. Plain text links in a band across the top; only Book a call is a pill. */
-  :global(body[data-sidebar][data-nav="7"]) .nav {
-    top: 16px;
-    left: calc(var(--gap) * 2 + 340px);
-    right: var(--gap);
-    width: auto;
-    height: 40px;
-    transform: none;
-    padding: 0 0 0 4px;
-    background: none;
-    border: 0;
-    box-shadow: none;
-  }
-
-  :global(body[data-sidebar][data-nav="7"]) .links {
-    justify-content: flex-end;
-    gap: 28px;
-  }
-
-  :global(body[data-sidebar][data-nav="7"]) .cta {
-    margin-right: 0;
-  }
-}
-
-/* Preview-only switcher. */
-.switcher {
-  position: fixed;
-  right: 16px;
-  bottom: 100px;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 36px;
-  padding: 0 4px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--text-nav);
-  box-shadow: var(--shadow-float);
-}
-
-.switcher b {
-  font-weight: 500;
-  color: var(--text);
-}
-
-.switcher button {
-  width: 28px;
-  height: 28px;
-  border: 0;
-  border-radius: 50%;
-  background: #1a1a1a;
-  color: var(--text);
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.switcher span {
-  padding: 0 6px;
-  white-space: nowrap;
-}
-
-@media (max-width: 819px) {
-  .switcher {
-    top: 80px;
-    bottom: auto;
   }
 }

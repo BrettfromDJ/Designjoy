@@ -1,12 +1,13 @@
-/* A fixed column on the left, a grid column wide; the artwork scrolls beside it. */
+/* A fixed column on the right, a grid column wide, under the nav (49px tall
+   plus a gap either side); the artwork scrolls beside it. */
 .sidebar {
   position: fixed;
-  left: 0;
+  right: 0;
   top: 0;
   bottom: 0;
   z-index: 10;
   width: var(--sidebar);
-  padding: var(--gap) 0 var(--gap) var(--gap);
+  padding: calc(var(--gap) * 2 + 49px) var(--gap) var(--gap) 0;
 }
 
 /* Fills the screen height and scrolls on its own, separately from the work,
@@ -77,12 +78,5 @@
   .inner {
     height: auto;
     overflow: visible;
-  }
-}
-
-/* Nav option 5 sits at the top of this column. */
-@media (min-width: 820px) {
-  :global(body[data-nav="5"]) .sidebar {
-    padding-top: 81px;
   }
 }
