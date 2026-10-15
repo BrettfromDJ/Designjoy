@@ -270,63 +270,49 @@
   }
 }
 
-/* Pricing, compact: each plan opens the full picker in the ask box. */
-.plans {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+/* With the plan picker open, its own Subscribe and intro-call buttons
+   stand in for the ones at the bottom, which fold away to make room. */
+.actions {
+  max-height: 60px;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.3s ease;
 }
 
-.plan {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.15s ease;
+.inner[data-row-open="pricing"] .actions {
+  max-height: 0;
+  opacity: 0;
 }
 
-.plan:hover {
-  border-color: rgba(255, 255, 255, 0.18);
+/* The picker with every inclusion is tall, so the line under the headline
+   folds away too while it's open, and on short screens the How it works card. */
+.sub,
+.board {
+  max-height: 260px;
+  overflow: hidden;
+  transition:
+    max-height 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.3s ease,
+    margin 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    padding 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    gap 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    border-color 0.15s ease;
 }
 
-.planName {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  letter-spacing: -0.42px;
+.inner[data-row-open="pricing"] .sub {
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
 }
 
-.tag {
-  padding: 1px 5px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  text-transform: uppercase;
-  color: var(--text-nav);
-}
-
-.planLine {
-  display: block;
-  margin-top: 3px;
-  font-size: 12px;
-  letter-spacing: -0.36px;
-  color: var(--text-muted);
-}
-
-.planPrice {
-  flex: none;
-  font-size: 14px;
-  letter-spacing: -0.42px;
+@media (max-height: 860px) {
+  .inner[data-row-open="pricing"] .board {
+    max-height: 0;
+    margin-top: -12px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-color: transparent;
+    opacity: 0;
+  }
 }
 
 .services {

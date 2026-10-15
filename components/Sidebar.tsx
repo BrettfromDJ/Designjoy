@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { plans, scopeOfWork, testimonials, type WorkItem } from "@/content/site";
+import { scopeOfWork, testimonials, type WorkItem } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { openHowItWorks } from "@/lib/how-it-works";
 import { BoardDemo } from "./BoardDemo";
+import { PlanPicker } from "./PlanPicker";
 import styles from "./Sidebar.module.css";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -99,22 +100,8 @@ export function Sidebar({ work }: { work: WorkItem[] }) {
               <Chevron />
             </button>
             {open === "pricing" && (
-              <div className={`${styles.rowBody} ${styles.plans}`}>
-                {plans.map((p) => (
-                  <button key={p.id} type="button" className={styles.plan} onClick={() => openAskBox("pricing", p.id)}>
-                    <span>
-                      <span className={styles.planName}>
-                        {p.name}
-                        {p.tag && <span className={styles.tag}>{p.tag}</span>}
-                      </span>
-                      <span className={styles.planLine}>{p.description}</span>
-                    </span>
-                    <span className={styles.planPrice}>
-                      {p.price}
-                      <span className={styles.muted}>/mo</span>
-                    </span>
-                  </button>
-                ))}
+              <div className={styles.rowBody}>
+                <PlanPicker embedded />
               </div>
             )}
           </div>
