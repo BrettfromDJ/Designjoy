@@ -1,5 +1,4 @@
-/* A fixed column on the right, a grid column wide, under the nav (49px tall
-   plus a gap either side); the artwork scrolls beside it. */
+/* A fixed column on the right, a grid column wide; the artwork scrolls beside it. */
 .sidebar {
   position: fixed;
   right: 0;
@@ -7,25 +6,45 @@
   bottom: 0;
   z-index: 10;
   width: var(--sidebar);
-  padding: calc(var(--gap) * 2 + 49px) var(--gap) var(--gap) 0;
+  padding-right: var(--gap);
 }
 
 /* Fills the screen height and scrolls on its own, separately from the work,
-   so nothing in it has to be squeezed to fit. When there's more below, the
-   bottom edge fades out as a hint. */
+   so nothing in it has to be squeezed to fit. It runs the full height of the
+   screen, starting below the nav (49px tall plus a gap either side), so cards
+   scroll up underneath the nav and fade out as they reach it rather than
+   being cut off. While there's more below, the bottom edge fades too. */
 .inner {
+  --top-fade: 0px;
+  --bottom-fade: 0px;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
   height: 100%;
+  padding: calc(var(--gap) * 2 + 49px) 0 var(--gap);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
+  -webkit-mask: linear-gradient(
+    transparent calc(var(--gap) + 49px - var(--top-fade)),
+    #000 calc(var(--gap) + 49px + var(--top-fade)),
+    #000 calc(100% - var(--bottom-fade)),
+    transparent
+  );
+  mask: linear-gradient(
+    transparent calc(var(--gap) + 49px - var(--top-fade)),
+    #000 calc(var(--gap) + 49px + var(--top-fade)),
+    #000 calc(100% - var(--bottom-fade)),
+    transparent
+  );
+}
+
+.inner[data-scrolled] {
+  --top-fade: 28px;
 }
 
 .inner[data-more] {
-  -webkit-mask: linear-gradient(#000 calc(100% - 56px), transparent);
-  mask: linear-gradient(#000 calc(100% - 56px), transparent);
+  --bottom-fade: 56px;
 }
 
 /* Every card keeps its full height; the column scrolls instead. */
@@ -77,7 +96,10 @@
 
   .inner {
     height: auto;
+    padding: 0;
     overflow: visible;
+    -webkit-mask: none;
+    mask: none;
   }
 }
 

@@ -36,12 +36,16 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
     };
   }, []);
 
-  // While there's more below, the column's bottom edge fades as a hint.
-  // Rechecked as it scrolls and whenever its content resizes.
+  // Once scrolled, cards fade out as they pass under the nav; while there's
+  // more below, the bottom edge fades as a hint. Rechecked as it scrolls and
+  // whenever its content resizes.
   useEffect(() => {
     const el = innerRef.current;
     if (!el) return;
-    const check = () => el.toggleAttribute("data-more", el.scrollTop + el.clientHeight < el.scrollHeight - 4);
+    const check = () => {
+      el.toggleAttribute("data-scrolled", el.scrollTop > 2);
+      el.toggleAttribute("data-more", el.scrollTop + el.clientHeight < el.scrollHeight - 4);
+    };
     const observer = new ResizeObserver(check);
     observer.observe(el);
     Array.from(el.children).forEach((child) => observer.observe(child));
