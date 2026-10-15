@@ -55,7 +55,6 @@
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
   margin: 0;
   padding: 0;
@@ -86,6 +85,11 @@
 .active,
 .active:hover {
   opacity: 1;
+}
+
+/* The links sit together by the logo, with Book a call at the far end. */
+.links li:last-child {
+  margin-left: auto;
 }
 
 /* "Book a call": a subtle dark grey pill, tucked toward the nav's right edge. */
@@ -125,8 +129,7 @@
 
   .links {
     flex: 1;
-    justify-content: space-between;
-    gap: clamp(4px, 2.2vw, 10px);
+    gap: clamp(14px, 5vw, 22px);
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -165,7 +168,7 @@
   }
 
   :global(body[data-sidebar]) .links {
-    gap: 12px;
+    gap: 22px;
   }
 }
 

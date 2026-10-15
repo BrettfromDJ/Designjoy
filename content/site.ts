@@ -3,7 +3,6 @@
 // always sit in the same slot.
 
 export const navLinks = [
-  { label: "Home", href: "/" },
   { label: "FAQs", href: "/faqs" },
   { label: "Pricing", href: "/pricing" },
   // Shown as a white pill so it stands out as the call to action.
