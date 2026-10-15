@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { scopeOfWork, testimonials, type WorkItem } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { openHowItWorks } from "@/lib/how-it-works";
@@ -33,6 +33,7 @@ const quoted = (text: string) => `“${text}”`;
  */
 export function Sidebar({ work }: { work: WorkItem[] }) {
   const [open, setOpen] = useState<Section | null>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const [day, setDay] = useState("");
   useEffect(() => setDay(DAYS[new Date(Date.now() + 48 * 3600 * 1000).getDay()]), []);
 
@@ -50,12 +51,29 @@ export function Sidebar({ work }: { work: WorkItem[] }) {
     };
   }, []);
 
+  // The column scrolls on its own; while there's more below, its bottom edge
+  // fades as a hint. Rechecked as it scrolls and whenever its content resizes.
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const check = () => el.toggleAttribute("data-more", el.scrollTop + el.clientHeight < el.scrollHeight - 4);
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    Array.from(el.children).forEach((child) => observer.observe(child));
+    el.addEventListener("scroll", check, { passive: true });
+    check();
+    return () => {
+      observer.disconnect();
+      el.removeEventListener("scroll", check);
+    };
+  }, []);
+
   const toggle = (s: Section) => setOpen((o) => (o === s ? null : s));
   const t = testimonials[quote];
 
   return (
     <aside data-hero className={styles.sidebar} aria-label="About Designjoy">
-      <div className={styles.inner} data-row-open={open || undefined}>
+      <div ref={innerRef} className={styles.inner}>
         <header className={styles.top}>
           <Link href="/" className={styles.logo} aria-label="Designjoy home">
             {/* eslint-disable-next-line @next/next/no-img-element */}

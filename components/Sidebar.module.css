@@ -9,14 +9,22 @@
   padding: var(--gap) 0 var(--gap) var(--gap);
 }
 
-/* Fills the screen height; if a short window can't fit it all, it scrolls on its own. */
+/* Fills the screen height and scrolls on its own, separately from the work,
+   so nothing in it has to be squeezed to fit. When there's more below, the
+   bottom edge fades out as a hint. */
 .inner {
   display: flex;
   flex-direction: column;
   gap: 12px;
   height: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
+}
+
+.inner[data-more] {
+  -webkit-mask: linear-gradient(#000 calc(100% - 56px), transparent);
+  mask: linear-gradient(#000 calc(100% - 56px), transparent);
 }
 
 .inner::-webkit-scrollbar {
@@ -158,28 +166,9 @@
   transform: scale(1.1);
 }
 
-/* The preview folds away while a row below is open, so everything still fits. */
 .preview {
   display: block;
-  max-height: 200px;
-  overflow: hidden;
   pointer-events: none;
-  transition:
-    max-height 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    opacity 0.3s ease;
-}
-
-.inner[data-row-open] .preview {
-  max-height: 0;
-  opacity: 0;
-}
-
-.inner[data-row-open] .board {
-  gap: 0;
-}
-
-.board {
-  transition: gap 0.45s cubic-bezier(0.65, 0, 0.35, 1), border-color 0.15s ease;
 }
 
 /* The other tiles, as rows in one card that open in place. */
@@ -267,51 +256,6 @@
   from {
     opacity: 0;
     transform: translateY(-6px);
-  }
-}
-
-/* With the plan picker open, its own Subscribe and intro-call buttons
-   stand in for the ones at the bottom, which fold away to make room. */
-.actions {
-  max-height: 60px;
-  overflow: hidden;
-  transition: max-height 0.45s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.3s ease;
-}
-
-.inner[data-row-open="pricing"] .actions {
-  max-height: 0;
-  opacity: 0;
-}
-
-/* The picker with every inclusion is tall, so the line under the headline
-   folds away too while it's open, and on short screens the How it works card. */
-.sub,
-.board {
-  max-height: 260px;
-  overflow: hidden;
-  transition:
-    max-height 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    opacity 0.3s ease,
-    margin 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    padding 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    gap 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    border-color 0.15s ease;
-}
-
-.inner[data-row-open="pricing"] .sub {
-  max-height: 0;
-  margin-top: 0;
-  opacity: 0;
-}
-
-@media (max-height: 860px) {
-  .inner[data-row-open="pricing"] .board {
-    max-height: 0;
-    margin-top: -12px;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-color: transparent;
-    opacity: 0;
   }
 }
 
@@ -483,38 +427,6 @@
 
   .intro {
     padding-top: 0;
-  }
-}
-
-/* Short laptop screens: the board keeps its title row and drops the preview. */
-@media (min-width: 820px) and (max-height: 820px) {
-  .preview {
-    display: none;
-  }
-
-  .board {
-    gap: 0;
-  }
-
-  .intro {
-    padding-top: 14px;
-  }
-
-  /* With a row open, the line under the headline folds away too. */
-  .sub {
-    max-height: 80px;
-    overflow: hidden;
-    transition: max-height 0.45s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.3s ease, margin 0.45s ease;
-  }
-
-  .inner[data-row-open] .sub {
-    max-height: 0;
-    margin-top: 0;
-    opacity: 0;
-  }
-
-  .words blockquote {
-    font-size: 15px;
   }
 }
 
