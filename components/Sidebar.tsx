@@ -28,8 +28,8 @@ const quoted = (text: string) => `“${text}”`;
 
 /**
  * Everything that isn't artwork, in one fixed column on the left: the
- * headline, the How it works board, and the homepage tiles as
- * compact rows that open in place. The artwork scrolls on the right.
+ * headline, the homepage tiles as compact rows that open in place, and the
+ * How it works board. The artwork scrolls on the right.
  */
 export function Sidebar({ work }: { work: WorkItem[] }) {
   const [open, setOpen] = useState<Section | null>(null);
@@ -74,23 +74,6 @@ export function Sidebar({ work }: { work: WorkItem[] }) {
             <span className={styles.muted}>Unlimited requests, $4,995 a month, no contracts.</span>
           </p>
         </div>
-
-        <button type="button" className={styles.board} onClick={openHowItWorks}>
-          <span className={styles.boardHead}>
-            <span className={styles.label}>How it works</span>
-            <span className={styles.watch}>
-              Watch the tour
-              <span className={styles.play} aria-hidden="true">
-                <svg width="8" height="8" viewBox="0 0 10 10">
-                  <path d="M2.5 1.5v7l6-3.5z" fill="currentColor" />
-                </svg>
-              </span>
-            </span>
-          </span>
-          <span className={styles.preview}>
-            <BoardDemo />
-          </span>
-        </button>
 
         <div className={styles.list}>
           <div className={styles.row} data-open={open === "pricing" || undefined}>
@@ -165,6 +148,23 @@ export function Sidebar({ work }: { work: WorkItem[] }) {
             </span>
           </Link>
         </div>
+
+        <button type="button" className={styles.board} onClick={openHowItWorks}>
+          <span className={styles.boardHead}>
+            <span className={styles.label}>How it works</span>
+            <span className={styles.watch}>
+              Watch the tour
+              <span className={styles.play} aria-hidden="true">
+                <svg width="8" height="8" viewBox="0 0 10 10">
+                  <path d="M2.5 1.5v7l6-3.5z" fill="currentColor" />
+                </svg>
+              </span>
+            </span>
+          </span>
+          <span className={styles.preview}>
+            <BoardDemo />
+          </span>
+        </button>
 
         <footer className={styles.foot}>
           <div className={styles.actions}>
