@@ -19,6 +19,9 @@ export type Plan = {
   tag?: string;
   /** Gives the plan a slowly travelling edge highlight, like the ask box. */
   highlight?: boolean;
+  /** Its first feature is another plan ("Everything in …"); the rest are
+   *  additions on top, marked with a + instead of a check. */
+  additions?: boolean;
   features: string[];
 };
 
@@ -41,6 +44,7 @@ export const plans: Plan[] = [
     name: "Design Partner",
     tag: "New",
     highlight: true,
+    additions: true,
     price: "$7,995",
     description: "Perfect for fast-moving teams.",
     features: [

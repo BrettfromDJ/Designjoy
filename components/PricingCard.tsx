@@ -4,7 +4,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { clientLogos, plans, type Plan } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { startCheckout } from "@/lib/checkout";
-import { CheckIcon } from "./Icons";
+import { CheckIcon, PlusIcon } from "./Icons";
 import { LogoMarquee } from "./LogoMarquee";
 import styles from "./PricingCard.module.css";
 
@@ -90,7 +90,7 @@ export function PricingCard() {
       <ul key={plan.id} className={styles.features} data-cascade={switched || undefined}>
         {plan.features.map((feature, i) => (
           <li key={feature} style={{ "--i": i } as CSSProperties}>
-            <CheckIcon />
+            {plan.additions && i > 0 ? <PlusIcon /> : <CheckIcon />}
             {feature}
           </li>
         ))}

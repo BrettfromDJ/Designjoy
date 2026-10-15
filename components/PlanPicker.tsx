@@ -4,7 +4,7 @@ import { useState, type CSSProperties } from "react";
 import { plans, type Plan } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { startCheckout } from "@/lib/checkout";
-import { CheckIcon } from "./Icons";
+import { CheckIcon, PlusIcon } from "./Icons";
 import styles from "./PlanPicker.module.css";
 
 /** Both plans as rows; the chosen one opens to show its line and checklist.
@@ -73,7 +73,7 @@ export function PlanPicker({ embedded = false }: { embedded?: boolean }) {
                   >
                     {p.features.map((feature, i) => (
                       <span role="listitem" key={feature} style={{ "--i": i } as CSSProperties}>
-                        <CheckIcon />
+                        {p.additions && i > 0 ? <PlusIcon /> : <CheckIcon />}
                         {feature}
                       </span>
                     ))}
