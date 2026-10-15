@@ -143,3 +143,11 @@
     padding: 0 clamp(8px, 2.6vw, 12px);
   }
 }
+
+/* The sidebar layout carries the logo and links itself on wider screens. */
+@media (min-width: 820px) {
+  :global(body[data-sidebar]) .nav,
+  :global(body[data-sidebar]) .shadow {
+    display: none;
+  }
+}

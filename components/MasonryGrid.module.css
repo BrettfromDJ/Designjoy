@@ -30,3 +30,15 @@
 :global([data-hero]) ~ .grid {
   padding-top: var(--gap);
 }
+
+/* Beside the fixed sidebar: starts after it, and right at the top. */
+.beside {
+  margin-left: var(--sidebar);
+  padding-top: var(--gap);
+}
+
+@media (max-width: 819px) {
+  .beside {
+    margin-left: 0;
+  }
+}

@@ -22,8 +22,15 @@ const QUERIES: [string, ColumnCount][] = [
   ["(min-width: 560px)", 2],
 ];
 
-function getColumnCount(): ColumnCount {
-  for (const [query, count] of QUERIES) {
+// With the sidebar, the work has a column's less room.
+const SIDEBAR_QUERIES: [string, ColumnCount][] = [
+  ["(min-width: 1800px)", 4],
+  ["(min-width: 1360px)", 3],
+  ["(min-width: 560px)", 2],
+];
+
+function getColumnCount(queries = QUERIES): ColumnCount {
+  for (const [query, count] of queries) {
     if (window.matchMedia(query).matches) return count;
   }
   return 1;
@@ -42,19 +49,32 @@ function visibleFixedCards(highlights: Highlight[]) {
 }
 
 function subscribe(onChange: () => void) {
-  const lists = QUERIES.map(([query]) => window.matchMedia(query));
+  const lists = [...QUERIES, ...SIDEBAR_QUERIES].map(([query]) => window.matchMedia(query));
   lists.forEach((list) => list.addEventListener("change", onChange));
   return () => lists.forEach((list) => list.removeEventListener("change", onChange));
 }
 
-export function MasonryGrid({ work, highlights }: { work: WorkItem[]; highlights: Highlight[] }) {
-  const columnCount = useSyncExternalStore(subscribe, getColumnCount, () => 4 as const);
-  const columns = layoutMasonry(columnCount, work, visibleFixedCards(highlights));
+/** `workOnly` leaves out the fixed cards, for the sidebar layout where they live on the left. */
+export function MasonryGrid({
+  work,
+  highlights,
+  workOnly = false,
+}: {
+  work: WorkItem[];
+  highlights: Highlight[];
+  workOnly?: boolean;
+}) {
+  const columnCount = useSyncExternalStore(
+    subscribe,
+    () => getColumnCount(workOnly ? SIDEBAR_QUERIES : QUERIES),
+    () => (workOnly ? 3 : 4) as ColumnCount,
+  );
+  const columns = layoutMasonry(columnCount, work, workOnly ? [] : visibleFixedCards(highlights));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <>
-      <div className={styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>
+      <div className={workOnly ? `${styles.grid} ${styles.beside}` : styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>
         {columns.map((column, i) => (
           <div key={i} className={styles.column}>
             {column.map((cell, row) => {
