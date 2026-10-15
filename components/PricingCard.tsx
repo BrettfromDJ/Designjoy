@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { clientLogos, plans, type Plan } from "@/content/site";
 import { openAskBox } from "@/lib/ask-box";
 import { startCheckout } from "@/lib/checkout";
@@ -8,7 +8,12 @@ import { CheckIcon } from "./Icons";
 import { LogoMarquee } from "./LogoMarquee";
 import styles from "./PricingCard.module.css";
 
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 export function PricingCard() {
+  // The weekday 48 hours from now, set after mount so it's the visitor's own.
+  const [day, setDay] = useState("");
+  useEffect(() => setDay(DAYS[new Date(Date.now() + 48 * 3600 * 1000).getDay()]), []);
   const [planId, setPlanId] = useState<Plan["id"]>(plans[0].id);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   // The checklist only cascades in after a switch, not on first load.
@@ -31,7 +36,10 @@ export function PricingCard() {
         <br />
         <span className={`${styles.line} ${styles.muted}`}>Endless possibilities.</span>
       </h2>
-      <p className={styles.subtitle}>Pause or cancel anytime.</p>
+      <p className={styles.subtitle}>
+        Subscribe today and most requests land {day ? `by ${day}` : "in about two days"}. Pause or cancel
+        anytime.
+      </p>
 
       <fieldset className={styles.plans}>
         <legend className="visually-hidden">Choose a plan</legend>

@@ -36,81 +36,6 @@
   display: none;
 }
 
-.top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 12px 4px 0 8px;
-}
-
-/* The smile's SVG leaves room for its glow; the negative margins cancel it. */
-.logo {
-  display: flex;
-  margin: 0 -5px -23px;
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  letter-spacing: -0.36px;
-  color: var(--text-muted);
-}
-
-.liveDot {
-  position: relative;
-  flex: none;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fff;
-}
-
-.liveDot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #fff;
-  animation: live-pulse 1.8s ease-out infinite;
-}
-
-@keyframes live-pulse {
-  from {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(2.8);
-  }
-}
-
-.intro {
-  padding: 22px 8px 6px;
-}
-
-.title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 34px;
-  line-height: 1.04;
-  letter-spacing: -0.04em;
-}
-
-.sub {
-  margin: 12px 0 0;
-  font-size: 14px;
-  line-height: 1.45;
-  letter-spacing: -0.35px;
-}
-
-.muted {
-  color: var(--text-muted);
-}
-
 .legal {
   display: flex;
   gap: 14px;
@@ -152,19 +77,5 @@
   .inner {
     height: auto;
     overflow: visible;
-  }
-
-  .top {
-    display: none;
-  }
-
-  .intro {
-    padding-top: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .liveDot::after {
-    animation: none;
   }
 }
