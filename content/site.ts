@@ -29,7 +29,7 @@ export const plans: Plan[] = [
     price: "$4,995",
     description: "Perfect for steady workloads.",
     features: [
-      "Unlimited design requests",
+      "One request at a time",
       "Unlimited revisions",
       "~48-hour average delivery",
       "Async communication via Trello",
