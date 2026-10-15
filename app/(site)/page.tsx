@@ -27,6 +27,9 @@ export default async function Home() {
 
   return (
     <main style={{ "--sidebar": "356px" } as React.CSSProperties}>
+      {/* Marks the page before it first paints, so the nav and ask box start
+          in their sidebar-layout spots instead of jumping there on load. */}
+      <script dangerouslySetInnerHTML={{ __html: 'document.body.dataset.sidebar=""' }} />
       <Sidebar work={work} highlights={highlights} />
       <MasonryGrid work={work} highlights={highlights} workOnly />
     </main>

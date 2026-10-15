@@ -53,6 +53,36 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
     };
   }, []);
 
+  // Entrance: the cards rise in one after another (see Sidebar.module.css).
+  // Those on screen at load are staggered; the rest arrive as the column is
+  // scrolled to them.
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const items = Array.from(el.children) as HTMLElement[];
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      items.forEach((item) => item.setAttribute("data-in", ""));
+      return;
+    }
+    let atLoad = true;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries
+          .filter((entry) => entry.isIntersecting)
+          .forEach((entry, i) => {
+            const item = entry.target as HTMLElement;
+            item.style.setProperty("--d", `${(atLoad ? 260 : 0) + i * (atLoad ? 130 : 90)}ms`);
+            item.setAttribute("data-in", "");
+            observer.unobserve(item);
+          });
+        atLoad = false;
+      },
+      { threshold: 0.08 },
+    );
+    items.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <aside data-hero className={styles.sidebar} aria-label="About Designjoy">
       <div ref={innerRef} className={styles.inner}>
