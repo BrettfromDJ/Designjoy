@@ -538,3 +538,11 @@
     font-size: 16px;
   }
 }
+
+/* Nav option 6: the ask box shares the bottom with the nav, on the right. */
+@media (min-width: 820px) {
+  :global(body[data-sidebar][data-nav="6"]) .wrapper:not([data-open]) {
+    width: min(412px, calc((100vw - 412px) / 2));
+    transform: translateX(6px);
+  }
+}

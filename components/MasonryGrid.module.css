@@ -42,3 +42,19 @@
     margin-left: 0;
   }
 }
+
+/* Nav options that sit in a band across the top of the work make room for it. */
+@media (min-width: 820px) {
+  :global(body[data-nav="2"]) .beside {
+    padding-top: 84px;
+  }
+
+  :global(body[data-nav="3"]) .beside,
+  :global(body[data-nav="4"]) .beside {
+    padding-top: 81px;
+  }
+
+  :global(body[data-nav="7"]) .beside {
+    padding-top: 72px;
+  }
+}

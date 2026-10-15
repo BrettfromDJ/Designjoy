@@ -79,3 +79,10 @@
     overflow: visible;
   }
 }
+
+/* Nav option 5 sits at the top of this column. */
+@media (min-width: 820px) {
+  :global(body[data-nav="5"]) .sidebar {
+    padding-top: 81px;
+  }
+}
