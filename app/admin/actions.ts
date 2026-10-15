@@ -18,6 +18,7 @@ async function update(change: (projects: Project[]) => Project[]) {
   const projects = change(await getProjects());
   await saveProjects(projects);
   revalidatePath("/");
+  revalidatePath("/classic");
   revalidatePath("/admin");
   return projects;
 }
@@ -136,6 +137,7 @@ export async function updateHighlights(input: Highlight[]) {
   await saveHighlights(clean);
   if (dropped.length) await del(dropped).catch((error) => console.error("Could not delete icons", error));
   revalidatePath("/");
+  revalidatePath("/classic");
   revalidatePath("/admin/highlights");
   return clean;
 }

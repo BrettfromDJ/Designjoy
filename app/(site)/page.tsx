@@ -1,10 +1,11 @@
-import { HeroAsk } from "@/components/HeroAsk";
 import { MasonryGrid } from "@/components/MasonryGrid";
+import { Sidebar } from "@/components/Sidebar";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
 import { getProjects } from "@/lib/projects";
-import Link from "next/link";
-import styles from "./page.module.css";
+
+// The homepage: everything that isn't artwork in a fixed sidebar on the left,
+// the work scrolling on the right. The previous layout lives at /classic.
 
 // Rebuilt whenever projects change in /admin; this is a fallback refresh.
 export const revalidate = 3600;
@@ -25,18 +26,9 @@ export default async function Home() {
     : sampleWork;
 
   return (
-    <main>
-      <HeroAsk
-        art={work
-          .filter((w) => w.kind === "image")
-          .map(({ src, width, height }) => ({ src, width, height }))}
-      />
-      <MasonryGrid work={work} highlights={highlights} />
-      <footer className={styles.footer}>
-        <span>© {new Date().getFullYear()} Designjoy</span>
-        <Link href="/terms">Terms</Link>
-        <Link href="/privacy">Privacy</Link>
-      </footer>
+    <main style={{ "--sidebar": "356px" } as React.CSSProperties}>
+      <Sidebar work={work} />
+      <MasonryGrid work={work} highlights={highlights} workOnly />
     </main>
   );
 }

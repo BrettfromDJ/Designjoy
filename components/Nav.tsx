@@ -18,7 +18,7 @@ export function Nav() {
   // On the homepage the nav casts its shadow over the grid. On the other
   // pages the shadow is a separate layer beneath the page content, so text
   // scrolling under the nav isn't darkened by it.
-  const home = pathname === "/";
+  const home = pathname === "/" || pathname === "/classic";
 
   return (
     <>
