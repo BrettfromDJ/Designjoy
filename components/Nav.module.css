@@ -144,10 +144,13 @@
   }
 }
 
-/* The sidebar layout carries the logo and links itself on wider screens. */
+/* With the sidebar on wider screens, the nav sits at the top of the work,
+   centred over it, and the ask box takes its place at the bottom. */
 @media (min-width: 820px) {
   :global(body[data-sidebar]) .nav,
   :global(body[data-sidebar]) .shadow {
-    display: none;
+    top: 32px;
+    bottom: auto;
+    left: calc(50% + 178px);
   }
 }

@@ -27,8 +27,8 @@ function cardHeight(kind: string, fallback: number) {
 export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Highlight[] }) {
   const innerRef = useRef<HTMLDivElement>(null);
 
-  // On wider screens this page has no floating nav, and the ask box sits at
-  // the bottom of the work instead of the top (see AskBox.module.css).
+  // On wider screens the nav sits at the top of the work and the ask box at
+  // the bottom (see Nav.module.css and AskBox.module.css).
   useEffect(() => {
     document.body.dataset.sidebar = "";
     return () => {
