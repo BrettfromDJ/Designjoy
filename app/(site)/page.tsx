@@ -27,7 +27,7 @@ export default async function Home() {
 
   return (
     <main style={{ "--sidebar": "356px" } as React.CSSProperties}>
-      <Sidebar work={work} />
+      <Sidebar work={work} highlights={highlights} />
       <MasonryGrid work={work} highlights={highlights} workOnly />
     </main>
   );
