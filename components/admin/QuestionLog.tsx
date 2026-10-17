@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { clearQuestionLog } from "@/app/admin/actions";
 import type { StoredQuestion } from "@/lib/questions";
@@ -176,6 +177,14 @@ export function QuestionLog({
                       </span>
                     </summary>
                     <p className={styles.answer}>{q.answer || "No answer recorded."}</p>
+                    {q.source === "typed" && (
+                      <Link
+                        className={`${admin.link} ${styles.makeFaq}`}
+                        href={`/admin/faqs?${new URLSearchParams({ q: q.question, a: q.answer })}`}
+                      >
+                        Make it an FAQ →
+                      </Link>
+                    )}
                   </details>
                 </li>
               ))}

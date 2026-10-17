@@ -1,12 +1,14 @@
 import { Nav } from "@/components/Nav";
 import { AskBox } from "@/components/AskBox";
+import { getFaqs } from "@/lib/faqs";
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const { faqs } = await getFaqs();
   return (
     <>
       <Nav />
       {children}
-      <AskBox />
+      <AskBox faqs={faqs} />
     </>
   );
 }

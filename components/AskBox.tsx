@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { faqs, plans, type Faq, type Plan } from "@/content/site";
+import { plans, type Faq, type Plan } from "@/content/site";
 import {
   OPEN_ASK_BOX_EVENT,
   type AskBoxView,
@@ -90,7 +90,8 @@ function useSampleQuestions(
   return { samples: fitting, placeholder };
 }
 
-export function AskBox() {
+/** `faqs`: the FAQs, as edited in /admin/faqs, offered as tappable questions. */
+export function AskBox({ faqs }: { faqs: Faq[] }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);

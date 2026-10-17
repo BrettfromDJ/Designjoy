@@ -216,6 +216,13 @@
   margin: 4px 0 0;
 }
 
+/* Starts a new FAQ from a typed question and its answer. */
+.makeFaq {
+  display: inline-block;
+  margin: 0 10px 14px;
+  text-decoration: none;
+}
+
 .answerField {
   width: 100%;
   min-height: 80px;

@@ -1,11 +1,11 @@
 import { after } from "next/server";
-import { faqs } from "@/content/site";
 import { BILLING_TAG, BOOK_CALL_TAG, UNSURE_TAG, parseAnswer } from "@/lib/chat";
 import { logQuestion, pageFrom } from "@/lib/questions";
 import { suggestAnswer } from "@/lib/suggest";
 
 const PLANS_TAG = "[plans]";
 const HOW_IT_WORKS_TAG = "[how-it-works]";
+import { getFaqsCached } from "@/lib/faqs";
 import { getKnowledgeForChat } from "@/lib/knowledge";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -14,7 +14,7 @@ const MAX_HISTORY = 12;
 const MAX_MESSAGE_LENGTH = 2000;
 
 async function systemPrompt() {
-  const knowledge = await getKnowledgeForChat();
+  const [knowledge, faqs] = await Promise.all([getKnowledgeForChat(), getFaqsCached()]);
   return [
     "You are the assistant on designjoy.co, answering questions from prospective and current clients.",
     "Answer only using the knowledge base below. If the answer isn't there, say you're not sure and suggest booking a 15 minute intro call.",

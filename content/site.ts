@@ -174,7 +174,8 @@ export const testimonials: Testimonial[] = [
 
 export type Faq = { question: string; answer: string };
 
-// Shown on the FAQ page as tappable questions, and given to the chatbot so it
+// The starting FAQs, until they're edited in /admin/faqs (see lib/faqs.ts).
+// Shown in the ask box as tappable questions, and given to the chatbot so it
 // answers them the same way everywhere. Tags at the end of an answer, like
 // [plans], become next-step buttons (see lib/chat.ts).
 export const faqs: Faq[] = [

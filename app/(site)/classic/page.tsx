@@ -1,6 +1,7 @@
 import { HeroAsk } from "@/components/HeroAsk";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { sampleWork, type WorkItem } from "@/content/site";
+import { getFaqs } from "@/lib/faqs";
 import { getHighlights } from "@/lib/highlights";
 import { getProjects } from "@/lib/projects";
 import Link from "next/link";
@@ -15,7 +16,7 @@ export const metadata: Metadata = { robots: { index: false } };
 export const revalidate = 3600;
 
 export default async function ClassicHome() {
-  const [projects, highlights] = await Promise.all([getProjects(), getHighlights()]);
+  const [projects, highlights, { faqs }] = await Promise.all([getProjects(), getHighlights(), getFaqs()]);
   const work: WorkItem[] = projects.length
     ? projects.map(({ id, title, kind, url, width, height, frames, framed }) => ({
         id,
@@ -32,6 +33,7 @@ export default async function ClassicHome() {
   return (
     <main>
       <HeroAsk
+        faqs={faqs}
         art={work
           .filter((w) => w.kind === "image")
           .map(({ src, width, height }) => ({ src, width, height }))}

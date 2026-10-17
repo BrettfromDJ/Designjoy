@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { isAdmin, signIn, signOut } from "@/lib/auth";
 import { MAX_KNOWLEDGE_LENGTH, addToKnowledge, saveKnowledge } from "@/lib/knowledge";
 import { HIGHLIGHT_ICON_NAMES, MAX_HIGHLIGHTS, type Highlight } from "@/lib/highlight-icons";
+import type { Faq } from "@/content/site";
+import { MAX_FAQS, saveFaqs } from "@/lib/faqs";
 import { getHighlights, saveHighlights } from "@/lib/highlights";
 import { MAX_FRAMES, getProjects, isBlobUrl, saveProjects, type Project } from "@/lib/projects";
 import { clearQuestions, resolveQuestion } from "@/lib/questions";
@@ -139,6 +141,22 @@ export async function updateHighlights(input: Highlight[]) {
   revalidatePath("/");
   revalidatePath("/classic");
   revalidatePath("/admin/highlights");
+  return clean;
+}
+
+/** Saves the FAQs, in order. Ones missing a question or an answer are dropped. */
+export async function updateFaqs(input: Faq[]) {
+  await requireAdmin();
+  if (!Array.isArray(input) || input.length > MAX_FAQS) throw new Error("Too many FAQs.");
+  const clean: Faq[] = input
+    .map((f) => ({
+      question: String(f.question ?? "").trim().slice(0, 200),
+      answer: String(f.answer ?? "").trim().slice(0, 2000),
+    }))
+    .filter((f) => f.question && f.answer);
+  await saveFaqs(clean);
+  // The ask box is on every page.
+  revalidatePath("/", "layout");
   return clean;
 }
 

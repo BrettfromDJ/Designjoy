@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { faqs } from "@/content/site";
+import type { Faq } from "@/content/site";
 import { askQuestion } from "@/lib/ask-box";
 import { BotFace } from "./BotFace";
 import styles from "./HeroAsk.module.css";
@@ -9,7 +9,6 @@ import styles from "./HeroAsk.module.css";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 // The questions offered as chips under the box: the first few FAQs.
-const CHIPS = faqs.slice(0, 4);
 
 export type HeroArt = { src: string; width: number; height: number };
 
@@ -50,7 +49,8 @@ function useVariant() {
  * the real ask box with the answer. While this is on screen the small ask
  * pill at the top stays hidden; once it scrolls away, the pill takes over.
  */
-export function HeroAsk({ art = [] }: { art?: HeroArt[] }) {
+export function HeroAsk({ art = [], faqs = [] }: { art?: HeroArt[]; faqs?: Faq[] }) {
+  const chips = faqs.slice(0, 4);
   const ref = useRef<HTMLElement>(null);
   const [input, setInput] = useState("");
   const [focused, setFocused] = useState(false);
@@ -131,7 +131,7 @@ export function HeroAsk({ art = [] }: { art?: HeroArt[] }) {
         </form>
       </div>
       <div className={styles.chips}>
-        {CHIPS.map((faq) => (
+        {chips.map((faq) => (
           <button key={faq.question} type="button" onClick={() => ask(faq.question)}>
             {faq.question}
           </button>
