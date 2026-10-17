@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { Welcome } from "@/components/welcome/Welcome";
-import { plans, trelloInviteEta } from "@/content/site";
+import { plans, sampleWork, trelloInviteEta } from "@/content/site";
 import { memberNumber } from "@/lib/members";
+import { getProjects } from "@/lib/projects";
 import { getStripe } from "@/lib/stripe";
 
 export const metadata = { title: "Welcome — Designjoy" };
@@ -11,6 +12,7 @@ type Details = {
   planId?: string;
   email?: string;
   trelloEmail?: string;
+  name?: string;
   /** When they subscribed, in ms. */
   since?: number;
   member?: number | null;
@@ -30,6 +32,7 @@ async function checkoutDetails(sessionId?: string): Promise<Details | null> {
       status,
       planId: session.metadata?.plan,
       email: session.customer_details?.email ?? undefined,
+      name: session.customer_details?.name ?? undefined,
       trelloEmail: session.metadata?.trello_email?.trim() || undefined,
       since: session.created * 1000,
       member: status === "complete" && subscriptionId ? await memberNumber(stripe, subscriptionId) : null,
@@ -49,9 +52,10 @@ export default async function WelcomePage({
     member?: string;
     style?: string;
     layout?: string;
+    name?: string;
   }>;
 }) {
-  const { session_id, plan: previewPlan, email: previewEmail, member: previewMember, style, layout } =
+  const { session_id, plan: previewPlan, email: previewEmail, member: previewMember, style, layout, name: previewName } =
     await searchParams;
   const details = await checkoutDetails(session_id);
   // Not paid yet (e.g. the page was opened early): back to the form.
@@ -63,6 +67,13 @@ export default async function WelcomePage({
   const plan = plans.find((p) => p.id === planId);
   const inviteTo = details?.trelloEmail ?? email;
   const member = details ? details.member : Number(previewMember) || undefined;
+  const name = details ? details.name : previewName;
+  // Portfolio images, for the wall behind the page.
+  const projects = await getProjects().catch(() => []);
+  const art = (projects.length ? projects.map((p) => ({ kind: p.kind, src: p.url })) : sampleWork)
+    .filter((w) => w.kind === "image")
+    .map((w) => w.src)
+    .slice(0, 12);
 
   return (
     <>
@@ -81,6 +92,8 @@ export default async function WelcomePage({
         lanyard={style !== "card"}
         // ?layout=split previews two columns: the badge beside the text.
         split={layout === "split"}
+        name={name}
+        art={art}
       />
     </>
   );
