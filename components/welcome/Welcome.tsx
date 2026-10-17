@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { openAskBox } from "@/lib/ask-box";
 import styles from "./Welcome.module.css";
 
@@ -10,24 +10,60 @@ type Props = {
   email?: string;
   inviteTo?: string;
   eta: string;
+  /** Their member number, from their subscription. */
+  member?: number;
+  /** When they subscribed, in ms. */
+  since?: number;
 };
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const DAY = 24 * 3600 * 1000;
+
+const short = (d: Date) => `${DAYS[d.getDay()].slice(0, 3)} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
 
 /**
  * The page people land on after paying: a membership card for their plan
  * that flips in and tilts toward the pointer, with what happens next below.
  */
-export function Welcome({ planId, planName, email, inviteTo, eta }: Props) {
+export function Welcome({ planId, planName, email, inviteTo, eta, member, since }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [since, setSince] = useState("");
-  const [number, setNumber] = useState("");
-  useEffect(() => {
-    const now = new Date();
-    setSince(`${MONTHS[now.getMonth()]} ${now.getFullYear()}`);
-    // A friendly member number, steady for the day.
-    setNumber(String(((now.getFullYear() * 372 + now.getMonth() * 31 + now.getDate()) % 9000) + 1000));
-  }, []);
+  const partner = planId === "design-partner";
+  // Dates are set after mount so they're in the visitor's own time zone.
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => setToday(new Date()), []);
+  const joined = since ? new Date(since) : today;
+  const day = (n: number) => (today ? new Date(+today + n * DAY) : null);
+
+  // Their first few days. Design Partner adds its Slack channel.
+  const stops = [
+    { when: "Today", title: "Trello invite", body: `Sent to ${inviteTo ?? "your inbox"} ${eta}.`, date: day(0) },
+    ...(partner
+      ? [
+          {
+            when: "Today",
+            title: "Slack channel",
+            body: "We'll add you to a shared channel for daily updates and quick feedback.",
+            date: day(0),
+          },
+        ]
+      : []),
+    {
+      when: "Tomorrow",
+      title: "Brief your first request",
+      body: "Add it to Backlog and move it into Current request. A few lines is plenty.",
+      date: day(1),
+    },
+    {
+      // Named by its date alone ("Mon 19 Oct"), so it doesn't repeat the day.
+      when: today ? "" : "In two days",
+      title: "First delivery",
+      body: partner
+        ? "Most requests land in about 48 hours, with progress shared in Slack along the way."
+        : "Most requests land in about 48 hours. Revisions take about a day.",
+      date: day(2),
+    },
+  ];
 
   // The nav sits at the top on this page (set early by the page itself);
   // put it back when leaving.
@@ -62,7 +98,7 @@ export function Welcome({ planId, planName, email, inviteTo, eta }: Props) {
           <div className={styles.memberTop}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icons/smile.svg" alt="" width={36} height={36} className={styles.memberSmile} />
-            <span className={styles.label}>Member № {number}</span>
+            {member && <span className={styles.label}>Member № {String(member).padStart(4, "0")}</span>}
           </div>
           <div>
             <p className={styles.label}>Designjoy</p>
@@ -71,7 +107,7 @@ export function Welcome({ planId, planName, email, inviteTo, eta }: Props) {
           <div className={styles.memberFoot}>
             <span>
               <span className={styles.label}>Member since</span>
-              {since}
+              {joined ? `${MONTHS[joined.getMonth()]} ${joined.getFullYear()}` : "\u00a0"}
             </span>
             <span>
               <span className={styles.label}>Requests</span>
@@ -86,10 +122,30 @@ export function Welcome({ planId, planName, email, inviteTo, eta }: Props) {
           Welcome to the club. <span className={styles.muted}>You&apos;re in.</span>
         </h1>
         <p className={styles.sub}>
-          Watch for a Trello invite to {inviteTo ?? "your inbox"} {eta}. Your receipt is on its way
-          {email ? ` to ${email}` : ""}.
+          Your receipt is on its way{email ? ` to ${email}` : ""}. Here&apos;s how your first few days go.
         </p>
       </header>
+
+      <section className={styles.card} aria-label="Your first few days">
+        <ol className={styles.timeline}>
+          {stops.map((stop, i) => (
+            <li key={stop.title} data-now={stop.when === "Today" || undefined} style={{ "--i": i } as CSSProperties}>
+              <span className={styles.dot} aria-hidden="true" />
+              <p className={styles.label}>
+                {stop.when}
+                {stop.date && (
+                  <span className={styles.date}>
+                    {stop.when && " · "}
+                    {short(stop.date)}
+                  </span>
+                )}
+              </p>
+              <p className={styles.stepTitle}>{stop.title}</p>
+              <p className={styles.stepBody}>{stop.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       <section className={styles.card} aria-label="Billing and help">
         <a
