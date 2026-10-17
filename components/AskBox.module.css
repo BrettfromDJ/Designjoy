@@ -55,7 +55,7 @@
   }
 }
 
-/* Pages that put the nav at the top (the welcome page) have the ask box at
+/* Pages that put the nav at the top (welcome, terms, privacy) have the ask box at
    the bottom instead, opening upward the same way. */
 :global(body[data-nav-top]) .wrapper {
   top: auto;

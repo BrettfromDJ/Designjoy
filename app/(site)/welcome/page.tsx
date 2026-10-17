@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { NavTop } from "@/components/NavTop";
 import { Welcome } from "@/components/welcome/Welcome";
 import { plans, sampleWork, trelloInviteEta } from "@/content/site";
 import { memberNumber } from "@/lib/members";
@@ -76,9 +77,8 @@ export default async function WelcomePage({
 
   return (
     <>
-      {/* Puts the nav at the top and the ask box at the bottom on this page,
-          set before it first paints so neither jumps into place. */}
-      <script dangerouslySetInnerHTML={{ __html: 'document.body.dataset.navTop=""' }} />
+      {/* The nav at the top and the ask box at the bottom on this page. */}
+      <NavTop />
       <Welcome
         planId={plan?.id}
         planName={plan?.name}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LEGAL, type LegalDoc } from "@/content/legal";
+import { NavTop } from "./NavTop";
 import styles from "./LegalPage.module.css";
 
 /** A legal document (privacy policy, terms) in the site's narrow reading column. */
@@ -12,6 +13,7 @@ export function LegalPage({
 }) {
   return (
     <main className={styles.page}>
+      <NavTop />
       <header className={styles.header}>
         <p className={styles.label}>Legal</p>
         <h1 className={styles.title}>{doc.title}</h1>

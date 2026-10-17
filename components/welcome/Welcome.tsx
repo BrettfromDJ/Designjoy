@@ -55,15 +55,6 @@ export function Welcome({ planId, planName, email, inviteTo, slackTo, eta, membe
       : []),
   ];
 
-  // The nav sits at the top on this page (set early by the page itself);
-  // put it back when leaving.
-  useEffect(() => {
-    document.body.dataset.navTop = "";
-    return () => {
-      delete document.body.dataset.navTop;
-    };
-  }, []);
-
   // The card tilts toward the pointer, and its light follows it.
   function tilt(event: React.PointerEvent) {
     const el = ref.current;
