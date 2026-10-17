@@ -83,8 +83,8 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
           {joined ? `${MONTHS[joined.getMonth()]} ${joined.getFullYear()}` : "\u00a0"}
         </span>
         <span>
-          <span className={styles.label}>Requests</span>
-          One at a time, unlimited
+          <span className={styles.label}>Access</span>
+          Unlimited
         </span>
       </div>
     </>
