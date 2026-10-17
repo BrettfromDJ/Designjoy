@@ -36,40 +36,6 @@
   will-change: transform;
 }
 
-/* Smiles bursting out from where the badge lands. */
-.burst {
-  position: absolute;
-  z-index: 2;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.burst img {
-  position: absolute;
-  left: -24px;
-  top: -24px;
-  width: 48px;
-  max-width: none;
-  height: 48px;
-  opacity: 0;
-  animation: fly 1.5s var(--d) cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes fly {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(0.2);
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--x), var(--y)) scale(var(--s)) rotate(45deg);
-  }
-}
-
 .badge[data-grabbing] {
   cursor: grabbing;
 }

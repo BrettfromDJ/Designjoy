@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./Lanyard.module.css";
 
 type Point = { x: number; y: number; px: number; py: number };
@@ -22,29 +22,12 @@ export function Lanyard({
   children,
   partner = false,
   fill = false,
-  spotlight = false,
-  glare = false,
-  burst = false,
-  onTap,
 }: {
   children: React.ReactNode;
   partner?: boolean;
   /** Fill its column, full height, instead of spanning the page above the text. */
   fill?: boolean;
-  /** A beam of light from above that follows the badge. */
-  spotlight?: boolean;
-  /** The light on the badge follows the pointer. */
-  glare?: boolean;
-  /** Little smiles burst out when the badge first lands. */
-  burst?: boolean;
-  /** Called on a tap (a press without dragging). */
-  onTap?: () => void;
 }) {
-  const [landed, setLanded] = useState<{ x: number; y: number } | null>(null);
-  const tapRef = useRef(onTap);
-  useEffect(() => {
-    tapRef.current = onTap;
-  }, [onTap]);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
@@ -81,8 +64,8 @@ export function Lanyard({
       // Long enough that the badge hangs just above the stage's bottom edge;
       // filling a column, its middle hangs level with the text beside it.
       link = fill
-        ? Math.max(14, (height * 0.52 - reach + 24) / LINKS)
-        : Math.max(14, (height - badgeH - 12) / LINKS);
+        ? Math.max(4, (height * 0.52 - reach + 24) / LINKS)
+        : Math.max(4, (height - badgeH - 12) / LINKS);
     };
     measure();
 
@@ -141,28 +124,6 @@ export function Lanyard({
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
       const end = last();
-      if (spotlight) {
-        // A soft beam from above, widening down to the badge, and a pool of
-        // light around it.
-        const top = rope[0];
-        const spread = badgeW * 0.95;
-        const beam = ctx.createLinearGradient(0, top.y, 0, body.y + badgeH / 2);
-        beam.addColorStop(0, "rgba(255,255,255,0.10)");
-        beam.addColorStop(1, "rgba(255,255,255,0.025)");
-        ctx.fillStyle = beam;
-        ctx.beginPath();
-        ctx.moveTo(top.x - 14, top.y);
-        ctx.lineTo(top.x + 14, top.y);
-        ctx.lineTo(body.x + spread, body.y + badgeH * 0.62);
-        ctx.lineTo(body.x - spread, body.y + badgeH * 0.62);
-        ctx.closePath();
-        ctx.fill();
-        const pool = ctx.createRadialGradient(body.x, body.y, 0, body.x, body.y, badgeH);
-        pool.addColorStop(0, "rgba(255,255,255,0.09)");
-        pool.addColorStop(1, "rgba(255,255,255,0)");
-        ctx.fillStyle = pool;
-        ctx.fillRect(body.x - badgeH, body.y - badgeH, badgeH * 2, badgeH * 2);
-      }
       // The ribbon.
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
@@ -247,9 +208,6 @@ export function Lanyard({
     let lastTime = performance.now();
     let pending = 0;
     let settled = 0;
-    let falling = 0;
-    let hasLanded = false;
-    const born = performance.now();
     const frame = (now: number) => {
       pending = Math.min(pending + (now - lastTime), 100);
       lastTime = now;
@@ -258,17 +216,6 @@ export function Lanyard({
         pending -= 1000 / 60;
       }
       draw();
-      // The first time it bounces at the bottom of its drop (the strap pulled
-      // straight), it has landed.
-      const vy = body.y - body.py;
-      const rest = anchor().y + LINKS * link + reach;
-      // (The strap snaps straight for a moment as it first unfurls; that
-      // doesn't count, so it waits until the drop is under way.)
-      if (!hasLanded && now - born > 650 && falling > 2 && vy < 0 && body.y > rest - 40) {
-        hasLanded = true;
-        if (burst) setLanded({ x: body.x, y: body.y });
-      }
-      falling = vy > 0 ? falling + vy : 0;
       // Rests once it has stopped moving, until it's touched again.
       const moving = Math.abs(body.x - body.px) + Math.abs(body.y - body.py) > 0.02;
       settled = moving || drag ? 0 : settled + 1;
@@ -287,10 +234,8 @@ export function Lanyard({
       const box = stage.getBoundingClientRect();
       return { x: event.clientX - box.left, y: event.clientY - box.top };
     };
-    let press: { x: number; y: number; t: number } | null = null;
     const down = (event: PointerEvent) => {
       const p = point(event);
-      press = { ...p, t: performance.now() };
       drag = { dx: p.x - body.x, dy: p.y - body.y, ...p };
       badge.setPointerCapture(event.pointerId);
       badge.dataset.grabbing = "";
@@ -300,24 +245,10 @@ export function Lanyard({
       if (!drag) return;
       Object.assign(drag, point(event));
     };
-    const up = (event: PointerEvent) => {
-      // A quick press without moving is a tap, not a drag.
-      if (press && event.type === "pointerup") {
-        const p = point(event);
-        if (Math.hypot(p.x - press.x, p.y - press.y) < 6 && performance.now() - press.t < 350) tapRef.current?.();
-      }
-      press = null;
+    const up = () => {
       drag = null;
       delete badge.dataset.grabbing;
     };
-    // The badge's light follows the pointer anywhere over the stage.
-    const shine = (event: PointerEvent) => {
-      if (!glare) return;
-      const box = badge.getBoundingClientRect();
-      badge.style.setProperty("--gx", `${((event.clientX - box.left) / box.width) * 100}%`);
-      badge.style.setProperty("--gy", `${((event.clientY - box.top) / box.height) * 100}%`);
-    };
-    window.addEventListener("pointermove", shine);
     badge.addEventListener("pointerdown", down);
     badge.addEventListener("pointermove", move);
     badge.addEventListener("pointerup", up);
@@ -336,38 +267,13 @@ export function Lanyard({
       badge.removeEventListener("pointermove", move);
       badge.removeEventListener("pointerup", up);
       badge.removeEventListener("pointercancel", up);
-      window.removeEventListener("pointermove", shine);
     };
-  }, [partner, fill, spotlight, glare, burst]);
+  }, [partner, fill]);
 
   return (
     <div ref={stageRef} className={fill ? `${styles.stage} ${styles.fill}` : styles.stage}>
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
-      {landed && (
-        <div className={styles.burst} style={{ left: landed.x, top: landed.y }} aria-hidden="true">
-          {Array.from({ length: 16 }, (_, i) => {
-            const a = (i / 16) * Math.PI * 2;
-            const d = 190 + (i % 3) * 70;
-            return (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={i}
-                src="/icons/smile.svg"
-                alt=""
-                style={
-                  {
-                    "--x": `${Math.cos(a) * d}px`,
-                    "--y": `${Math.sin(a) * d * 0.8}px`,
-                    "--d": `${(i % 4) * 40}ms`,
-                    "--s": 0.7 + (i % 3) * 0.25,
-                  } as CSSProperties
-                }
-              />
-            );
-          })}
-        </div>
-      )}
-      <div ref={badgeRef} className={styles.badge} data-glare={glare || undefined}>
+      <div ref={badgeRef} className={styles.badge}>
         {children}
       </div>
     </div>

@@ -398,109 +398,8 @@
   }
 }
 
-/* ---------- Preview: ways to make the page cooler (?fx=1…7) ---------- */
-
-/* 3. Flip it over: the badge has a back; a tap turns it round. */
-.flipper {
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.34, 1.3, 0.64, 1);
-}
-
-.flipper[data-flipped] {
-  transform: rotateY(180deg);
-}
-
-.flipper > .member {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.back {
-  position: absolute;
-  inset: 0;
-  justify-content: center;
-  gap: 14px;
-  transform: rotateY(180deg);
-}
-
-.badge.back {
-  transform: rotateY(180deg);
-}
-
-.backText {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 19px;
-  line-height: 1.25;
-  letter-spacing: -0.5px;
-}
-
-/* 4. Arrival: the tick pops in, the invites still on their way say so. */
-.checks[data-arrive] li[data-done] .check {
-  animation: pop 0.6s 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-@keyframes pop {
-  from {
-    transform: scale(0.3);
-    background: transparent;
-  }
-}
-
-.sending {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  margin-left: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.1px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.sending i {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: currentColor;
-  animation: blink 1.2s ease-in-out infinite;
-}
-
-.sending i:first-of-type {
-  margin-left: 3px;
-}
-
-.sending i:nth-of-type(2) {
-  animation-delay: 0.2s;
-}
-
-.sending i:nth-of-type(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0.2;
-  }
-}
-
-/* 5. Glare: a brighter light that follows the pointer across the badge. */
-.member[data-glare] {
-  background:
-    radial-gradient(70% 50% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.16), transparent 70%),
-    #000;
-}
-
-.member[data-plan="design-partner"][data-glare] {
-  background:
-    radial-gradient(70% 50% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.16), transparent 70%) padding-box,
-    linear-gradient(#000, #000) padding-box,
-    conic-gradient(from var(--glow-angle), #6f9bff, #c08bff, #6fffd8, #ffd28a, #6f9bff) border-box;
-}
-
-/* 6. The wall: the portfolio drifting slowly behind everything. */
+/* The wall: the portfolio drifting slowly behind everything, fading out
+   toward the middle so it never competes with the badge. */
 .wall {
   position: fixed;
   inset: 0;
@@ -540,59 +439,24 @@
   }
 }
 
-/* Preview-only switcher. */
-.switcher {
-  position: fixed;
-  left: 16px;
-  bottom: 40px;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 36px;
-  padding: 0 4px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--text-nav);
-  box-shadow: var(--shadow-float);
-}
+@media (max-width: 559px) {
+  .wall {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 0 10px;
+  }
 
-.switcher b {
-  font-weight: 500;
-  color: var(--text);
-}
+  .wallCol {
+    gap: 10px;
+  }
 
-.switcher button {
-  width: 28px;
-  height: 28px;
-  border: 0;
-  border-radius: 50%;
-  background: #1a1a1a;
-  color: var(--text);
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.switcher span {
-  padding: 0 6px;
-  white-space: nowrap;
-}
-
-@media (max-width: 899px) {
-  .switcher {
-    top: 80px;
-    bottom: auto;
+  .wallCol:nth-child(n + 4) {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wallCol,
-  .flipper,
-  .sending i,
-  .checks[data-arrive] li[data-done] .check {
+  .wallCol {
     animation: none;
-    transition: none;
   }
 }
