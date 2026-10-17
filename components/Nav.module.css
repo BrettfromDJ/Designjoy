@@ -148,6 +148,21 @@
   }
 }
 
+/* Pages that ask for it (the welcome page) have the nav at the top and the
+   ask box at the bottom. */
+:global(body[data-nav-top]) .nav,
+:global(body[data-nav-top]) .shadow {
+  top: 32px;
+  bottom: auto;
+}
+
+@media (max-width: 559px) {
+  :global(body[data-nav-top]) .nav,
+  :global(body[data-nav-top]) .shadow {
+    top: 16px;
+  }
+}
+
 /* With the sidebar on wider screens, the nav sits at the top of it, above
    the pricing card. */
 @media (min-width: 820px) {

@@ -42,12 +42,17 @@ export default async function WelcomePage({
   const inviteTo = details?.trelloEmail ?? email;
 
   return (
-    <Welcome
+    <>
+      {/* Puts the nav at the top and the ask box at the bottom on this page,
+          set before it first paints so neither jumps into place. */}
+      <script dangerouslySetInnerHTML={{ __html: 'document.body.dataset.navTop=""' }} />
+      <Welcome
       planId={plan?.id}
       planName={plan?.name}
       email={email}
       inviteTo={inviteTo}
       eta={trelloInviteEta}
-    />
+      />
+    </>
   );
 }

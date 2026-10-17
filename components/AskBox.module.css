@@ -55,6 +55,30 @@
   }
 }
 
+/* Pages that put the nav at the top (the welcome page) have the ask box at
+   the bottom instead, opening upward the same way. */
+:global(body[data-nav-top]) .wrapper {
+  top: auto;
+  bottom: 32px;
+}
+
+:global(body[data-nav-top]) .shell[data-open="true"] {
+  animation-name: grow-from-bottom;
+}
+
+:global(body[data-nav-top]) .shell[data-open="true"] .box {
+  order: 1;
+  border-bottom: 0;
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0 0 26px 26px;
+}
+
+@media (max-width: 559px) {
+  :global(body[data-nav-top]) .wrapper {
+    bottom: 16px;
+  }
+}
+
 @keyframes grow-from-bottom {
   from {
     clip-path: inset(calc(100% - 49px) 0 0 0 round 74px);
