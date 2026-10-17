@@ -21,7 +21,7 @@ average of 48 hours.
   - ~48-hour average delivery
   - Async communication via Trello
   - Pause or resume anytime
-- **Design Partner** — $7,995/month
+- **Pro** — $7,995/month
   - Everything in Monthly Club
   - Daily design updates
   - Direct Slack communication

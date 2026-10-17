@@ -10,7 +10,7 @@ type Props = {
   planName?: string;
   email?: string;
   inviteTo?: string;
-  /** Where their Slack invite goes (Design Partner). */
+  /** Where their Slack invite goes (Pro). */
   slackTo?: string;
   eta: string;
   /** Their member number, from their subscription. */
@@ -41,7 +41,7 @@ export function Welcome({ planId, planName, email, inviteTo, slackTo, eta, membe
   const joined = since ? new Date(since) : today;
 
   // Where they are: subscribed, then the invites on their way. Slack is
-  // for Design Partner only.
+  // for Pro only.
   const steps = [
     {
       title: "Subscribed",
@@ -151,7 +151,7 @@ export function Welcome({ planId, planName, email, inviteTo, slackTo, eta, membe
             Welcome to the club. <span className={styles.muted}>You&apos;re in.</span>
           </h1>
           <p className={styles.sub}>
-            Your {planName ?? "subscription"} is active. Watch your inbox for your invites.
+            Your {planName ? `${planName} plan` : "subscription"} is active. Watch your inbox for your invites.
           </p>
         </header>
 

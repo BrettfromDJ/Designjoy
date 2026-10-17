@@ -16,7 +16,7 @@ const ITERATIONS = 24;
 /**
  * A badge on a lanyard that hangs from the top of the page. It drops in,
  * swings, and can be grabbed and flung; it turns in 3D as it moves.
- * `children` is the badge's face; Design Partner's strap has an iridescent stripe.
+ * `children` is the badge's face; Pro's strap has an iridescent stripe.
  */
 export function Lanyard({
   children,

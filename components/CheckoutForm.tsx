@@ -211,7 +211,7 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      {/* Design Partner also gets a Slack channel, so it asks where to send
+      {/* Pro also gets a Slack channel, so it asks where to send
           that invite too, beside Trello's; the company then goes below. */}
       <div className={styles.row}>
         <div className={styles.field}>

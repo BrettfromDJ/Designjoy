@@ -40,7 +40,7 @@ export const plans: Plan[] = [
   },
   {
     id: "design-partner",
-    name: "Design Partner",
+    name: "Pro",
     tag: "New",
     highlight: true,
     additions: true,
@@ -187,7 +187,7 @@ export const faqs: Faq[] = [
   {
     question: "How much does it cost?",
     answer:
-      "Monthly Club is $4,995/mo and Design Partner is $7,995/mo. One flat price, no contracts or surprise invoices. [plans]",
+      "Monthly Club is $4,995/mo and Pro is $7,995/mo. One flat price, no contracts or surprise invoices. [plans]",
   },
   {
     question: "How fast will I get my designs?",

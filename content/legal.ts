@@ -11,7 +11,7 @@ export const LEGAL = {
   email: "hello@designjoy.co",
   /** The state whose laws govern the Terms, e.g. "Arizona". */
   state: "[your state]",
-  updated: "October 9, 2026",
+  updated: "October 17, 2026",
 };
 
 /** A paragraph, or a list of bullet points. */
@@ -31,7 +31,7 @@ export const privacyPolicy: LegalDoc = {
         "When you use the site or subscribe, you may give us:",
         [
           "Contact details: your name, email address, and company name.",
-          "Subscription details: the plan you choose, and and emails for your Trello invite (and Slack invite, on Design Partner) if they're different from your billing email.",
+          "Subscription details: the plan you choose, and emails for your Trello invite (and Slack invite, on Pro) if they're different from your billing email.",
           "Booking details: the time you pick for an intro call and your reason for the meeting.",
           "Questions you type into the ask box on the site.",
           "Project materials: briefs, files, references and feedback you share with us in Trello, Slack or by email.",
@@ -50,7 +50,7 @@ export const privacyPolicy: LegalDoc = {
       heading: "How we use your information",
       body: [
         [
-          "To provide the service: set up your Trello board (and Slack channel on Design Partner), work on your requests and deliver your designs.",
+          "To provide the service: set up your Trello board (and Slack channel on Pro), work on your requests and deliver your designs.",
           "To bill you, send receipts and manage your subscription.",
           "To book and run intro calls.",
           "To answer questions you ask on the site.",
@@ -139,7 +139,7 @@ export const termsOfService: LegalDoc = {
         "Designjoy is a design subscription. For a flat monthly fee, you can submit design requests and we work through them. Requests and deliverables are managed in a Trello board we set up for you.",
         [
           "Monthly Club: one active request at a time, with an unlimited backlog. Communication is asynchronous, through Trello.",
-          "Design Partner: everything in Monthly Club, plus daily design updates and direct communication in a shared Slack channel.",
+          "Pro: everything in Monthly Club, plus daily design updates and direct communication in a shared Slack channel.",
         ],
         "The plans, prices and what's included are as shown on the site when you subscribe. We may add, change or remove features over time and will tell you about changes that materially affect your plan.",
       ],
