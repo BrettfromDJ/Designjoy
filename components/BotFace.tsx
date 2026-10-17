@@ -7,16 +7,16 @@ import styles from "./BotFace.module.css";
 // cursor, and how far away the cursor must be for it to look all the way over.
 const REACH = 3.6;
 const FULL_LOOK_PX = 260;
-// The face is drawn turned to one side; it faces whichever way it's looking.
-const AT_REST = "scale(1, 1)";
+// The face is drawn a little large; this scales it to size.
+const FACE_SCALE = 0.86;
+const AT_REST = `scale(${FACE_SCALE})`;
 // While typing, it watches the text to its right.
-const LOOK_AT_TEXT = "translate(3.2px, 0.6px) scale(1, 1)";
+const LOOK_AT_TEXT = `translate(3.2px, 0.6px) scale(${FACE_SCALE})`;
 
 /**
- * The ask box's mascot: a ball with a happy face, eyes closed in crescents
- * over a wide grin. The whole face slides around the ball toward the pointer
- * and turns to face it. It perks up when the box is hovered and watches the
- * text while you type.
+ * The ask box's mascot: a ball with pill eyes.
+ * The face slides around the ball to look at the pointer and blinks. It
+ * perks up when the box is hovered and watches the text while you type.
  */
 export function BotFace({
   size = 24,
@@ -56,9 +56,7 @@ export function BotFace({
         const pull = Math.min(distance / FULL_LOOK_PX, 1);
         const x = (dx / distance) * REACH * pull;
         const y = (dy / distance) * REACH * pull;
-        // Turned toward the pointer: mirrored when it's off to the left.
-        const turn = dx < -12 ? -1 : 1;
-        lastLook.current = `translate(${x}px, ${y}px) scale(${turn}, 1)`;
+        lastLook.current = `translate(${x}px, ${y}px) scale(${FACE_SCALE})`;
         if (!typingRef.current) face.style.transform = lastLook.current;
       });
     };
@@ -91,19 +89,9 @@ export function BotFace({
         <g clipPath="url(#bot-clip)">
           <g ref={faceRef} className={styles.face} style={{ transform: typing ? LOOK_AT_TEXT : lastLook.current }}>
             <g className={styles.look}>
-              {/* Drawn turned to the right, then centred on the ball. */}
-              <g fill="#0a0a0a" transform="translate(12 12.4) scale(0.95) translate(-16.85 -12.85)">
-                {/* Closed, smiling eyes: two crescents arching up, the far one
-                    smaller as the face is turned. */}
-                <g className={styles.eyes}>
-                  <path d="M12.6 10 C13.3 8.1 14 7.4 15 7.4 C16.3 7.4 17.4 8.6 17.5 10.7 C16.8 9.6 16 9.05 15 9.05 C14.1 9.05 13.4 9.5 12.6 10 Z" />
-                  <path d="M19.6 11.1 C19.8 9.9 20.2 9 20.8 9 C21.6 9 22.2 10.2 22.3 11.5 C21.9 10.9 21.5 10.5 21 10.5 C20.5 10.5 20 10.8 19.6 11.1 Z" />
-                </g>
-                {/* A wide grin. */}
-                <path
-                  className={styles.mouth}
-                  d="M11.4 12.9 C11.9 15.6 14.3 18.3 17.2 18.3 C19.4 18.3 21 16.6 22.1 14.2 C20.7 15.6 19.4 16.2 18.2 16.2 C15.6 16.2 13.8 14.8 12.4 13.1 C12.1 12.6 11.3 12.4 11.4 12.9 Z"
-                />
+              <g className={styles.eyes} fill="#0a0a0a">
+                <rect x="7.9" y="9.2" width="2.4" height="4.6" rx="1.2" />
+                <rect x="13.7" y="9.2" width="2.4" height="4.6" rx="1.2" />
               </g>
             </g>
           </g>
