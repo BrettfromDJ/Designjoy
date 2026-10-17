@@ -26,33 +26,32 @@
   transform-origin: 12px 12px;
 }
 
-.eyes {
+.eyes,
+.mouth {
   transform-box: fill-box;
-  transform-origin: center;
-  animation: blink 5.5s infinite;
   transition: transform 0.25s ease;
 }
 
-/* Happy, squinting eyes while hovered. */
+.eyes {
+  transform-origin: center bottom;
+}
+
+.mouth {
+  transform-origin: center top;
+}
+
+/* Hovered: the grin widens and the eyes scrunch up. */
 .wrap[data-excited="true"] .eyes {
-  animation: none;
-  transform: translateY(0.8px) scaleY(0.55);
+  transform: translateY(-0.3px) scaleY(1.2);
+}
+
+.wrap[data-excited="true"] .mouth {
+  transform: scale(1.08, 1.15);
 }
 
 /* While an answer is coming in, the bot glances up and around as if thinking. */
 .bot[data-thinking="true"] .look {
   animation: think 1.8s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%,
-  92%,
-  100% {
-    transform: scaleY(1);
-  }
-  95% {
-    transform: scaleY(0.1);
-  }
 }
 
 @keyframes think {
@@ -68,10 +67,10 @@
 @media (prefers-reduced-motion: reduce) {
   .bot,
   .face,
-  .eyes {
+  .eyes,
+  .mouth {
     transition: none;
   }
-  .eyes,
   .bot[data-thinking="true"] .look {
     animation: none;
   }
