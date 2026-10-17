@@ -2,7 +2,7 @@ import { getStripe } from "@/lib/stripe";
 
 const clean = (value: unknown) => (typeof value === "string" ? value.trim().slice(0, 200) : "");
 
-// Saves the optional Trello invite email and company name on the checkout,
+// Saves the optional Trello and Slack invite emails and company name on the checkout,
 // just before paying, so they show on the payment in Stripe.
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
       metadata: {
         ...session.metadata,
         trello_email: clean(body.trelloEmail),
+        slack_email: clean(body.slackEmail),
         company: clean(body.company),
       },
     });

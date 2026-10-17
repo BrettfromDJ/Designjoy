@@ -10,6 +10,8 @@ type Props = {
   planName?: string;
   email?: string;
   inviteTo?: string;
+  /** Where their Slack invite goes (Design Partner). */
+  slackTo?: string;
   eta: string;
   /** Their member number, from their subscription. */
   member?: number;
@@ -30,7 +32,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
  * on a lanyard (or, with ?style=card, a card) in front of a giant "You're in.",
  * their progress below, and their new design team's work drifting behind.
  */
-export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true, art = [] }: Props) {
+export function Welcome({ planId, planName, email, inviteTo, slackTo, eta, member, since, lanyard = true, art = [] }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const partner = planId === "design-partner";
   // Set after mount so "member since" falls back to the visitor's own date.
@@ -49,7 +51,7 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
     },
     { title: "Trello invite", short: eta.replace(/^within /, "In "), body: `On its way to ${inviteTo ?? "your inbox"} ${eta}.` },
     ...(partner
-      ? [{ title: "Slack invite", short: "Coming soon", body: "For daily updates and quick feedback." }]
+      ? [{ title: "Slack invite", short: "Coming soon", body: `On its way to ${slackTo ?? "your inbox"}, for daily updates and quick feedback.` }]
       : []),
   ];
 

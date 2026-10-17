@@ -141,6 +141,7 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
   const result = useCheckoutElements();
   const [email, setEmail] = useState("");
   const [trelloEmail, setTrelloEmail] = useState("");
+  const [slackEmail, setSlackEmail] = useState("");
   const [company, setCompany] = useState("");
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,7 +166,7 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
     await fetch("/api/checkout/details", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId: checkout.id, trelloEmail, company }),
+      body: JSON.stringify({ sessionId: checkout.id, trelloEmail, slackEmail, company }),
     }).catch(() => {});
 
     // On success Stripe takes the visitor to the welcome page.
@@ -175,6 +176,21 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
       setPaying(false);
     }
   }
+
+  const partner = plan.id === "design-partner";
+  const companyField = (
+    <div className={styles.field}>
+      <label htmlFor="checkout-company">
+        Company <span>Optional</span>
+      </label>
+      <input
+        id="checkout-company"
+        autoComplete="organization"
+        value={company}
+        onChange={(e) => setCompany(e.target.value)}
+      />
+    </div>
+  );
 
   return (
     <form
@@ -195,6 +211,8 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
+      {/* Design Partner also gets a Slack channel, so it asks where to send
+          that invite too, beside Trello's; the company then goes below. */}
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="checkout-trello">
@@ -209,18 +227,25 @@ function PayForm({ plan, className }: { plan: Plan; className: string }) {
             onChange={(e) => setTrelloEmail(e.target.value)}
           />
         </div>
-        <div className={styles.field}>
-          <label htmlFor="checkout-company">
-            Company <span>Optional</span>
-          </label>
-          <input
-            id="checkout-company"
-            autoComplete="organization"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-          />
-        </div>
+        {partner ? (
+          <div className={styles.field}>
+            <label htmlFor="checkout-slack">
+              Slack invite email <span>Optional</span>
+            </label>
+            <input
+              id="checkout-slack"
+              type="email"
+              autoComplete="off"
+              placeholder="If different"
+              value={slackEmail}
+              onChange={(e) => setSlackEmail(e.target.value)}
+            />
+          </div>
+        ) : (
+          companyField
+        )}
       </div>
+      {partner && companyField}
 
       <h2 className={`${styles.label} ${styles.section}`}>Payment</h2>
       <div className={styles.payment}>

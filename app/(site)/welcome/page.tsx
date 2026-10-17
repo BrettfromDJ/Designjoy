@@ -12,6 +12,7 @@ type Details = {
   planId?: string;
   email?: string;
   trelloEmail?: string;
+  slackEmail?: string;
   /** When they subscribed, in ms. */
   since?: number;
   member?: number | null;
@@ -32,6 +33,7 @@ async function checkoutDetails(sessionId?: string): Promise<Details | null> {
       planId: session.metadata?.plan,
       email: session.customer_details?.email ?? undefined,
       trelloEmail: session.metadata?.trello_email?.trim() || undefined,
+      slackEmail: session.metadata?.slack_email?.trim() || undefined,
       since: session.created * 1000,
       member: status === "complete" && subscriptionId ? await memberNumber(stripe, subscriptionId) : null,
     };
@@ -62,6 +64,8 @@ export default async function WelcomePage({
   const email = details ? details.email : previewEmail;
   const plan = plans.find((p) => p.id === planId);
   const inviteTo = details?.trelloEmail ?? email;
+  // Slack's invite goes to their Slack email, else wherever Trello's went.
+  const slackTo = details?.slackEmail ?? inviteTo;
   const member = details ? details.member : Number(previewMember) || undefined;
   // Portfolio images, for the wall behind the page.
   const projects = await getProjects().catch(() => []);
@@ -80,6 +84,7 @@ export default async function WelcomePage({
         planName={plan?.name}
         email={email}
         inviteTo={inviteTo}
+        slackTo={slackTo}
         eta={trelloInviteEta}
         member={member ?? undefined}
         since={details?.since}

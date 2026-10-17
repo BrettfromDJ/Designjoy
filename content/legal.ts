@@ -31,7 +31,7 @@ export const privacyPolicy: LegalDoc = {
         "When you use the site or subscribe, you may give us:",
         [
           "Contact details: your name, email address, and company name.",
-          "Subscription details: the plan you choose, and an email for your Trello invite if it's different from your billing email.",
+          "Subscription details: the plan you choose, and and emails for your Trello invite (and Slack invite, on Design Partner) if they're different from your billing email.",
           "Booking details: the time you pick for an intro call and your reason for the meeting.",
           "Questions you type into the ask box on the site.",
           "Project materials: briefs, files, references and feedback you share with us in Trello, Slack or by email.",
