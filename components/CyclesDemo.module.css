@@ -1,0 +1,388 @@
+/* Holds the scaled stage; its height follows the scale. */
+.fit {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #050505;
+}
+
+.stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  font-size: 8px;
+  letter-spacing: -0.1px;
+  color: var(--text);
+  user-select: none;
+}
+
+.mono,
+.bar,
+.label,
+.row b {
+  font-family: var(--font-mono);
+}
+
+/* ---------- Top bar ---------- */
+.top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+}
+
+.crumbs i {
+  font-style: normal;
+  opacity: 0.5;
+}
+
+.crumbs b {
+  font-weight: 400;
+  color: var(--text);
+}
+
+.file span {
+  color: var(--text-muted);
+}
+
+.top .mono {
+  font-size: 7px;
+  color: var(--text-muted);
+}
+
+/* ---------- Canvas ---------- */
+.canvas {
+  position: absolute;
+  left: 0;
+  top: 22px;
+  width: 218px;
+  bottom: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 0.6px, transparent 0.6px);
+  background-size: 8px 8px;
+}
+
+.bar {
+  height: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 6.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: #050505;
+}
+
+.preview {
+  position: absolute;
+  left: 39px;
+  top: 34px;
+  width: 140px;
+  height: 105px;
+  display: grid;
+  place-items: center;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.preview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.preview img[data-on] {
+  opacity: 1;
+}
+
+.drop {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 7px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.stage[data-phase="drag"] .drop {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* The frames, in a floating tray. */
+.tray {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 8px;
+  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+}
+
+.add,
+.tile {
+  position: relative;
+  width: 30px;
+  height: 22px;
+  border-radius: 4px;
+}
+
+.add {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.tile {
+  overflow: hidden;
+  background: #161616;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.6);
+  transition: opacity 0.35s, transform 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+  transition-delay: inherit;
+}
+
+.tile[data-in] img {
+  opacity: 1;
+  transform: none;
+}
+
+.tile[data-current] {
+  outline-color: #fff;
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: #fff;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.progress[data-state="full"] {
+  transform: scaleX(1);
+}
+
+.progress[data-state="run"] {
+  animation: run 0.7s linear forwards;
+}
+
+@keyframes run {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* The download, confirmed. */
+.toast {
+  position: absolute;
+  left: 50%;
+  top: 26px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px 4px 5px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 7px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translate(-50%, -6px) scale(0.9);
+  transition: opacity 0.25s, transform 0.35s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.toast[data-on] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.toast span:last-child {
+  color: #777;
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3ddc84;
+  color: #000;
+  font-size: 6px;
+}
+
+/* ---------- Inspector ---------- */
+.side {
+  position: absolute;
+  left: 218px;
+  right: 0;
+  top: 22px;
+  bottom: 0;
+  padding: 8px 8px 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  background: #080808;
+}
+
+.label {
+  margin: 4px 0 4px;
+  font-size: 5.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  color: var(--text-muted);
+}
+
+.label:not(:first-child) {
+  margin-top: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 3px 0;
+  font-size: 7px;
+  color: var(--text-muted);
+}
+
+.row b {
+  font-weight: 400;
+  font-size: 6.5px;
+  color: var(--text);
+}
+
+.button {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 10px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #fff;
+  color: #000;
+  font-size: 7px;
+  font-weight: 500;
+  transition: transform 0.12s;
+}
+
+.button[data-pressed] {
+  animation: press 0.25s;
+}
+
+@keyframes press {
+  40% {
+    transform: scale(0.94);
+  }
+}
+
+/* While making, the button fills from left to right. */
+.fill {
+  position: absolute;
+  inset: 0;
+  background: #d9d9d9;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.button[data-state="making"] .fill {
+  transform: scaleX(1);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button[data-state="done"] {
+  background: #3ddc84;
+}
+
+.buttonText {
+  position: relative;
+}
+
+/* ---------- Pointer ---------- */
+.cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  transition: transform 0.8s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.cursor svg {
+  position: relative;
+  display: block;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* The images being dragged in, held under the pointer. */
+.stack {
+  position: absolute;
+  left: -14px;
+  top: -10px;
+  width: 40px;
+  height: 30px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s, transform 0.25s;
+}
+
+.stack[data-on] {
+  opacity: 1;
+  transform: none;
+}
+
+.stack img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.stage[data-phase="out"] .cursor {
+  transition-duration: 0.6s;
+}
