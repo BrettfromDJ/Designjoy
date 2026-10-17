@@ -1,9 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CheckIcon } from "@/components/Icons";
+import { Welcome, type WelcomeStep } from "@/components/welcome/Welcome";
 import { plans, trelloInviteEta } from "@/content/site";
 import { getStripe } from "@/lib/stripe";
-import styles from "./page.module.css";
 
 export const metadata = { title: "Welcome — Designjoy" };
 
@@ -28,22 +26,25 @@ async function checkoutDetails(sessionId?: string): Promise<Details | null> {
   }
 }
 
-export default async function Welcome({
+export default async function WelcomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ session_id?: string; plan?: string; email?: string }>;
 }) {
-  const { session_id } = await searchParams;
+  const { session_id, plan: previewPlan, email: previewEmail } = await searchParams;
   const details = await checkoutDetails(session_id);
   // Not paid yet (e.g. the page was opened early): back to the form.
   if (details?.status === "open") redirect(`/checkout?plan=${details.planId ?? ""}`);
-  const plan = plans.find((p) => p.id === details?.planId);
-  const inviteTo = details?.trelloEmail ?? details?.email;
+  // Without a checkout, ?plan= and ?email= fill in the page for previewing it.
+  const planId = details ? details.planId : previewPlan;
+  const email = details ? details.email : previewEmail;
+  const plan = plans.find((p) => p.id === planId);
+  const inviteTo = details?.trelloEmail ?? email;
 
-  const steps = [
+  const steps: WelcomeStep[] = [
     {
       title: "Payment confirmed",
-      body: details?.email ? `Your receipt is on its way to ${details.email}.` : "Your receipt is on its way to your inbox.",
+      body: email ? `Your receipt is on its way to ${email}.` : "Your receipt is on its way to your inbox.",
       done: true,
     },
     {
@@ -64,46 +65,13 @@ export default async function Welcome({
   ];
 
   return (
-    <main className={styles.page}>
-      <header className={styles.header}>
-        <p className={styles.label}>Welcome to Designjoy</p>
-        <h1 className={styles.title}>
-          You&apos;re in. <span className={styles.muted}>Let&apos;s make something great.</span>
-        </h1>
-        <p className={styles.sub}>
-          {plan ? `Your ${plan.name} subscription is active.` : "Your subscription is active."} Here&apos;s what
-          happens next.
-        </p>
-      </header>
-
-      <section className={styles.card} aria-labelledby="next-title">
-        <h2 id="next-title" className={styles.label}>
-          What happens next
-        </h2>
-        <ol className={styles.steps}>
-          {steps.map((step, i) => (
-            <li key={step.title} data-done={step.done ?? false}>
-              <span className={styles.marker} aria-hidden="true">
-                {step.done ? <CheckIcon /> : String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <p className={styles.stepTitle}>{step.title}</p>
-                <p className={styles.stepBody}>{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className={styles.card} aria-label="Billing and help">
-        <a href={details?.email ? `/billing?email=${encodeURIComponent(details.email)}` : "/billing"} className={styles.link} target="_blank" rel="noopener">
-          Manage billing <span aria-hidden="true">→</span>
-        </a>
-        <p className={styles.stepBody}>Update your card, download invoices, or cancel anytime.</p>
-        <Link href="/?faq" className={styles.link}>
-          Questions? See the FAQs <span aria-hidden="true">→</span>
-        </Link>
-      </section>
-    </main>
+    <Welcome
+      planId={plan?.id}
+      planName={plan?.name}
+      email={email}
+      inviteTo={inviteTo}
+      eta={trelloInviteEta}
+      steps={steps}
+    />
   );
 }
