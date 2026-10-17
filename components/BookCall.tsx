@@ -46,8 +46,12 @@ export function BookCallMeta() {
   );
 }
 
-/** Book the 15 minute intro call: day → time → name and email → booked. Powered by Cal.com. */
-export function BookCall() {
+/**
+ * Book the 15 minute intro call: day → time → name and email → booked.
+ * Powered by Cal.com. `pick` (a day, or one of its open times) starts it with
+ * that already chosen.
+ */
+export function BookCall({ pick }: { pick?: string }) {
   const [timeZone] = useState(
     () => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
   );
@@ -74,9 +78,19 @@ export function BookCall() {
     });
     fetch(`/api/booking/slots?${params}`)
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error("slots"))))
-      .then((data: { days?: Days }) => setDays(data.days ?? {}))
+      .then((data: { days?: Days }) => {
+        const loaded = data.days ?? {};
+        setDays(loaded);
+        // Start on the picked day (and time), on the page that shows it.
+        const keys = Object.keys(loaded).sort();
+        const key = pick && (loaded[pick] ? pick : keys.find((k) => loaded[k].includes(pick)));
+        if (!key) return;
+        setDay(key);
+        if (key !== pick) setTime(pick ?? null);
+        setPage(Math.max(0, Math.floor(keys.indexOf(key) / DAYS_SHOWN)));
+      })
       .catch(() => setFailed(true));
-  }, [timeZone]);
+  }, [timeZone, pick]);
 
   async function book(event: React.FormEvent) {
     event.preventDefault();

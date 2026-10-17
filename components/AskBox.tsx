@@ -148,6 +148,9 @@ export function AskBox() {
   // A question asked from elsewhere (the homepage hero): a FAQ gets its
   // written answer, anything else goes to the chat. Kept in a ref so the
   // listener below always uses the current conversation.
+  // A day or time picked before booking opened (e.g. on a homepage card).
+  const [bookPick, setBookPick] = useState<string>();
+
   const askRef = useRef<(question: string) => void>(() => {});
   askRef.current = (question: string) => {
     const faq = faqs.find((f) => f.question === question);
@@ -170,6 +173,7 @@ export function AskBox() {
     const onOpen = (e: Event) => {
       const detail = (e as CustomEvent<OpenAskBoxDetail>).detail;
       show(detail?.view ?? "chat", detail?.plan);
+      setBookPick(detail?.pick);
       if (detail?.question) askRef.current(detail.question);
     };
     window.addEventListener(OPEN_ASK_BOX_EVENT, onOpen);
@@ -351,7 +355,7 @@ export function AskBox() {
                 </div>
               ) : mode === "booking" ? (
                 <div className={styles.log}>
-                  <BookCall />
+                  <BookCall key={bookPick} pick={bookPick} />
                 </div>
               ) : mode === "tour" ? (
                 <div className={styles.log}>

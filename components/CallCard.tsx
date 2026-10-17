@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { openAskBox } from "@/lib/ask-box";
+import { bookCall } from "@/lib/ask-box";
 import { BotFace } from "./BotFace";
 import styles from "./CallCard.module.css";
 
@@ -69,7 +69,7 @@ export function CallCard() {
   const days = useSlots(variant === 2 || variant === 5);
   if (!variant) return null;
 
-  const book = () => openAskBox("booking");
+  const book = () => bookCall();
   const arrow = <span aria-hidden="true">→</span>;
 
   // The first few open times, a couple from each day.
@@ -105,7 +105,7 @@ export function CallCard() {
         <div className={styles.slots}>
           {next.length > 0
             ? next.map((iso) => (
-                <button key={iso} type="button" className={styles.slot} onClick={book}>
+                <button key={iso} type="button" className={styles.slot} onClick={() => bookCall(iso)}>
                   <span>{fmtDay(iso)}</span>
                   {fmtTime(iso)}
                 </button>
@@ -168,7 +168,7 @@ export function CallCard() {
                 type="button"
                 className={styles.day}
                 data-open={open > 0 || undefined}
-                onClick={book}
+                onClick={() => bookCall(key)}
                 disabled={days !== null && !open}
               >
                 <span>{dayOf(key).toLocaleDateString("en-US", { weekday: "short" })}</span>
