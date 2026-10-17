@@ -362,3 +362,38 @@
     animation: none;
   }
 }
+
+/* The page's text and boxes, one under another. */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Two columns on wider screens: the badge swinging in the left half, the
+   welcome, progress and billing beside it, centred top to bottom. */
+@media (min-width: 900px) {
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 412px;
+    align-items: center;
+    gap: 48px;
+    max-width: 1040px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0 32px;
+  }
+
+  .split .info {
+    padding: 96px 0 120px;
+  }
+
+  .split .title {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+
+  .split .sub {
+    font-size: 14px;
+  }
+}

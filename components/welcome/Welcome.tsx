@@ -18,6 +18,8 @@ type Props = {
   since?: number;
   /** Show the membership as a badge on a lanyard (the default) or a card. */
   lanyard?: boolean;
+  /** Two columns on wider screens: the badge on the left, the rest beside it. */
+  split?: boolean;
 };
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -27,7 +29,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
  * The page people land on after paying: a membership card for their plan
  * that flips in and tilts toward the pointer, with what happens next below.
  */
-export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true }: Props) {
+export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true, split = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const partner = planId === "design-partner";
   // Set after mount so "member since" falls back to the visitor's own date.
@@ -91,9 +93,9 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
   );
 
   return (
-    <main className={styles.page}>
+    <main className={split ? `${styles.page} ${styles.split}` : styles.page}>
       {lanyard ? (
-        <Lanyard partner={partner}>
+        <Lanyard partner={partner} fill={split}>
           <div className={`${styles.member} ${styles.badge}`} data-plan={planId}>
             <span className={styles.slot} aria-hidden="true" />
             {face}
@@ -111,7 +113,8 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
         </div>
       )}
 
-      <header className={`${styles.header} ${styles.center}`}>
+      <div className={styles.info}>
+      <header className={split ? styles.header : `${styles.header} ${styles.center}`}>
         <h1 className={styles.title}>
           Welcome to the club. <span className={styles.muted}>You&apos;re in.</span>
         </h1>
@@ -153,6 +156,7 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
           Questions? Just ask <span aria-hidden="true">→</span>
         </button>
       </section>
+      </div>
     </main>
   );
 }

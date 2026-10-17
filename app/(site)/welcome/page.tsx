@@ -42,9 +42,17 @@ async function checkoutDetails(sessionId?: string): Promise<Details | null> {
 export default async function WelcomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string; plan?: string; email?: string; member?: string; style?: string }>;
+  searchParams: Promise<{
+    session_id?: string;
+    plan?: string;
+    email?: string;
+    member?: string;
+    style?: string;
+    layout?: string;
+  }>;
 }) {
-  const { session_id, plan: previewPlan, email: previewEmail, member: previewMember, style } = await searchParams;
+  const { session_id, plan: previewPlan, email: previewEmail, member: previewMember, style, layout } =
+    await searchParams;
   const details = await checkoutDetails(session_id);
   // Not paid yet (e.g. the page was opened early): back to the form.
   if (details?.status === "open") redirect(`/checkout?plan=${details.planId ?? ""}`);
@@ -71,6 +79,8 @@ export default async function WelcomePage({
         since={details?.since}
         // The badge on a lanyard; ?style=card shows the earlier card version.
         lanyard={style !== "card"}
+        // ?layout=split previews two columns: the badge beside the text.
+        split={layout === "split"}
       />
     </>
   );

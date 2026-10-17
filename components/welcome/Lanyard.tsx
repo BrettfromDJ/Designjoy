@@ -18,7 +18,16 @@ const ITERATIONS = 24;
  * swings, and can be grabbed and flung; it turns in 3D as it moves.
  * `children` is the badge's face; Design Partner's strap has an iridescent stripe.
  */
-export function Lanyard({ children, partner = false }: { children: React.ReactNode; partner?: boolean }) {
+export function Lanyard({
+  children,
+  partner = false,
+  fill = false,
+}: {
+  children: React.ReactNode;
+  partner?: boolean;
+  /** Fill its column, full height, instead of spanning the page above the text. */
+  fill?: boolean;
+}) {
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
@@ -52,8 +61,11 @@ export function Lanyard({ children, partner = false }: { children: React.ReactNo
       badgeW = badge.offsetWidth;
       badgeH = badge.offsetHeight;
       reach = badgeH / 2 + 4;
-      // Long enough that the badge hangs just above the stage's bottom edge.
-      link = Math.max(14, (height - badgeH - 12) / LINKS);
+      // Long enough that the badge hangs just above the stage's bottom edge;
+      // filling a column, its middle hangs level with the text beside it.
+      link = fill
+        ? Math.max(14, (height * 0.52 - reach + 24) / LINKS)
+        : Math.max(14, (height - badgeH - 12) / LINKS);
     };
     measure();
 
@@ -256,10 +268,10 @@ export function Lanyard({ children, partner = false }: { children: React.ReactNo
       badge.removeEventListener("pointerup", up);
       badge.removeEventListener("pointercancel", up);
     };
-  }, [partner]);
+  }, [partner, fill]);
 
   return (
-    <div ref={stageRef} className={styles.stage}>
+    <div ref={stageRef} className={fill ? `${styles.stage} ${styles.fill}` : styles.stage}>
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
       <div ref={badgeRef} className={styles.badge}>
         {children}
