@@ -18,7 +18,8 @@
 .face {
   transform-box: view-box;
   transform-origin: 12px 12px;
-  transition: transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Turning to face the other way takes a little longer, like a head turn. */
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .look {
