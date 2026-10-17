@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { openAskBox } from "@/lib/ask-box";
+import { CheckIcon } from "../Icons";
 import styles from "./Welcome.module.css";
 
 type Props = {
@@ -17,10 +18,7 @@ type Props = {
 };
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const DAY = 24 * 3600 * 1000;
 
-const short = (d: Date) => `${DAYS[d.getDay()].slice(0, 3)} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
 
 /**
  * The page people land on after paying: a membership card for their plan
@@ -29,40 +27,17 @@ const short = (d: Date) => `${DAYS[d.getDay()].slice(0, 3)} ${d.getDate()} ${MON
 export function Welcome({ planId, planName, email, inviteTo, eta, member, since }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const partner = planId === "design-partner";
-  // Dates are set after mount so they're in the visitor's own time zone.
+  // Set after mount so "member since" falls back to the visitor's own date.
   const [today, setToday] = useState<Date | null>(null);
   useEffect(() => setToday(new Date()), []);
   const joined = since ? new Date(since) : today;
-  const day = (n: number) => (today ? new Date(+today + n * DAY) : null);
 
-  // Their first few days. Design Partner adds its Slack channel.
-  const stops = [
-    { when: "Today", title: "Trello invite", body: `Sent to ${inviteTo ?? "your inbox"} ${eta}.`, date: day(0) },
-    ...(partner
-      ? [
-          {
-            when: "Today",
-            title: "Slack channel",
-            body: "We'll add you to a shared channel for daily updates and quick feedback.",
-            date: day(0),
-          },
-        ]
-      : []),
-    {
-      when: "Tomorrow",
-      title: "Brief your first request",
-      body: "Add it to Backlog and move it into Current request. A few lines is plenty.",
-      date: day(1),
-    },
-    {
-      // Named by its date alone ("Mon 19 Oct"), so it doesn't repeat the day.
-      when: today ? "" : "In two days",
-      title: "First delivery",
-      body: partner
-        ? "Most requests land in about 48 hours, with progress shared in Slack along the way."
-        : "Most requests land in about 48 hours. Revisions take about a day.",
-      date: day(2),
-    },
+  // Where they are: subscribed, then the invites on their way. Slack is
+  // for Design Partner only.
+  const steps = [
+    { title: "Subscribed", body: email ? `Receipt sent to ${email}.` : "Your receipt is on its way.", done: true },
+    { title: "Trello invite", body: `On its way to ${inviteTo ?? "your inbox"} ${eta}.` },
+    ...(partner ? [{ title: "Slack invite", body: "For daily updates and quick feedback." }] : []),
   ];
 
   // The nav sits at the top on this page (set early by the page itself);
@@ -122,26 +97,24 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since 
           Welcome to the club. <span className={styles.muted}>You&apos;re in.</span>
         </h1>
         <p className={styles.sub}>
-          Your receipt is on its way{email ? ` to ${email}` : ""}. Here&apos;s how your first few days go.
+          Your {planName ?? "subscription"} is active. Watch your inbox for your invites.
         </p>
       </header>
 
-      <section className={styles.card} aria-label="Your first few days">
-        <ol className={styles.timeline}>
-          {stops.map((stop, i) => (
-            <li key={stop.title} data-now={stop.when === "Today" || undefined} style={{ "--i": i } as CSSProperties}>
-              <span className={styles.dot} aria-hidden="true" />
-              <p className={styles.label}>
-                {stop.when}
-                {stop.date && (
-                  <span className={styles.date}>
-                    {stop.when && " · "}
-                    {short(stop.date)}
-                  </span>
-                )}
-              </p>
-              <p className={styles.stepTitle}>{stop.title}</p>
-              <p className={styles.stepBody}>{stop.body}</p>
+      <section className={styles.card} aria-label="Your progress">
+        <ol className={styles.checks}>
+          {steps.map((step, i) => (
+            <li key={step.title} data-done={step.done || undefined} style={{ "--i": i } as CSSProperties}>
+              <span className={styles.check} aria-hidden="true">
+                {step.done && <CheckIcon />}
+              </span>
+              <span>
+                <span className={styles.stepTitle}>
+                  {step.title}
+                  <span className="visually-hidden">{step.done ? " (done)" : " (on its way)"}</span>
+                </span>
+                <span className={styles.stepBody}>{step.body}</span>
+              </span>
             </li>
           ))}
         </ol>
