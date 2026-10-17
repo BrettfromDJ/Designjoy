@@ -137,8 +137,8 @@
   border-radius: 18px;
   overflow: hidden;
   background:
-    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.12), transparent 55%),
-    linear-gradient(150deg, #1b1b1b, #0b0b0b 60%, #141414);
+    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.07), transparent 55%),
+    #000;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow-float);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
@@ -166,13 +166,13 @@
   }
 }
 
-/* Design Partner: the same dark card with a holographic foil that shifts
+/* Design Partner: the same black card with a faint holographic foil that shifts
    as it moves, an iridescent edge that travels round, and a foil name. */
 .member[data-plan="design-partner"] {
   border: 1px solid transparent;
   background:
-    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.12), transparent 55%) padding-box,
-    linear-gradient(150deg, #1b1b1b, #0b0b0b 60%, #141414) padding-box,
+    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.07), transparent 55%) padding-box,
+    linear-gradient(#000, #000) padding-box,
     conic-gradient(from var(--glow-angle), #6f9bff, #c08bff, #6fffd8, #ffd28a, #6f9bff) border-box;
   box-shadow: var(--shadow-float), 0 0 48px -12px rgba(150, 140, 255, 0.4);
   animation: edge-spin 6s linear infinite;
@@ -192,9 +192,9 @@
   background: linear-gradient(
     115deg,
     transparent 20%,
-    rgba(110, 160, 255, 0.2) 34%,
-    rgba(200, 140, 255, 0.2) 44%,
-    rgba(110, 255, 215, 0.16) 54%,
+    rgba(110, 160, 255, 0.09) 34%,
+    rgba(200, 140, 255, 0.09) 44%,
+    rgba(110, 255, 215, 0.07) 54%,
     transparent 68%
   );
   background-size: 260% 260%;
