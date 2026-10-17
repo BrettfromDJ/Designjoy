@@ -3,8 +3,8 @@
 .stage {
   position: relative;
   width: 100vw;
-  height: min(640px, 78vh);
-  margin: -112px calc(50% - 50vw) 8px;
+  height: min(600px, 70vh);
+  margin: -112px calc(50% - 50vw) 0;
   perspective: 900px;
   touch-action: none;
 }
@@ -34,7 +34,7 @@
 
 @media (max-width: 559px) {
   .stage {
-    height: min(560px, 72vh);
+    height: min(520px, 66vh);
     margin-top: -96px;
   }
 

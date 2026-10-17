@@ -166,15 +166,67 @@
   }
 }
 
+/* Design Partner: the same dark card with a holographic foil that shifts
+   as it moves, an iridescent edge that travels round, and a foil name. */
 .member[data-plan="design-partner"] {
+  border: 1px solid transparent;
   background:
-    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.5), transparent 55%),
-    linear-gradient(150deg, #f2f2f2, #cfcfcf 60%, #e6e6e6);
-  color: #000;
+    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.12), transparent 55%) padding-box,
+    linear-gradient(150deg, #1b1b1b, #0b0b0b 60%, #141414) padding-box,
+    conic-gradient(from var(--glow-angle), #6f9bff, #c08bff, #6fffd8, #ffd28a, #6f9bff) border-box;
+  box-shadow: var(--shadow-float), 0 0 48px -12px rgba(150, 140, 255, 0.4);
+  animation: edge-spin 6s linear infinite;
 }
 
-.member[data-plan="design-partner"] .memberSmile {
-  filter: invert(1);
+@keyframes edge-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+.member[data-plan="design-partner"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(110, 160, 255, 0.2) 34%,
+    rgba(200, 140, 255, 0.2) 44%,
+    rgba(110, 255, 215, 0.16) 54%,
+    transparent 68%
+  );
+  background-size: 260% 260%;
+  mix-blend-mode: screen;
+  /* The badge's turn (set by the lanyard) shifts the foil's colours. */
+  filter: hue-rotate(calc(var(--turn, 0) * 4deg));
+  animation: holo 7s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes holo {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+.member[data-plan="design-partner"] .memberPlan {
+  background: linear-gradient(100deg, #fff 20%, #cbb9ff 38%, #a3e9ff 52%, #fff 70%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: foil 6s linear infinite;
+}
+
+@keyframes foil {
+  to {
+    background-position: -220% 0;
+  }
 }
 
 /* The lanyard version: a portrait badge with a slot for the clip. */
@@ -186,9 +238,9 @@
   transition: none;
 }
 
-.badge::before {
-  content: "";
+.slot {
   position: absolute;
+  z-index: 1;
   top: 10px;
   left: 50%;
   width: 36px;
@@ -303,6 +355,9 @@
 @media (prefers-reduced-motion: reduce) {
   .memberWrap,
   .member::after,
+  .member[data-plan="design-partner"],
+  .member[data-plan="design-partner"]::before,
+  .member[data-plan="design-partner"] .memberPlan,
   .checks li {
     animation: none;
   }

@@ -69,8 +69,8 @@ export default async function WelcomePage({
         eta={trelloInviteEta}
         member={member ?? undefined}
         since={details?.since}
-        // ?style=lanyard previews the badge-on-a-lanyard version.
-        lanyard={style === "lanyard"}
+        // The badge on a lanyard; ?style=card shows the earlier card version.
+        lanyard={style !== "card"}
       />
     </>
   );

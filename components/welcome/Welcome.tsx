@@ -16,7 +16,7 @@ type Props = {
   member?: number;
   /** When they subscribed, in ms. */
   since?: number;
-  /** Show the membership as a badge on a lanyard instead of a card. */
+  /** Show the membership as a badge on a lanyard (the default) or a card. */
   lanyard?: boolean;
 };
 
@@ -27,7 +27,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
  * The page people land on after paying: a membership card for their plan
  * that flips in and tilts toward the pointer, with what happens next below.
  */
-export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = false }: Props) {
+export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const partner = planId === "design-partner";
   // Set after mount so "member since" falls back to the visitor's own date.
@@ -93,8 +93,9 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
   return (
     <main className={styles.page}>
       {lanyard ? (
-        <Lanyard light={partner}>
+        <Lanyard partner={partner}>
           <div className={`${styles.member} ${styles.badge}`} data-plan={planId}>
+            <span className={styles.slot} aria-hidden="true" />
             {face}
           </div>
         </Lanyard>

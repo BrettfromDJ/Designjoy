@@ -16,9 +16,9 @@ const ITERATIONS = 24;
 /**
  * A badge on a lanyard that hangs from the top of the page. It drops in,
  * swings, and can be grabbed and flung; it turns in 3D as it moves.
- * `children` is the badge's face.
+ * `children` is the badge's face; Design Partner's strap has an iridescent stripe.
  */
-export function Lanyard({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+export function Lanyard({ children, partner = false }: { children: React.ReactNode; partner?: boolean }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
@@ -52,8 +52,8 @@ export function Lanyard({ children, light = false }: { children: React.ReactNode
       badgeW = badge.offsetWidth;
       badgeH = badge.offsetHeight;
       reach = badgeH / 2 + 4;
-      // The strap reaches about 40% of the way down before the badge hangs.
-      link = Math.max(14, (height - badgeH - 40) / LINKS);
+      // Long enough that the badge hangs just above the stage's bottom edge.
+      link = Math.max(14, (height - badgeH - 12) / LINKS);
     };
     measure();
 
@@ -123,15 +123,27 @@ export function Lanyard({ children, light = false }: { children: React.ReactNode
         ctx.quadraticCurveTo(rope[i].x, rope[i].y, mx, my);
       }
       ctx.lineTo(end.x, end.y);
-      ctx.strokeStyle = light ? "#d9d9d9" : "#161616";
+      ctx.strokeStyle = "#161616";
       ctx.lineWidth = 22;
       ctx.stroke();
-      ctx.strokeStyle = light ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.06)";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      if (partner) {
+        // An iridescent stripe down the middle.
+        const sheen = ctx.createLinearGradient(0, 0, 0, height);
+        sheen.addColorStop(0, "rgba(111,155,255,0.75)");
+        sheen.addColorStop(0.35, "rgba(192,139,255,0.75)");
+        sheen.addColorStop(0.7, "rgba(111,255,216,0.7)");
+        sheen.addColorStop(1, "rgba(255,210,138,0.7)");
+        ctx.strokeStyle = sheen;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = "rgba(255,255,255,0.06)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
 
       // DESIGNJOY printed along the strap, every so often.
-      ctx.fillStyle = light ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.5)";
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
       ctx.font = "500 8px ui-monospace, SFMono-Regular, Menlo, monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -149,7 +161,7 @@ export function Lanyard({ children, light = false }: { children: React.ReactNode
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(Math.atan2(q.y - p.y, q.x - p.x));
-            ctx.fillText("DESIGNJOY", 0, 0.5);
+            ctx.fillText("DESIGNJOY", 0, partner ? -5.5 : 0.5);
             ctx.restore();
           }
           next += 90;
@@ -163,6 +175,7 @@ export function Lanyard({ children, light = false }: { children: React.ReactNode
       const vx = body.x - body.px;
       const turn = Math.max(-40, Math.min(40, vx * 3.2));
       badge.style.transform = `translate(${body.x - badgeW / 2}px, ${body.y - badgeH / 2}px) rotate(${angle}rad) rotateY(${turn}deg)`;
+      badge.style.setProperty("--turn", turn.toFixed(1));
 
       // The metal clip joining strap and badge.
       ctx.save();
@@ -243,7 +256,7 @@ export function Lanyard({ children, light = false }: { children: React.ReactNode
       badge.removeEventListener("pointerup", up);
       badge.removeEventListener("pointercancel", up);
     };
-  }, [light]);
+  }, [partner]);
 
   return (
     <div ref={stageRef} className={styles.stage}>
