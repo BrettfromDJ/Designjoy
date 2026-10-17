@@ -370,53 +370,13 @@
   gap: 16px;
 }
 
-/* ---------- Layouts for wider screens (?layout=1…5) ---------- */
+/* ---------- Poster: a giant "You're in." behind the swinging badge ---------- */
 
-/* 2 and 3. Two columns: the badge swinging in one half, hanging level with
-   the welcome, progress and billing in the other. */
 .giant {
   display: none;
 }
 
 @media (min-width: 900px) {
-  .split,
-  .splitRight {
-    display: grid;
-    grid-template-columns: 1fr 412px;
-    align-items: center;
-    gap: 48px;
-    max-width: 1040px;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: 0 32px;
-  }
-
-  .splitRight {
-    grid-template-columns: 412px 1fr;
-  }
-
-  .splitRight > :first-child {
-    order: 2;
-  }
-
-  .split .info,
-  .splitRight .info {
-    padding: 96px 0 120px;
-  }
-
-  .split .title,
-  .splitRight .title {
-    font-size: 30px;
-    letter-spacing: -1px;
-  }
-
-  .split .sub,
-  .splitRight .sub {
-    font-size: 14px;
-  }
-
-  /* 4. Poster: a giant "You're in." behind the swinging badge, the rest
-     side by side underneath. */
   .poster {
     max-width: 880px;
   }
@@ -448,60 +408,262 @@
     }
   }
 
-  .poster .info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .poster .header {
-    grid-column: 1 / -1;
-  }
-
   /* The giant type already says it. */
   .poster .title .muted {
     display: none;
   }
 
-  /* 5. Editorial: big left-aligned type, the badge in a narrow column on
-     the right. */
-  .editorial {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    align-items: center;
-    gap: 40px;
-    max-width: 1160px;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: 0 40px;
-  }
-
-  .editorial > :first-child {
-    order: 2;
-  }
-
-  .editorial .info {
+  /* Option 1: the two cards side by side. */
+  .info[data-bottom="Cards"] {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: start;
     gap: 16px;
-    padding: 120px 0;
   }
 
-  .editorial .header {
+  .info[data-bottom="Cards"] .header {
     grid-column: 1 / -1;
-    margin-bottom: 24px;
+  }
+}
+
+/* ---------- Options for the section under the badge (?bottom=1…6) ---------- */
+
+/* Billing and help as two quiet text links, centred. */
+.links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 4px 0 0;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+}
+
+.links a,
+.links button {
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: var(--text-nav);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.links a:hover,
+.links button:hover {
+  color: #fff;
+}
+
+/* 2. One strip. */
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+}
+
+.strip li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+}
+
+.strip li + li {
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.strip li > span:last-child,
+.row li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.strip li[data-done] .check {
+  background: #fff;
+  border-color: #fff;
+}
+
+/* 3. No boxes. */
+.row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 24px;
+  margin: 8px 0 0;
+  padding: 20px 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.row li {
+  gap: 6px;
+}
+
+.row li[data-done] .label {
+  color: #fff;
+}
+
+/* 4. Receipt. */
+.receipt {
+  align-self: center;
+  width: min(420px, 100%);
+  padding: 22px 24px;
+  background: #f4f4f2;
+  color: #111;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1px;
+  /* A torn edge along the bottom. */
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat,
+    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom / 12px 8px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat,
+    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom / 12px 8px repeat-x;
+  padding-bottom: 30px;
+  transform: rotate(-1deg);
+  box-shadow: var(--shadow-float);
+}
+
+.receiptHead {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #bbb;
+  text-transform: uppercase;
+}
+
+.receipt dl {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.receipt dl > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+/* Dotted leaders between each label and its value. */
+.receipt dt {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  color: #666;
+}
+
+.receipt dt::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px dotted #aaa;
+  transform: translateY(-3px);
+}
+
+.receipt dd {
+  margin: 0;
+  text-align: right;
+}
+
+.receiptFoot {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed #bbb;
+}
+
+.receiptFoot a,
+.receiptFoot button {
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* 5. Progress track. */
+.track {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+/* The line runs between the first and last stops, filled up to the first. */
+.track::before,
+.track::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: calc(50% / var(--n));
+  right: calc(50% / var(--n));
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.track::after {
+  right: auto;
+  width: calc((100% - 100% / var(--n)) / (var(--n) - 1) * 0.5);
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.2));
+  animation: fill-in 1.4s 0.6s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  transform-origin: left;
+}
+
+@keyframes fill-in {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.track li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stop {
+  width: 15px;
+  height: 15px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.track li[data-done] .stop {
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 559px) {
+  .strip,
+  .row {
+    grid-auto-flow: row;
   }
 
-  .editorial .title {
-    font-size: clamp(48px, 6vw, 84px);
-    line-height: 0.98;
-    letter-spacing: -0.045em;
-  }
-
-  .editorial .sub {
-    margin-top: 10px;
-    font-size: 16px;
+  .strip li + li {
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 }
 
