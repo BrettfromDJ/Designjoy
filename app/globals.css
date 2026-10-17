@@ -73,6 +73,23 @@ a {
   text-decoration: none;
 }
 
+/* No widows: text never ends with a single word alone on its last line.
+   Headings are balanced across their lines. */
+p,
+li,
+dd,
+blockquote,
+figcaption {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
 button,
 input {
   font: inherit;

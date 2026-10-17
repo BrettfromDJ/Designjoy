@@ -98,6 +98,11 @@
   text-align: center;
 }
 
+/* Centred lines read best evenly balanced. */
+.center .sub {
+  text-wrap: balance;
+}
+
 .header,
 .card {
   position: relative;
