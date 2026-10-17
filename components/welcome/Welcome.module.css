@@ -49,15 +49,6 @@
   color: var(--text-muted);
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-card);
-}
 .stepBody {
   margin: 0;
   font-size: 12px;
@@ -66,17 +57,6 @@
   color: var(--text-muted);
 }
 
-.link {
-  align-self: flex-start;
-  font-size: 14px;
-  letter-spacing: -0.42px;
-  color: var(--text-nav);
-  transition: color 0.15s ease;
-}
-
-.link:hover {
-  color: #fff;
-}
 
 @media (max-width: 559px) {
   .page {
@@ -84,14 +64,6 @@
   }
 }
 
-.link {
-  padding: 0;
-  background: none;
-  border: 0;
-  font: inherit;
-  font-size: 14px;
-  cursor: pointer;
-}
 
 .center {
   align-items: center;
@@ -104,7 +76,8 @@
 }
 
 .header,
-.card {
+.track,
+.links {
   position: relative;
   z-index: 1;
 }
@@ -296,55 +269,6 @@
   text-align: right;
 }
 
-/* Progress: subscribed (ticked), then the invites still on their way. */
-.checks {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.checks li {
-  display: flex;
-  gap: 12px;
-  animation: rise 0.8s calc(0.6s + var(--i, 0) * 120ms) cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-.checks li > span:last-child {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-    filter: blur(5px);
-  }
-}
-
-.check {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-}
-
-.checks li[data-done] .check {
-  background: #fff;
-  border-color: #fff;
-}
-
-.check svg path {
-  stroke: #000;
-}
-
 .stepTitle {
   margin-top: 2px;
   font-size: 14px;
@@ -357,8 +281,7 @@
   .member::after,
   .member[data-plan="design-partner"],
   .member[data-plan="design-partner"]::before,
-  .member[data-plan="design-partner"] .memberPlan,
-  .checks li {
+  .member[data-plan="design-partner"] .memberPlan {
     animation: none;
   }
 }
@@ -413,19 +336,7 @@
     display: none;
   }
 
-  /* Option 1: the two cards side by side. */
-  .info[data-bottom="Cards"] {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .info[data-bottom="Cards"] .header {
-    grid-column: 1 / -1;
-  }
 }
-
-/* ---------- Options for the section under the badge (?bottom=1…6) ---------- */
 
 /* Billing and help as two quiet text links, centred. */
 .links {
@@ -454,149 +365,11 @@
   color: #fff;
 }
 
-/* 2. One strip. */
-.strip {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-card);
-}
-
-.strip li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 20px;
-}
-
-.strip li + li {
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.strip li > span:last-child,
-.row li {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.strip li[data-done] .check {
-  background: #fff;
-  border-color: #fff;
-}
-
-/* 3. No boxes. */
-.row {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: 24px;
-  margin: 8px 0 0;
-  padding: 20px 0;
-  list-style: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.row li {
-  gap: 6px;
-}
-
-.row li[data-done] .label {
-  color: #fff;
-}
-
-/* 4. Receipt. */
-.receipt {
-  align-self: center;
-  width: min(420px, 100%);
-  padding: 22px 24px;
-  background: #f4f4f2;
-  color: #111;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1px;
-  /* A torn edge along the bottom. */
-  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat,
-    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom / 12px 8px repeat-x;
-  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat,
-    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom / 12px 8px repeat-x;
-  padding-bottom: 30px;
-  transform: rotate(-1deg);
-  box-shadow: var(--shadow-float);
-}
-
-.receiptHead {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 0 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px dashed #bbb;
-  text-transform: uppercase;
-}
-
-.receipt dl {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-}
-
-.receipt dl > div {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-/* Dotted leaders between each label and its value. */
-.receipt dt {
-  display: flex;
-  flex: 1;
-  gap: 8px;
-  color: #666;
-}
-
-.receipt dt::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px dotted #aaa;
-  transform: translateY(-3px);
-}
-
-.receipt dd {
-  margin: 0;
-  text-align: right;
-}
-
-.receiptFoot {
-  display: flex;
-  justify-content: space-between;
-  margin: 16px 0 0;
-  padding-top: 12px;
-  border-top: 1px dashed #bbb;
-}
-
-.receiptFoot a,
-.receiptFoot button {
-  padding: 0;
-  background: none;
-  border: 0;
-  font: inherit;
-  color: #111;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-
-/* 5. Progress track. */
+/* Progress: a track with a stop per step, filled up to the first. */
 .track {
   position: relative;
+  align-self: center;
+  width: min(600px, 100%);
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
@@ -649,69 +422,29 @@
   border: 1px solid var(--border);
 }
 
+/* A small spinner beside the steps still on their way. */
+.spinner {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  vertical-align: -1px;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-top-color: var(--text-nav);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .track li[data-done] .stop {
   background: #fff;
   border-color: #fff;
   box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 559px) {
-  .strip,
-  .row {
-    grid-auto-flow: row;
-  }
-
-  .strip li + li {
-    border-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-  }
-}
-
-/* Preview-only switcher. */
-.switcher {
-  position: fixed;
-  left: 16px;
-  bottom: 40px;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 36px;
-  padding: 0 4px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--text-nav);
-  box-shadow: var(--shadow-float);
-}
-
-.switcher b {
-  font-weight: 500;
-  color: var(--text);
-}
-
-.switcher button {
-  width: 28px;
-  height: 28px;
-  border: 0;
-  border-radius: 50%;
-  background: #1a1a1a;
-  color: var(--text);
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.switcher span {
-  padding: 0 6px;
-  white-space: nowrap;
-}
-
-@media (max-width: 899px) {
-  .switcher {
-    top: 80px;
-    bottom: auto;
-  }
 }
 
 /* The wall: the portfolio drifting slowly behind everything, fading out
@@ -772,7 +505,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wallCol {
+  .wallCol,
+  .track::after,
+  .spinner {
     animation: none;
   }
 }

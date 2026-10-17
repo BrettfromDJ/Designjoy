@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { openAskBox } from "@/lib/ask-box";
-import { CheckIcon } from "../Icons";
 import { Lanyard } from "./Lanyard";
 import styles from "./Welcome.module.css";
 
@@ -23,39 +22,13 @@ type Props = {
   art?: string[];
 };
 
-/*
- * Treatments for the section under the badge, previewed with ?bottom=1…6 and
- * a small switcher. Without ?bottom it's the cards (option 1).
- */
-const BOTTOMS = ["Cards", "One strip", "No boxes", "Receipt", "Progress track", "Minimal"] as const;
-
-function useBottom() {
-  const [n, setN] = useState(1);
-  const [preview, setPreview] = useState(false);
-  useEffect(() => {
-    const v = Number(new URLSearchParams(window.location.search).get("bottom"));
-    if (v >= 1 && v <= BOTTOMS.length) {
-      setN(v);
-      setPreview(true);
-    }
-  }, []);
-  const go = (to: number) => {
-    const next = ((to - 1 + BOTTOMS.length) % BOTTOMS.length) + 1;
-    const url = new URL(window.location.href);
-    url.searchParams.set("bottom", String(next));
-    window.history.replaceState(null, "", url);
-    setN(next);
-  };
-  return { n, preview, go };
-}
-
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 
 /**
  * The page people land on after paying: a membership badge for their plan
- * on a lanyard (or, with ?style=card, a card), with what happens next below
- * and their new design team's work drifting behind.
+ * on a lanyard (or, with ?style=card, a card) in front of a giant "You're in.",
+ * their progress below, and their new design team's work drifting behind.
  */
 export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true, art = [] }: Props) {
   const ref = useRef<HTMLDivElement>(null);
@@ -64,7 +37,6 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
   const [today, setToday] = useState<Date | null>(null);
   useEffect(() => setToday(new Date()), []);
   const joined = since ? new Date(since) : today;
-  const bottom = useBottom();
 
   // Where they are: subscribed, then the invites on their way. Slack is
   // for Design Partner only.
@@ -130,25 +102,6 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
 
   const billing = email ? `/billing?email=${encodeURIComponent(email)}` : "/billing";
 
-  const checklist = (
-    <ol className={styles.checks}>
-      {steps.map((step, i) => (
-        <li key={step.title} data-done={step.done || undefined} style={{ "--i": i } as CSSProperties}>
-          <span className={styles.check} aria-hidden="true">
-            {step.done && <CheckIcon />}
-          </span>
-          <span>
-            <span className={styles.stepTitle}>
-              {step.title}
-              <span className="visually-hidden">{step.done ? " (done)" : " (on its way)"}</span>
-            </span>
-            <span className={styles.stepBody}>{step.body}</span>
-          </span>
-        </li>
-      ))}
-    </ol>
-  );
-
   // Billing and help as two quiet text links.
   const links = (
     <p className={styles.links}>
@@ -199,7 +152,7 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
         </div>
       )}
 
-      <div className={styles.info} data-bottom={BOTTOMS[bottom.n - 1]}>
+      <div className={styles.info}>
         <header className={`${styles.header} ${styles.center}`}>
           <h1 className={styles.title}>
             Welcome to the club. <span className={styles.muted}>You&apos;re in.</span>
@@ -209,144 +162,24 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
           </p>
         </header>
 
-        {bottom.n === 1 && (
-          <>
-            <section className={styles.card} aria-label="Your progress">
-              {checklist}
-            </section>
-            <section className={styles.card} aria-label="Billing and help">
-              <a href={billing} className={styles.link} target="_blank" rel="noopener">
-                Manage billing <span aria-hidden="true">→</span>
-              </a>
-              <p className={styles.stepBody}>Update your card, download invoices, or cancel anytime.</p>
-              <button type="button" className={styles.link} onClick={() => openAskBox("chat")}>
-                Questions? Just ask <span aria-hidden="true">→</span>
-              </button>
-            </section>
-          </>
-        )}
-
-        {/* 2. One slim bar: each step and its status in a row. */}
-        {bottom.n === 2 && (
-          <>
-            <ol className={styles.strip} aria-label="Your progress">
-              {steps.map((step) => (
-                <li key={step.title} data-done={step.done || undefined}>
-                  <span className={styles.check} aria-hidden="true">
-                    {step.done && <CheckIcon />}
-                  </span>
-                  <span>
-                    <span className={styles.stepTitle}>{step.title}</span>
-                    <span className={styles.stepBody}>{step.short}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-            {links}
-          </>
-        )}
-
-        {/* 3. No boxes: the steps in a row between hairlines, links as text. */}
-        {bottom.n === 3 && (
-          <>
-            <ol className={styles.row} aria-label="Your progress">
-              {steps.map((step) => (
-                <li key={step.title} data-done={step.done || undefined}>
-                  <span className={styles.label}>{step.done ? "Done" : "Next"}</span>
-                  <span className={styles.stepTitle}>{step.title}</span>
-                  <span className={styles.stepBody}>{step.body}</span>
-                </li>
-              ))}
-            </ol>
-            {links}
-          </>
-        )}
-
-        {/* 4. A receipt, in mono, with dotted leaders. */}
-        {bottom.n === 4 && (
-          <section className={styles.receipt} aria-label="Your receipt">
-            <p className={styles.receiptHead}>
-              <span>Designjoy</span>
-              <span>{today ? today.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : ""}</span>
-            </p>
-            <dl>
-              <div>
-                <dt>Plan</dt>
-                <dd>{planName ?? "Subscription"}</dd>
-              </div>
-              <div>
-                <dt>Status</dt>
-                <dd>Active ✓</dd>
-              </div>
-              {member && (
-                <div>
-                  <dt>Member</dt>
-                  <dd>№ {String(member).padStart(4, "0")}</dd>
-                </div>
-              )}
-              <div>
-                <dt>Receipt</dt>
-                <dd>{email ? `Sent to ${email}` : "On its way"}</dd>
-              </div>
-              <div>
-                <dt>Trello invite</dt>
-                <dd>{eta.replace(/^within /, "In ")}</dd>
-              </div>
-              {partner && (
-                <div>
-                  <dt>Slack invite</dt>
-                  <dd>Coming soon</dd>
-                </div>
-              )}
-            </dl>
-            <p className={styles.receiptFoot}>
-              <a href={billing} target="_blank" rel="noopener">
-                Manage billing
-              </a>
-              <button type="button" onClick={() => openAskBox("chat")}>
-                Questions? Just ask
-              </button>
-            </p>
-          </section>
-        )}
-
-        {/* 5. A track that fills in as each step is done. */}
-        {bottom.n === 5 && (
-          <>
-            <ol
-              className={styles.track}
-              aria-label="Your progress"
-              style={{ "--n": steps.length } as CSSProperties}
-            >
-              {steps.map((step) => (
-                <li key={step.title} data-done={step.done || undefined}>
-                  <span className={styles.stop} aria-hidden="true" />
-                  <span className={styles.stepTitle}>{step.title}</span>
-                  <span className={styles.stepBody}>{step.short}</span>
-                </li>
-              ))}
-            </ol>
-            {links}
-          </>
-        )}
-
-        {/* 6. Nothing but the heading and two links. */}
-        {bottom.n === 6 && links}
+        {/* A track that fills in as each step is done; the steps still on
+            their way have a spinner. */}
+        <ol className={styles.track} aria-label="Your progress" style={{ "--n": steps.length } as CSSProperties}>
+          {steps.map((step) => (
+            <li key={step.title} data-done={step.done || undefined}>
+              <span className={styles.stop} aria-hidden="true" />
+              <span className={styles.stepTitle}>{step.title}</span>
+              <span className={styles.stepBody}>
+                {!step.done && <span className={styles.spinner} aria-hidden="true" />}
+                {step.short}
+                <span className="visually-hidden">{step.done ? " (done)" : " (on its way)"}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        {links}
       </div>
     </main>
-    {bottom.preview && (
-      <div className={styles.switcher} role="group" aria-label="Preview">
-        <button type="button" onClick={() => bottom.go(bottom.n - 1)} aria-label="Previous">
-          ‹
-        </button>
-        <span>
-          <b>{bottom.n}</b>/{BOTTOMS.length} · {BOTTOMS[bottom.n - 1]}
-        </span>
-        <button type="button" onClick={() => bottom.go(bottom.n + 1)} aria-label="Next">
-          ›
-        </button>
-      </div>
-    )}
     </>
   );
 }
