@@ -42,9 +42,9 @@ async function checkoutDetails(sessionId?: string): Promise<Details | null> {
 export default async function WelcomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string; plan?: string; email?: string; member?: string }>;
+  searchParams: Promise<{ session_id?: string; plan?: string; email?: string; member?: string; style?: string }>;
 }) {
-  const { session_id, plan: previewPlan, email: previewEmail, member: previewMember } = await searchParams;
+  const { session_id, plan: previewPlan, email: previewEmail, member: previewMember, style } = await searchParams;
   const details = await checkoutDetails(session_id);
   // Not paid yet (e.g. the page was opened early): back to the form.
   if (details?.status === "open") redirect(`/checkout?plan=${details.planId ?? ""}`);
@@ -69,6 +69,8 @@ export default async function WelcomePage({
         eta={trelloInviteEta}
         member={member ?? undefined}
         since={details?.since}
+        // ?style=lanyard previews the badge-on-a-lanyard version.
+        lanyard={style === "lanyard"}
       />
     </>
   );

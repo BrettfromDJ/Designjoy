@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { openAskBox } from "@/lib/ask-box";
 import { CheckIcon } from "../Icons";
+import { Lanyard } from "./Lanyard";
 import styles from "./Welcome.module.css";
 
 type Props = {
@@ -15,6 +16,8 @@ type Props = {
   member?: number;
   /** When they subscribed, in ms. */
   since?: number;
+  /** Show the membership as a badge on a lanyard instead of a card. */
+  lanyard?: boolean;
 };
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -24,7 +27,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
  * The page people land on after paying: a membership card for their plan
  * that flips in and tilts toward the pointer, with what happens next below.
  */
-export function Welcome({ planId, planName, email, inviteTo, eta, member, since }: Props) {
+export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const partner = planId === "design-partner";
   // Set after mount so "member since" falls back to the visitor's own date.
@@ -62,35 +65,50 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since 
     el.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
   }
 
+  // What's printed on the card (or badge).
+  const face = (
+    <>
+      <div className={styles.memberTop}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/icons/smile.svg" alt="" width={36} height={36} className={styles.memberSmile} draggable={false} />
+        {member && <span className={styles.label}>Member № {String(member).padStart(4, "0")}</span>}
+      </div>
+      <div>
+        <p className={styles.label}>Designjoy</p>
+        <p className={styles.memberPlan}>{planName ?? "Subscriber"}</p>
+      </div>
+      <div className={styles.memberFoot}>
+        <span>
+          <span className={styles.label}>Member since</span>
+          {joined ? `${MONTHS[joined.getMonth()]} ${joined.getFullYear()}` : "\u00a0"}
+        </span>
+        <span>
+          <span className={styles.label}>Requests</span>
+          One at a time, unlimited
+        </span>
+      </div>
+    </>
+  );
+
   return (
     <main className={styles.page}>
-      <div
-        className={styles.memberWrap}
-        onPointerMove={tilt}
-        onPointerLeave={() => ref.current?.removeAttribute("style")}
-      >
-        <div ref={ref} className={styles.member} data-plan={planId}>
-          <div className={styles.memberTop}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/smile.svg" alt="" width={36} height={36} className={styles.memberSmile} />
-            {member && <span className={styles.label}>Member № {String(member).padStart(4, "0")}</span>}
+      {lanyard ? (
+        <Lanyard light={partner}>
+          <div className={`${styles.member} ${styles.badge}`} data-plan={planId}>
+            {face}
           </div>
-          <div>
-            <p className={styles.label}>Designjoy</p>
-            <p className={styles.memberPlan}>{planName ?? "Subscriber"}</p>
-          </div>
-          <div className={styles.memberFoot}>
-            <span>
-              <span className={styles.label}>Member since</span>
-              {joined ? `${MONTHS[joined.getMonth()]} ${joined.getFullYear()}` : "\u00a0"}
-            </span>
-            <span>
-              <span className={styles.label}>Requests</span>
-              One at a time, unlimited
-            </span>
+        </Lanyard>
+      ) : (
+        <div
+          className={styles.memberWrap}
+          onPointerMove={tilt}
+          onPointerLeave={() => ref.current?.removeAttribute("style")}
+        >
+          <div ref={ref} className={styles.member} data-plan={planId}>
+            {face}
           </div>
         </div>
-      </div>
+      )}
 
       <header className={`${styles.header} ${styles.center}`}>
         <h1 className={styles.title}>

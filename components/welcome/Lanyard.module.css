@@ -1,0 +1,44 @@
+/* Spans the page's width and starts at the very top, so the strap hangs
+   from above the screen, behind the nav. */
+.stage {
+  position: relative;
+  width: 100vw;
+  height: min(640px, 78vh);
+  margin: -112px calc(50% - 50vw) 8px;
+  perspective: 900px;
+  touch-action: none;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The badge, placed and turned each frame by the physics. */
+.badge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 240px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  will-change: transform;
+}
+
+.badge[data-grabbing] {
+  cursor: grabbing;
+}
+
+@media (max-width: 559px) {
+  .stage {
+    height: min(560px, 72vh);
+    margin-top: -96px;
+  }
+
+  .badge {
+    width: 210px;
+  }
+}
