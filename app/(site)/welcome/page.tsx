@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Welcome, type WelcomeStep } from "@/components/welcome/Welcome";
+import { Welcome } from "@/components/welcome/Welcome";
 import { plans, trelloInviteEta } from "@/content/site";
 import { getStripe } from "@/lib/stripe";
 
@@ -41,29 +41,6 @@ export default async function WelcomePage({
   const plan = plans.find((p) => p.id === planId);
   const inviteTo = details?.trelloEmail ?? email;
 
-  const steps: WelcomeStep[] = [
-    {
-      title: "Payment confirmed",
-      body: email ? `Your receipt is on its way to ${email}.` : "Your receipt is on its way to your inbox.",
-      done: true,
-    },
-    {
-      title: "Trello invite",
-      body: `We'll invite ${inviteTo ?? "you"} to your board ${trelloInviteEta}.`,
-    },
-    ...(plan?.id === "design-partner"
-      ? [{ title: "Slack invite", body: "We'll add you to a shared Slack channel for day-to-day updates." }]
-      : []),
-    {
-      title: "Fill your Backlog",
-      body: "Add as many requests as you like, then move one into Current request. Briefs can be as detailed or as loose as you like.",
-    },
-    {
-      title: "First delivery",
-      body: "Most requests are delivered in about 48 hours, revisions in about 24.",
-    },
-  ];
-
   return (
     <Welcome
       planId={plan?.id}
@@ -71,7 +48,6 @@ export default async function WelcomePage({
       email={email}
       inviteTo={inviteTo}
       eta={trelloInviteEta}
-      steps={steps}
     />
   );
 }
