@@ -2,14 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 100%;
   padding: 24px;
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   color: var(--text);
-  text-align: left;
 }
 
 .label {
@@ -27,13 +25,6 @@
   font-size: 22px;
   line-height: 1.2;
   letter-spacing: -0.66px;
-}
-
-.sub {
-  margin: 0;
-  font-size: 13px;
-  letter-spacing: -0.36px;
-  color: var(--text-muted);
 }
 
 .button {
@@ -55,7 +46,7 @@
   transform: translateY(-1px);
 }
 
-/* 2. Next open times. */
+/* The next open times. */
 .head {
   display: flex;
   align-items: center;
@@ -150,182 +141,6 @@
 
 .more:hover {
   color: var(--text);
-}
-
-/* 3. Say hi: a message from the bot. */
-.hi {
-  gap: 16px;
-}
-
-.bubble {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.bubble p {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 4px 14px 14px 14px;
-  background: #161616;
-  font-size: 14px;
-  line-height: 1.45;
-  letter-spacing: -0.3px;
-}
-
-.face {
-  flex: none;
-  display: grid;
-  place-items: center;
-}
-
-/* 4. One line. */
-.row {
-  flex-direction: row;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
-  font: inherit;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.row:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.rowText {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 14px;
-  letter-spacing: -0.3px;
-}
-
-.rowText b {
-  font-weight: 500;
-}
-
-.rowText span {
-  color: var(--text-muted);
-}
-
-.rowArrow {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--text);
-  color: #000;
-  font-size: 15px;
-  transition: transform 0.15s;
-}
-
-.row:hover .rowArrow {
-  transform: translateX(2px);
-}
-
-/* 5. This week: the next five weekdays, lit where there's time open. */
-.week {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.day {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 10px 0 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  background: #121212;
-  color: var(--text);
-  font: inherit;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.day span {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.day b {
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: -0.5px;
-}
-
-.day i {
-  width: 4px;
-  height: 4px;
-  margin-top: 2px;
-  border-radius: 50%;
-  background: transparent;
-}
-
-.day[data-open] i {
-  background: #3ddc84;
-}
-
-.day:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.day:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-/* Preview-only switcher. */
-.switcher {
-  position: fixed;
-  left: 16px;
-  bottom: 40px;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 36px;
-  padding: 0 4px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--text-nav);
-  box-shadow: var(--shadow-float);
-}
-
-.switcher b {
-  font-weight: 500;
-  color: var(--text);
-}
-
-.switcher button {
-  width: 28px;
-  height: 28px;
-  border: 0;
-  border-radius: 50%;
-  background: #1a1a1a;
-  color: var(--text);
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.switcher span {
-  padding: 0 6px;
-  white-space: nowrap;
-}
-
-@media (max-width: 899px) {
-  .switcher {
-    bottom: 96px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
