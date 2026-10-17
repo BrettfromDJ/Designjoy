@@ -193,6 +193,10 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* The foil only paints inside the text's box, so give the "g" room to hang
+     below it without moving anything. */
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
   animation: foil 6s linear infinite;
 }
 
