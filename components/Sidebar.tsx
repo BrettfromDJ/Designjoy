@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { fixedCards, type WorkItem } from "@/content/site";
 import type { Highlight } from "@/lib/highlight-icons";
 import { openAskBox } from "@/lib/ask-box";
+import { CallCard } from "./CallCard";
 import { HighlightsCard } from "./HighlightsCard";
 import { HowItWorksCard } from "./HowItWorksCard";
 import { LabsCard } from "./LabsCard";
@@ -95,6 +96,8 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
         <HowItWorksCard />
         <ScopeBoard height={cardHeight("scope", 429)} />
         <TestimonialCard height={cardHeight("testimonial", 250)} />
+        {/* For anyone still unsure after pricing and the reviews. */}
+        <CallCard />
         {highlights.length > 0 && <HighlightsCard highlights={highlights} />}
         <LabsCard work={work} />
 
