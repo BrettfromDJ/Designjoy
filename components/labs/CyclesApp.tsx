@@ -212,8 +212,19 @@ export function CyclesApp() {
     });
   }
 
+  // Saves the GIF to the visitor's downloads.
+  const save = useCallback((url: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.click();
+  }, [fileName]);
+
+  // One click: makes the GIF and downloads it. Once made, and until anything
+  // changes, it just downloads it again.
   const makeGif = useCallback(async () => {
     const list = framesRef.current;
+    if (build.state === "ready") return save(build.result.url);
     if (!output || !list.length || build.state === "building") return;
     const count = list.length;
     const lines: LogLine[] = [
@@ -238,7 +249,9 @@ export function CyclesApp() {
         },
       });
       lines.push({ label: "Writing GIF", detail: formatBytes(blob.size) });
-      setBuild({ state: "ready", lines, result: { url: URL.createObjectURL(blob), bytes: blob.size } });
+      const url = URL.createObjectURL(blob);
+      setBuild({ state: "ready", lines, result: { url, bytes: blob.size } });
+      save(url);
     } catch (err) {
       setBuild({
         state: "error",
@@ -246,9 +259,9 @@ export function CyclesApp() {
         message: err instanceof Error ? err.message : "Couldn't make the GIF.",
       });
     }
-  }, [output, build.state, ms, loop, quality, fit, background]);
+  }, [output, build, save, ms, loop, quality, fit, background]);
 
-  // Paste images, and ⌘/Ctrl + Enter to make the GIF.
+  // Paste images, and ⌘/Ctrl + Enter to make and download the GIF.
   useEffect(() => {
     const onPaste = (e: ClipboardEvent) => {
       const files = Array.from(e.clipboardData?.files ?? []);
@@ -358,11 +371,6 @@ export function CyclesApp() {
               {output.width} × {output.height} · {(total / 1000).toFixed(1)}s
             </span>
           )}
-          <button type="button" className={styles.primary} disabled={empty || building} onClick={makeGif}>
-            {building ? "Making…" : "Make GIF"}
-            <kbd>⌘</kbd>
-            <kbd>↵</kbd>
-          </button>
         </div>
       </header>
 
@@ -598,25 +606,17 @@ export function CyclesApp() {
               )}
             </ol>
           )}
-          {build.state === "ready" ? (
-            <a className={styles.primaryWide} href={build.result.url} download={fileName}>
-              Download {fileName}
-            </a>
-          ) : (
-            <>
-              {build.state === "idle" && (
-                <div className={styles.estimate}>
-                  <span>Output</span>
-                  <span className={styles.value}>
-                    {output ? `${output.width} × ${output.height} · ${frames.length} frames` : "—"}
-                  </span>
-                </div>
-              )}
-              <button type="button" className={styles.primaryWide} disabled={empty || building} onClick={makeGif}>
-                {building ? "Making GIF…" : "Make GIF"}
-              </button>
-            </>
+          {build.state === "idle" && (
+            <div className={styles.estimate}>
+              <span>Output</span>
+              <span className={styles.value}>
+                {output ? `${output.width} × ${output.height} · ${frames.length} frames` : "—"}
+              </span>
+            </div>
           )}
+          <button type="button" className={styles.primaryWide} disabled={empty || building} onClick={makeGif}>
+            {building ? "Making GIF…" : build.state === "ready" ? "Download again" : "Download GIF"}
+          </button>
           {notice && (
             <p className={styles.notice} role="alert">
               {notice}

@@ -36,20 +36,6 @@
   color: var(--text-muted);
 }
 
-.app kbd {
-  display: inline-grid;
-  place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border: 1px solid var(--line-strong);
-  border-radius: 4px;
-  background: #0f0f0f;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-nav);
-}
-
 /* ---------- Top bar ---------- */
 .topbar {
   grid-column: 1 / -1;
@@ -160,38 +146,9 @@
   gap: 14px;
 }
 
-.primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 8px 0 12px;
-  background: #fff;
-  border: 0;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #000;
-  cursor: pointer;
-  transition: background-color 0.15s ease, opacity 0.15s ease;
-}
-
-.primary:hover {
-  background: #e8e8e8;
-}
-
-.primary:disabled,
 .primaryWide:disabled {
   opacity: 0.3;
   cursor: default;
-}
-
-.primary kbd {
-  height: 16px;
-  min-width: 16px;
-  background: #ececec;
-  border-color: #d8d8d8;
-  color: #666;
 }
 
 /* ---------- Panels ---------- */
@@ -803,11 +760,7 @@
   }
 
   .topActions > .mono,
-  .primary kbd {
-    display: none;
-  }
-
-  .center {
+    .center {
     order: -1;
   }
 
