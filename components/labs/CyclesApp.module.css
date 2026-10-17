@@ -40,7 +40,7 @@
 .topbar {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 16px;
   padding: 0 10px 0 14px;
@@ -90,53 +90,6 @@
 
 .crumbCurrent {
   color: var(--text);
-}
-
-.fileName {
-  display: flex;
-  align-items: baseline;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-  transition: background-color 0.15s ease;
-}
-
-.fileName:hover,
-.fileName:focus-within {
-  background: var(--hover);
-}
-
-.sizer {
-  display: inline-grid;
-}
-
-.sizer > * {
-  grid-area: 1 / 1;
-  min-width: 1ch;
-  max-width: 260px;
-}
-
-.sizer > span {
-  /* A little extra room for the caret. */
-  padding-right: 2px;
-  visibility: hidden;
-  white-space: pre;
-}
-
-.fileName input {
-  width: 100%;
-  padding: 0;
-  background: none;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  color: var(--text);
-}
-
-.ext {
-  /* Tucks under the sizer's caret room. */
-  margin-left: -2px;
-  color: var(--text-muted);
 }
 
 .topActions {
@@ -751,16 +704,14 @@
     position: sticky;
     top: 0;
     z-index: 5;
-    grid-template-columns: 1fr auto;
     height: 52px;
   }
 
-  .fileName {
+  .topActions > .mono {
     display: none;
   }
 
-  .topActions > .mono,
-    .center {
+  .center {
     order: -1;
   }
 

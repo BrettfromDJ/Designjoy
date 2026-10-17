@@ -27,6 +27,7 @@ type Build =
 const MAX_WIDTH = 2000;
 /** The preview canvas never needs to be bigger than this. */
 const PREVIEW_WIDTH = 1200;
+const FILE_NAME = "cycles.gif";
 const MIN_MS = 100;
 const MAX_MS = 5000;
 
@@ -63,7 +64,6 @@ export function CyclesApp() {
   const [fit, setFit] = useState<Fit>("fill");
   const [background, setBackground] = useState("#000000");
   const [loop, setLoop] = useState(true);
-  const [name, setName] = useState("cycles");
   const [current, setCurrent] = useState(0);
   const [build, setBuild] = useState<Build>({ state: "idle" });
   const [notice, setNotice] = useState<string | null>(null);
@@ -120,7 +120,6 @@ export function CyclesApp() {
     else if (right > tray.scrollLeft + tray.clientWidth - 24)
       tray.scrollTo({ left: right - tray.clientWidth + 24, behavior: "smooth" });
   }, [current, frames, draggingId]);
-  const fileName = `${name.trim() || "cycles"}.gif`;
 
   // Any change makes the last export stale.
   useEffect(() => {
@@ -216,9 +215,9 @@ export function CyclesApp() {
   const save = useCallback((url: string) => {
     const link = document.createElement("a");
     link.href = url;
-    link.download = fileName;
+    link.download = FILE_NAME;
     link.click();
-  }, [fileName]);
+  }, []);
 
   // One click: makes the GIF and downloads it. Once made, and until anything
   // changes, it just downloads it again.
@@ -350,21 +349,6 @@ export function CyclesApp() {
           <span className={styles.slash}>/</span>
           <span className={styles.crumbCurrent}>Cycles</span>
         </div>
-        <label className={styles.fileName}>
-          <span className="visually-hidden">File name</span>
-          {/* The hidden copy sizes the field to its text. */}
-          <span className={styles.sizer}>
-            <span aria-hidden="true">{name || " "}</span>
-            <input
-              id="cycles-name"
-              value={name}
-              onChange={(e) => setName(e.target.value.replace(/[\\/:*?"<>|]/g, ""))}
-              spellCheck={false}
-              size={1}
-            />
-          </span>
-          <span className={styles.ext}>.gif</span>
-        </label>
         <div className={styles.topActions}>
           {output && (
             <span className={styles.mono}>
@@ -497,7 +481,7 @@ export function CyclesApp() {
       {/* Inspector */}
       <aside className={styles.right} aria-label="Settings">
         <div className={styles.bar}>
-          <span className={styles.barTitle}>{fileName}</span>
+          <span className={styles.barTitle}>{FILE_NAME}</span>
           <span className={styles.label}>{build.state === "ready" ? "Ready" : "Draft"}</span>
         </div>
         <div className={styles.props}>

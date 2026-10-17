@@ -1,18 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { WorkItem } from "@/content/site";
-import { CyclesDemo } from "./CyclesDemo";
 import styles from "./LabsCard.module.css";
 
-const FRAMES = 3;
+const FRAMES = 4;
+const FRAME_MS = 900;
 
 /**
- * The Designjoy Labs tile. Its preview is a small animated replica of the
- * Cycles tool turning a few pieces of work into a GIF.
+ * The Designjoy Labs tile. Its preview plays a few pieces of work as a
+ * sequence, the way the Cycles tool turns images into a GIF.
  */
 export function LabsCard({ work }: { work: WorkItem[] }) {
   const frames = work.filter((w) => w.kind === "image").slice(0, FRAMES);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (frames.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = setInterval(() => setCurrent((i) => (i + 1) % frames.length), FRAME_MS);
+    return () => clearInterval(timer);
+  }, [frames.length]);
 
   return (
     <Link href="/labs/cycles" className={styles.card}>
@@ -23,7 +32,22 @@ export function LabsCard({ work }: { work: WorkItem[] }) {
         </h2>
       </div>
 
-      <CyclesDemo images={frames.map((f) => f.src)} />
+      <div className={styles.preview} aria-hidden="true">
+        {frames.map((frame, i) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={frame.id}
+            src={frame.src}
+            alt=""
+            loading="lazy"
+            className={styles.frame}
+            data-on={i === current || undefined}
+          />
+        ))}
+        <span className={styles.counter}>
+          GIF · {current + 1}/{frames.length || 1}
+        </span>
+      </div>
 
       <div className={styles.tool}>
         <span>
