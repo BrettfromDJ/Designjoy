@@ -370,10 +370,17 @@
   gap: 16px;
 }
 
-/* Two columns on wider screens: the badge swinging in the left half, the
-   welcome, progress and billing beside it, centred top to bottom. */
+/* ---------- Layouts for wider screens (?layout=1…5) ---------- */
+
+/* 2 and 3. Two columns: the badge swinging in one half, hanging level with
+   the welcome, progress and billing in the other. */
+.giant {
+  display: none;
+}
+
 @media (min-width: 900px) {
-  .split {
+  .split,
+  .splitRight {
     display: grid;
     grid-template-columns: 1fr 412px;
     align-items: center;
@@ -384,17 +391,164 @@
     padding: 0 32px;
   }
 
-  .split .info {
+  .splitRight {
+    grid-template-columns: 412px 1fr;
+  }
+
+  .splitRight > :first-child {
+    order: 2;
+  }
+
+  .split .info,
+  .splitRight .info {
     padding: 96px 0 120px;
   }
 
-  .split .title {
+  .split .title,
+  .splitRight .title {
     font-size: 30px;
     letter-spacing: -1px;
   }
 
-  .split .sub {
+  .split .sub,
+  .splitRight .sub {
     font-size: 14px;
+  }
+
+  /* 4. Poster: a giant "You're in." behind the swinging badge, the rest
+     side by side underneath. */
+  .poster {
+    max-width: 880px;
+  }
+
+  .giant {
+    position: absolute;
+    left: 50%;
+    top: 22vh;
+    z-index: -1;
+    display: block;
+    margin: 0;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: clamp(120px, 16vw, 240px);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+    color: #fff;
+    opacity: 0.95;
+    pointer-events: none;
+    animation: giant-in 1.2s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  @keyframes giant-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 30px);
+      filter: blur(12px);
+    }
+  }
+
+  .poster .info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .poster .header {
+    grid-column: 1 / -1;
+  }
+
+  /* The giant type already says it. */
+  .poster .title .muted {
+    display: none;
+  }
+
+  /* 5. Editorial: big left-aligned type, the badge in a narrow column on
+     the right. */
+  .editorial {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    align-items: center;
+    gap: 40px;
+    max-width: 1160px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0 40px;
+  }
+
+  .editorial > :first-child {
+    order: 2;
+  }
+
+  .editorial .info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 16px;
+    padding: 120px 0;
+  }
+
+  .editorial .header {
+    grid-column: 1 / -1;
+    margin-bottom: 24px;
+  }
+
+  .editorial .title {
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .editorial .sub {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+}
+
+/* Preview-only switcher. */
+.switcher {
+  position: fixed;
+  left: 16px;
+  bottom: 40px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 4px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-nav);
+  box-shadow: var(--shadow-float);
+}
+
+.switcher b {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.switcher button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.switcher span {
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 899px) {
+  .switcher {
+    top: 80px;
+    bottom: auto;
   }
 }
 

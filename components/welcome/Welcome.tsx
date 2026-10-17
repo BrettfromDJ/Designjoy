@@ -18,11 +18,44 @@ type Props = {
   since?: number;
   /** Show the membership as a badge on a lanyard (the default) or a card. */
   lanyard?: boolean;
-  /** Two columns on wider screens: the badge on the left, the rest beside it. */
-  split?: boolean;
+
   /** Portfolio images, for the wall behind the page. */
   art?: string[];
 };
+
+/*
+ * Layouts for the page on wider screens, previewed with ?layout=1…5 and a
+ * small switcher. Without ?layout it's stacked (option 1). Phones always stack.
+ */
+const LAYOUTS = [
+  { key: "stacked", name: "Stacked" },
+  { key: "split", name: "Badge left, text right" },
+  { key: "splitRight", name: "Text left, badge right" },
+  { key: "poster", name: "Poster" },
+  { key: "editorial", name: "Editorial" },
+] as const;
+
+function useLayout() {
+  const [n, setN] = useState(1);
+  const [preview, setPreview] = useState(false);
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("layout");
+    // Accepts a number, or the earlier ?layout=split.
+    const v = raw === "split" ? 2 : Number(raw);
+    if (v >= 1 && v <= LAYOUTS.length) {
+      setN(v);
+      setPreview(true);
+    }
+  }, []);
+  const go = (to: number) => {
+    const next = ((to - 1 + LAYOUTS.length) % LAYOUTS.length) + 1;
+    const url = new URL(window.location.href);
+    url.searchParams.set("layout", String(next));
+    window.history.replaceState(null, "", url);
+    setN(next);
+  };
+  return { n, preview, go };
+}
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -32,13 +65,17 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
  * on a lanyard (or, with ?style=card, a card), with what happens next below
  * and their new design team's work drifting behind.
  */
-export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true, split = false, art = [] }: Props) {
+export function Welcome({ planId, planName, email, inviteTo, eta, member, since, lanyard = true, art = [] }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const partner = planId === "design-partner";
   // Set after mount so "member since" falls back to the visitor's own date.
   const [today, setToday] = useState<Date | null>(null);
   useEffect(() => setToday(new Date()), []);
   const joined = since ? new Date(since) : today;
+  const layout = useLayout();
+  const kind = LAYOUTS[layout.n - 1].key;
+  // The layouts with the badge in a column of its own.
+  const column = kind === "split" || kind === "splitRight" || kind === "editorial";
 
   // Where they are: subscribed, then the invites on their way. Slack is
   // for Design Partner only.
@@ -110,9 +147,14 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
         ))}
       </div>
     )}
-    <main className={split ? `${styles.page} ${styles.split}` : styles.page}>
+    <main className={kind === "stacked" ? styles.page : `${styles.page} ${styles[kind]}`}>
+      {kind === "poster" && (
+        <p className={styles.giant} aria-hidden="true">
+          You&apos;re in.
+        </p>
+      )}
       {lanyard ? (
-        <Lanyard partner={partner} fill={split}>
+        <Lanyard key={kind} partner={partner} fill={column}>
           <div className={`${styles.member} ${styles.badge}`} data-plan={planId}>
             <span className={styles.slot} aria-hidden="true" />
             {face}
@@ -131,7 +173,7 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
       )}
 
       <div className={styles.info}>
-      <header className={split ? styles.header : `${styles.header} ${styles.center}`}>
+      <header className={column ? styles.header : `${styles.header} ${styles.center}`}>
         <h1 className={styles.title}>
           Welcome to the club. <span className={styles.muted}>You&apos;re in.</span>
         </h1>
@@ -175,6 +217,19 @@ export function Welcome({ planId, planName, email, inviteTo, eta, member, since,
       </section>
       </div>
     </main>
+    {layout.preview && (
+      <div className={styles.switcher} role="group" aria-label="Layout preview">
+        <button type="button" onClick={() => layout.go(layout.n - 1)} aria-label="Previous layout">
+          ‹
+        </button>
+        <span>
+          <b>{layout.n}</b>/{LAYOUTS.length} · {LAYOUTS[layout.n - 1].name}
+        </span>
+        <button type="button" onClick={() => layout.go(layout.n + 1)} aria-label="Next layout">
+          ›
+        </button>
+      </div>
+    )}
     </>
   );
 }
