@@ -55,8 +55,9 @@
   }
 }
 
-/* Pages that put the nav at the top (welcome, terms, privacy) have the ask box at
-   the bottom instead, opening upward the same way. */
+/* With the nav at the top (on phones and tablets, and on the welcome, terms
+   and privacy pages), the ask box is at the bottom instead, opening upward
+   the same way. */
 :global(body[data-nav-top]) .wrapper {
   top: auto;
   bottom: 32px;
@@ -73,8 +74,26 @@
   border-radius: 0 0 26px 26px;
 }
 
+@media (max-width: 819px) {
+  .wrapper {
+    top: auto;
+    bottom: 32px;
+  }
+
+  .shell[data-open="true"] {
+    animation-name: grow-from-bottom;
+  }
+
+  .shell[data-open="true"] .box {
+    order: 1;
+    border-bottom: 0;
+    border-top: 1px solid var(--border-subtle);
+    border-radius: 0 0 26px 26px;
+  }
+}
+
 @media (max-width: 559px) {
-  :global(body[data-nav-top]) .wrapper {
+  .wrapper {
     bottom: 16px;
   }
 }

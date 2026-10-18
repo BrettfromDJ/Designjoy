@@ -148,17 +148,25 @@
   }
 }
 
-/* Pages that ask for it (the welcome page) have the nav at the top and the
-   ask box at the bottom. */
+/* On phones and tablets, and on pages that ask for it (welcome, terms,
+   privacy), the nav is at the top and the ask box at the bottom. */
 :global(body[data-nav-top]) .nav,
 :global(body[data-nav-top]) .shadow {
   top: 32px;
   bottom: auto;
 }
 
+@media (max-width: 819px) {
+  .nav,
+  .shadow {
+    top: 32px;
+    bottom: auto;
+  }
+}
+
 @media (max-width: 559px) {
-  :global(body[data-nav-top]) .nav,
-  :global(body[data-nav-top]) .shadow {
+  .nav,
+  .shadow {
     top: 16px;
   }
 }
