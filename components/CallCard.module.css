@@ -127,8 +127,21 @@
   }
 }
 
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.zone {
+  font-size: 12px;
+  letter-spacing: -0.36px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .more {
-  align-self: flex-start;
   padding: 0;
   border: 0;
   background: none;

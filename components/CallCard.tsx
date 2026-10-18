@@ -44,6 +44,13 @@ const fmtDay = (iso: string) => {
  */
 export function CallCard() {
   const days = useSlots();
+  // The visitor's time zone, which the times are shown in, e.g. "Los Angeles
+  // time". Set after mount, since the server doesn't know it.
+  const [zone, setZone] = useState("");
+  useEffect(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz) setZone(`${tz.split("/").pop()?.replace(/_/g, " ")} time`);
+  }, []);
   // The first few open times, a couple from each day.
   const next = days
     ? Object.keys(days)
@@ -80,9 +87,12 @@ export function CallCard() {
                 ))
               : [0, 1, 2].map((i) => <span key={i} className={styles.slotEmpty} aria-hidden="true" />)}
           </div>
-          <button type="button" className={styles.more} onClick={() => bookCall()}>
-            See all times <span aria-hidden="true">→</span>
-          </button>
+          <div className={styles.foot}>
+            <button type="button" className={styles.more} onClick={() => bookCall()}>
+              See all times <span aria-hidden="true">→</span>
+            </button>
+            {zone && <span className={styles.zone}>{zone}</span>}
+          </div>
         </>
       )}
     </div>
