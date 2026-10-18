@@ -47,6 +47,11 @@
   color: var(--text-muted);
 }
 
+/* The smile sits at the top of its artwork; nudge it to the middle of the line. */
+.crumbs img {
+  transform: translateY(3px);
+}
+
 .crumbs i {
   font-style: normal;
   opacity: 0.5;
