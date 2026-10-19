@@ -11,6 +11,13 @@
     transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* Hidden while a piece of work is open (see Lightbox), so it has the room. */
+:global(body[data-viewing]) .wrapper {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* On the homepage the big ask box in the hero stands in for this one, so it
    stays tucked away until the hero has scrolled out of view (or it's opened). */
 :global(body[data-hero-ask]) .wrapper:not([data-open]) {

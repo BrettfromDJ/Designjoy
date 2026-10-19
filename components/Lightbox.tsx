@@ -53,14 +53,17 @@ export function Lightbox({
     return () => window.removeEventListener("keydown", onKey);
   }, [index, count, onIndex, onClose]);
 
-  // Lock page scroll while open, and hand focus back to the tile on close.
+  // Lock page scroll while open, hide the ask box so the work has the room
+  // (see AskBox.module.css), and hand focus back to the tile on close.
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.body.dataset.viewing = "";
     closeRef.current?.focus();
     return () => {
       document.body.style.overflow = overflow;
+      delete document.body.dataset.viewing;
       previous?.focus();
     };
   }, []);

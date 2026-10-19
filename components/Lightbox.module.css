@@ -7,7 +7,7 @@
   z-index: 50;
   display: grid;
   place-items: center;
-  padding: 96px 88px 88px;
+  padding: 24px 88px;
   background: var(--bg);
   animation: overlay-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -16,12 +16,10 @@
   :global(body[data-sidebar]) .overlay {
     right: calc(var(--sidebar) + var(--gap));
     z-index: 9;
-    padding: 24px 88px 96px;
   }
 
   :global(body[data-sidebar]) .media {
     --max-w: calc(100vw - var(--sidebar) - var(--gap) - 176px);
-    --max-h: calc(100dvh - 160px);
   }
 
   :global(body[data-sidebar]) .close {
@@ -58,7 +56,7 @@
    proportions (--ratio, set inline), even when that means enlarging it. */
 .media {
   --max-w: calc(100vw - 176px);
-  --max-h: calc(100dvh - 210px);
+  --max-h: calc(100dvh - 48px);
   display: block;
   width: min(var(--max-w), var(--max-h) * var(--ratio));
   height: auto;
