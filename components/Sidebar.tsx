@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { LEGAL } from "@/content/legal";
 import { fixedCards, type WorkItem } from "@/content/site";
 import type { Highlight } from "@/lib/highlight-icons";
 import { openAskBox } from "@/lib/ask-box";
 import { CallCard } from "./CallCard";
+import { EmailCard } from "./EmailCard";
 import { HighlightsCard } from "./HighlightsCard";
 import { HowItWorksCard } from "./HowItWorksCard";
 import { LabsCard } from "./LabsCard";
@@ -94,6 +94,7 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
       <div ref={innerRef} className={styles.inner}>
         <h1 className="visually-hidden">Designjoy: design, on subscription</h1>
         <PricingCard />
+        <EmailCard />
         <HowItWorksCard />
         <ScopeBoard height={cardHeight("scope", 429)} />
         <TestimonialCard height={cardHeight("testimonial", 250)} />
@@ -103,9 +104,6 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
         <LabsCard work={work} />
 
         <footer className={styles.legal}>
-          <a href={`mailto:${LEGAL.email}`} className={styles.email}>
-            {LEGAL.email}
-          </a>
           <span>© {new Date().getFullYear()} Designjoy</span>
           <button type="button" onClick={() => openAskBox("chat")}>
             FAQs

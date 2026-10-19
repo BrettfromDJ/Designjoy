@@ -58,8 +58,7 @@
 
 .legal {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
+  gap: 14px;
   margin: 4px 0 0;
   padding: 0 8px 8px;
   font-size: 12px;
@@ -69,11 +68,6 @@
 
 .legal span {
   margin-right: auto;
-}
-
-/* The email gets a line of its own, above the rest. */
-.legal .email {
-  flex-basis: 100%;
 }
 
 .legal a,
