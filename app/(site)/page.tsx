@@ -1,4 +1,5 @@
 import { MasonryGrid } from "@/components/MasonryGrid";
+import { ScopeBanner } from "@/components/ScopeBanner";
 import { Sidebar } from "@/components/Sidebar";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
@@ -31,6 +32,7 @@ export default async function Home() {
           in their sidebar-layout spots instead of jumping there on load. */}
       <script dangerouslySetInnerHTML={{ __html: 'document.body.dataset.sidebar=""' }} />
       <Sidebar work={work} highlights={highlights} />
+      <ScopeBanner />
       <MasonryGrid work={work} highlights={highlights} workOnly />
     </main>
   );
