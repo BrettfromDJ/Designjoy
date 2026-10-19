@@ -42,3 +42,50 @@
     margin-right: 0;
   }
 }
+
+/* Preview-only switcher for the photo viewer options. Above the viewer. */
+.switcher {
+  position: fixed;
+  left: 16px;
+  bottom: 40px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 4px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-nav);
+  box-shadow: var(--shadow-float);
+}
+
+.switcher b {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.switcher button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.switcher span {
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 819px) {
+  .switcher {
+    bottom: auto;
+    top: 88px;
+  }
+}

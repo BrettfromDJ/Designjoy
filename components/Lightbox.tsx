@@ -8,16 +8,22 @@ import styles from "./Lightbox.module.css";
 
 const isGif = (src: string) => src.toLowerCase().split("?")[0].endsWith(".gif");
 
+/** Preview options for opening work without the dimmed overlay (see MasonryGrid). */
+export const LIGHTBOX_VARIANTS = ["In the work area", "Sheet", "Window", "Filmstrip"] as const;
+
 export function Lightbox({
   items,
   index,
   onIndex,
   onClose,
+  variant = 0,
 }: {
   items: WorkItem[];
   index: number;
   onIndex: (index: number) => void;
   onClose: () => void;
+  /** 0 is the usual viewer; 1… are the previewed options. */
+  variant?: number;
 }) {
   const item = items[index];
   const count = items.length;
@@ -65,10 +71,30 @@ export function Lightbox({
     };
   }, []);
 
+  const closeButton = (
+    <button
+      ref={closeRef}
+      type="button"
+      className={styles.close}
+      onClick={onClose}
+      aria-label="Close"
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path
+          d="M1 1l12 12M13 1L1 13"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    </button>
+  );
+
   return (
     <div
       ref={dialogRef}
       className={styles.overlay}
+      data-variant={variant || undefined}
       role="dialog"
       aria-modal="true"
       aria-label={`${item.title} (${index + 1} of ${count})`}
@@ -85,22 +111,7 @@ export function Lightbox({
         if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
       }}
     >
-      <button
-        ref={closeRef}
-        type="button"
-        className={styles.close}
-        onClick={onClose}
-        aria-label="Close"
-      >
-        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-          <path
-            d="M1 1l12 12M13 1L1 13"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
+      {variant !== 3 && closeButton}
 
       <figure
         key={item.id}
@@ -108,6 +119,20 @@ export function Lightbox({
         className={styles.stage}
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
+        {variant === 3 && (
+          <div className={styles.titlebar}>
+            <span className={styles.dots} aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            <span className={styles.titleText}>{item.title || "Untitled"}</span>
+            <span className={styles.counter}>
+              {index + 1} / {count}
+            </span>
+            {closeButton}
+          </div>
+        )}
         {item.kind === "video" ? (
           <video
             src={item.src}
@@ -160,6 +185,29 @@ export function Lightbox({
           </span>
         </figcaption>
       </figure>
+
+      {/* Filmstrip: every piece along the bottom, to jump straight to one. */}
+      {variant === 4 && (
+        <div className={styles.strip} role="group" aria-label="All work">
+          {items.map((w, i) => (
+            <button
+              key={w.id}
+              type="button"
+              className={styles.thumb}
+              aria-current={i === index || undefined}
+              aria-label={`${w.title || "Work"} (${i + 1} of ${count})`}
+              ref={i === index ? (el) => el?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" }) : undefined}
+              onClick={() => onIndex(i)}
+            >
+              {w.kind === "video" ? (
+                <video src={w.src} muted playsInline preload="metadata" />
+              ) : (
+                <Image src={w.src} alt="" width={96} height={72} sizes="96px" unoptimized={isGif(w.src)} />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {count > 1 && (
         <>

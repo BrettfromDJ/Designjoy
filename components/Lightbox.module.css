@@ -162,3 +162,281 @@
 .frame[data-hidden] {
   visibility: hidden;
 }
+
+/* ---------- Preview options (?view=1…4): no dimmed overlay ---------- */
+
+/* 1. In the work area: the piece replaces the grid where it is, on the page's
+   own background, with the nav and sidebar still in place beside it. */
+.overlay[data-variant="1"] {
+  background: var(--bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 96px 88px 88px;
+  animation: area-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes area-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.overlay[data-variant="1"] .media {
+  --max-w: calc(100vw - 176px);
+  --max-h: calc(100dvh - 210px);
+}
+
+@media (min-width: 820px) {
+  :global(body[data-sidebar]) .overlay[data-variant="1"] {
+    right: calc(var(--sidebar) + var(--gap));
+    z-index: 9;
+    padding: 24px 88px 96px;
+  }
+
+  :global(body[data-sidebar]) .overlay[data-variant="1"] .media {
+    --max-w: calc(100vw - var(--sidebar) - var(--gap) - 176px);
+    --max-h: calc(100dvh - 160px);
+  }
+
+  :global(body[data-sidebar]) .overlay[data-variant="1"] .close {
+    top: 24px;
+  }
+}
+
+/* 2. Sheet: a panel slides up over the page, which stays visible above it. */
+.overlay[data-variant="2"] {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  place-items: end stretch;
+}
+
+.overlay[data-variant="2"] .stage {
+  position: relative;
+  height: calc(100dvh - 56px);
+  max-height: none;
+  justify-content: center;
+  padding: 48px 88px 32px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6);
+  animation: sheet-in 0.5s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+/* A grab handle at the top of the sheet. */
+.overlay[data-variant="2"] .stage::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 40px;
+  height: 4px;
+  margin-left: -20px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.overlay[data-variant="2"] .media {
+  --max-w: calc(100vw - 176px);
+  --max-h: calc(100dvh - 190px);
+  box-shadow: none;
+}
+
+.overlay[data-variant="2"] .close {
+  top: 76px;
+}
+
+/* 3. Window: a floating window over the page, like a quick look. The page
+   isn't dimmed at all. */
+.overlay[data-variant="3"] {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.overlay[data-variant="3"] .stage {
+  gap: 0;
+  padding: 0 8px 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+  animation: window-in 0.45s cubic-bezier(0.2, 1.2, 0.3, 1);
+}
+
+@keyframes window-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+}
+
+.overlay[data-variant="3"] .media {
+  --max-w: min(1100px, calc(100vw - 210px));
+  --max-h: calc(100dvh - 210px);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.overlay[data-variant="3"] .caption {
+  display: none;
+}
+
+.titlebar {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 6px;
+  font-size: 13px;
+  letter-spacing: -0.39px;
+}
+
+/* The window's close button sits in its title bar. */
+.titlebar .close {
+  position: static;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  background: none;
+}
+
+.titlebar .close:hover {
+  background: #1f1f1f;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2a2a2a;
+}
+
+.titleText {
+  flex: 1;
+  text-align: center;
+  color: var(--text-nav);
+}
+
+/* 4. Filmstrip: a full-screen viewer on the page's background, with every
+   piece in a strip along the bottom. */
+.overlay[data-variant="4"] {
+  background: var(--bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 56px 96px 140px;
+}
+
+.overlay[data-variant="4"] .media {
+  --max-h: calc(100dvh - 250px);
+  box-shadow: none;
+}
+
+.overlay[data-variant="4"] .arrow {
+  top: calc(50% - 50px);
+}
+
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  display: flex;
+  gap: 8px;
+  padding: 6px max(24px, calc(50% - 48px));
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb {
+  flex: none;
+  width: 72px;
+  height: 54px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border: 0;
+  border-radius: 8px;
+  opacity: 0.4;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: opacity 0.2s ease, outline-color 0.2s ease, transform 0.2s ease;
+}
+
+.thumb:hover {
+  opacity: 0.8;
+}
+
+.thumb[aria-current] {
+  opacity: 1;
+  outline-color: #fff;
+  transform: scale(1.06);
+}
+
+.thumb img,
+.thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 559px) {
+  .overlay[data-variant="2"] .stage {
+    padding: 48px 16px 96px;
+  }
+
+  .overlay[data-variant="2"] .media,
+  .overlay[data-variant="1"] .media {
+    --max-w: calc(100vw - 32px);
+  }
+
+  .overlay[data-variant="1"] {
+    padding: 80px 16px 96px;
+  }
+
+  .overlay[data-variant="3"] .media {
+    --max-w: calc(100vw - 50px);
+  }
+
+  .overlay[data-variant="4"] {
+    padding: 72px 16px 180px;
+  }
+
+  .overlay[data-variant="4"] .arrow {
+    bottom: 104px;
+    top: auto;
+  }
+
+  .overlay[data-variant="4"] .media {
+    --max-h: calc(100dvh - 290px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay[data-variant] .stage {
+    animation: none;
+  }
+}
