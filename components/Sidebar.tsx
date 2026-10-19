@@ -93,11 +93,11 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
       <div ref={innerRef} className={styles.inner}>
         <h1 className="visually-hidden">Designjoy: design, on subscription</h1>
         <PricingCard />
+        {/* For anyone not ready to subscribe: a call, or an email. */}
+        <CallCard />
         <HowItWorksCard />
         <ScopeBoard height={cardHeight("scope", 429)} />
         <TestimonialCard height={cardHeight("testimonial", 250)} />
-        {/* For anyone still unsure after pricing and the reviews. */}
-        <CallCard />
         {highlights.length > 0 && <HighlightsCard highlights={highlights} />}
         <LabsCard work={work} />
 
