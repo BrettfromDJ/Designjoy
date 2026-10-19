@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LEGAL } from "@/content/legal";
 import { bookCall } from "@/lib/ask-box";
 import styles from "./CallCard.module.css";
 
@@ -41,6 +42,7 @@ const fmtDay = (iso: string) => {
  * "Not sure yet?": the next few open times for the 15 min intro call.
  * Tapping one opens booking with it already picked. With no times open
  * this week (or the calendar unreachable), a plain button opens booking.
+ * Below, the email address, for anyone who'd rather write.
  */
 export function CallCard() {
   const days = useSlots();
@@ -52,6 +54,17 @@ export function CallCard() {
     if (tz) setZone(`${tz.split("/").pop()?.replace(/_/g, " ")} time`);
   }, []);
   // The first few open times, a couple from each day.
+  const [copied, setCopied] = useState(false);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(LEGAL.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = `mailto:${LEGAL.email}`;
+    }
+  }
+
   const next = days
     ? Object.keys(days)
         .sort()
@@ -95,6 +108,17 @@ export function CallCard() {
           </div>
         </>
       )}
+
+      {/* Or skip the call and email. */}
+      <div className={styles.email}>
+        <span className={styles.emailLabel}>Prefer email?</span>
+        <a href={`mailto:${LEGAL.email}`} className={styles.address}>
+          {LEGAL.email}
+        </a>
+        <button type="button" className={styles.copy} onClick={copy} aria-live="polite">
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
     </div>
   );
 }
