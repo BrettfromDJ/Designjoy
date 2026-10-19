@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useState, useSyncExternalStore } from "react";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import type { Highlight } from "@/lib/highlight-icons";
 import { layoutMasonry } from "@/lib/masonry";
@@ -9,7 +8,7 @@ import { HighlightsCard } from "./HighlightsCard";
 import { HowItWorksCard } from "./HowItWorksCard";
 import { InfoCard } from "./InfoCard";
 import { LabsCard } from "./LabsCard";
-import { LIGHTBOX_VARIANTS, Lightbox } from "./Lightbox";
+import { Lightbox } from "./Lightbox";
 import { PricingCard } from "./PricingCard";
 import { ScopeBoard } from "./ScopeBoard";
 import { TestimonialCard } from "./TestimonialCard";
@@ -55,27 +54,6 @@ function subscribe(onChange: () => void) {
   return () => lists.forEach((list) => list.removeEventListener("change", onChange));
 }
 
-/*
- * Ways to open a piece of work other than the dimmed lightbox, previewed
- * with ?view=1…4 and a small switcher. Without ?view it opens as now.
- */
-function useView() {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    const v = Number(new URLSearchParams(window.location.search).get("view"));
-    if (v >= 1 && v <= LIGHTBOX_VARIANTS.length) setN(v);
-  }, []);
-  const go = (to: number) => {
-    const count = LIGHTBOX_VARIANTS.length;
-    const next = ((to - 1 + count) % count) + 1;
-    const url = new URL(window.location.href);
-    url.searchParams.set("view", String(next));
-    window.history.replaceState(null, "", url);
-    setN(next);
-  };
-  return [n, go] as const;
-}
-
 /** `workOnly` leaves out the fixed cards, for the sidebar layout where they live on the left. */
 export function MasonryGrid({
   work,
@@ -93,7 +71,6 @@ export function MasonryGrid({
   );
   const columns = layoutMasonry(columnCount, work, workOnly ? [] : visibleFixedCards(highlights));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [view, goView] = useView();
 
   return (
     <>
@@ -141,24 +118,8 @@ export function MasonryGrid({
           index={openIndex}
           onIndex={setOpenIndex}
           onClose={() => setOpenIndex(null)}
-          variant={view}
         />
       )}
-      {view > 0 &&
-        createPortal(
-          <div className={styles.switcher} role="group" aria-label="Photo viewer preview">
-            <button type="button" onClick={() => goView(view - 1)} aria-label="Previous">
-              ‹
-            </button>
-            <span>
-              <b>{view}</b>/{LIGHTBOX_VARIANTS.length} · {LIGHTBOX_VARIANTS[view - 1]}
-            </span>
-            <button type="button" onClick={() => goView(view + 1)} aria-label="Next">
-              ›
-            </button>
-          </div>,
-          document.body,
-        )}
     </>
   );
 }
