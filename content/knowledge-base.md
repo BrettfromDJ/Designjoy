@@ -13,6 +13,11 @@ average of 48 hours.
 
 <!-- TODO: add a short company story, who does the work, and who it's for. -->
 
+## Contact
+
+Email hello@designjoy.co for anything at all. Prospective clients can also
+book a 15 minute intro call.
+
 ## Plans
 
 - **Monthly Club** — $4,995/month

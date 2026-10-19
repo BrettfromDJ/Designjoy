@@ -1,5 +1,6 @@
 import { HeroAsk } from "@/components/HeroAsk";
 import { MasonryGrid } from "@/components/MasonryGrid";
+import { LEGAL } from "@/content/legal";
 import { sampleWork, type WorkItem } from "@/content/site";
 import { getFaqs } from "@/lib/faqs";
 import { getHighlights } from "@/lib/highlights";
@@ -41,6 +42,7 @@ export default async function ClassicHome() {
       <MasonryGrid work={work} highlights={highlights} />
       <footer className={styles.footer}>
         <span>© {new Date().getFullYear()} Designjoy</span>
+        <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>
         <Link href="/terms">Terms</Link>
         <Link href="/privacy">Privacy</Link>
       </footer>

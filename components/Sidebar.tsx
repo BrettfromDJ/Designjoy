@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { LEGAL } from "@/content/legal";
 import { fixedCards, type WorkItem } from "@/content/site";
 import type { Highlight } from "@/lib/highlight-icons";
 import { openAskBox } from "@/lib/ask-box";
@@ -102,6 +103,9 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
         <LabsCard work={work} />
 
         <footer className={styles.legal}>
+          <a href={`mailto:${LEGAL.email}`} className={styles.email}>
+            {LEGAL.email}
+          </a>
           <span>© {new Date().getFullYear()} Designjoy</span>
           <button type="button" onClick={() => openAskBox("chat")}>
             FAQs
