@@ -74,15 +74,7 @@ export function CallCard() {
 
   return (
     <div className={styles.card}>
-      <div className={styles.head}>
-        <p className={styles.label}>Not sure yet?</p>
-        {next && next.length > 0 && (
-          <span className={styles.live}>
-            <span className={styles.dot} aria-hidden="true" />
-            Open this week
-          </span>
-        )}
-      </div>
+      <p className={styles.label}>Not sure yet?</p>
       <p className={styles.title}>Grab 15 minutes with us.</p>
       {next && next.length === 0 ? (
         <button type="button" className={styles.button} onClick={() => bookCall()}>
