@@ -67,22 +67,6 @@
   box-shadow: var(--shadow-card);
 }
 
-.caption {
-  display: flex;
-  gap: 12px;
-  font-size: 13px;
-  letter-spacing: -0.39px;
-  color: var(--text-nav);
-}
-
-.counter {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.6;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
 .close,
 .arrow {
   position: absolute;

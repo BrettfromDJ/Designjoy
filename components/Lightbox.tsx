@@ -153,12 +153,6 @@ export function Lightbox({
             ))}
           </span>
         )}
-        <figcaption className={styles.caption}>
-          {item.title && <span>{item.title}</span>}
-          <span className={styles.counter}>
-            {index + 1} / {count}
-          </span>
-        </figcaption>
       </figure>
 
       {count > 1 && (
