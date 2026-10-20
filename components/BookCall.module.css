@@ -294,3 +294,80 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .avatar {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:global(html[data-theme="light"]) .arrows button:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+   color: var(--text);
+}
+
+:global(html[data-theme="light"]) .day {
+  background: #fff;
+}
+
+:global(html[data-theme="light"]) .day:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+:global(html[data-theme="light"]) .day[aria-pressed="true"] {
+  background: #0b0b0b;
+   border-color: #0b0b0b;
+   color: #fff;
+}
+
+:global(html[data-theme="light"]) .day[aria-pressed="true"] small {
+  color: #aaa;
+}
+
+:global(html[data-theme="light"]) .select select:invalid {
+  color: #9a9a96;
+}
+
+:global(html[data-theme="light"]) .select option {
+  background: #fff;
+}
+
+:global(html[data-theme="light"]) .form input,
+:global(html[data-theme="light"]) .select select {
+  background: #fff;
+}
+
+:global(html[data-theme="light"]) .form input:focus,
+:global(html[data-theme="light"]) .select select:focus {
+  border-color: rgba(0, 0, 0, 0.4);
+}
+
+:global(html[data-theme="light"]) .form input:-webkit-autofill,
+:global(html[data-theme="light"]) .form input:-webkit-autofill:hover,
+:global(html[data-theme="light"]) .form input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px #fff inset;
+}
+
+:global(html[data-theme="light"]) .confirm {
+  background: #0b0b0b;
+   color: #fff;
+}
+
+:global(html[data-theme="light"]) .confirm:hover {
+  background: #2a2a2a;
+}
+
+:global(html[data-theme="light"]) .error {
+  color: #d93636;
+}
+
+:global(html[data-theme="light"]) .skeleton {
+  background: linear-gradient(90deg, #efefec 0%, #f7f7f5 50%, #efefec 100%) 0 0 / 200% 100%;
+}
+
+:global(html[data-theme="light"]) .check {
+  background: #0b0b0b;
+}
+
+:global(html[data-theme="light"]) .check svg path {
+  stroke: #fff;
+}

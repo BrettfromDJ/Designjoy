@@ -14,11 +14,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Light theme preview: ?theme=light, set before the page paints. */}
+        {/* Light theme preview: ?theme=light (remembered for the visit, so
+            it carries across pages; the admin stays dark), set before the
+            page paints. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              'if(new URLSearchParams(location.search).get("theme")==="light")document.documentElement.dataset.theme="light"',
+              'try{var t=new URLSearchParams(location.search).get("theme");if(t)sessionStorage.setItem("theme",t);else t=sessionStorage.getItem("theme");if(t==="light"&&!location.pathname.startsWith("/admin"))document.documentElement.dataset.theme="light"}catch(e){}',
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

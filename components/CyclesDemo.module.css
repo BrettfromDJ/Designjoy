@@ -387,3 +387,86 @@
 .stage[data-phase="out"] .cursor {
   transition-duration: 0.6s;
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .fit {
+  border-color: rgba(0, 0, 0, 0.08);
+   background: #fafaf9;
+}
+
+:global(html[data-theme="light"]) .top {
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+:global(html[data-theme="light"]) .canvas {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 0.6px, transparent 0.6px);
+}
+
+:global(html[data-theme="light"]) .bar {
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+   background: #fafaf9;
+}
+
+:global(html[data-theme="light"]) .drop {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+:global(html[data-theme="light"]) .stage[data-phase="drag"] .drop {
+  border-color: rgba(0, 0, 0, 0.45);
+   background: rgba(0, 0, 0, 0.03);
+}
+
+:global(html[data-theme="light"]) .tray {
+  background: #fff;
+   border-color: rgba(0, 0, 0, 0.08);
+   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+:global(html[data-theme="light"]) .add {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+:global(html[data-theme="light"]) .tile {
+  background: #ececea;
+}
+
+:global(html[data-theme="light"]) .tile[data-current] {
+  outline-color: #0b0b0b;
+}
+
+:global(html[data-theme="light"]) .progress {
+  background: #0b0b0b;
+}
+
+:global(html[data-theme="light"]) .toast {
+  background: #0b0b0b;
+   color: #fff;
+   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+:global(html[data-theme="light"]) .toast span:last-child {
+  color: #9a9a9a;
+}
+
+:global(html[data-theme="light"]) .side {
+  border-left-color: rgba(0, 0, 0, 0.07);
+   background: #fff;
+}
+
+:global(html[data-theme="light"]) .button {
+  background: #0b0b0b;
+   color: #fff;
+}
+
+:global(html[data-theme="light"]) .fill {
+  background: #444;
+}
+
+:global(html[data-theme="light"]) .cursor svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+
+:global(html[data-theme="light"]) .stack img {
+  border-color: rgba(0, 0, 0, 0.15);
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}

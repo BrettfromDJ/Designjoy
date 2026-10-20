@@ -130,3 +130,9 @@
 .frame[data-hidden] {
   visibility: hidden;
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .card::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(0, 0, 0, 0.05) 50%, transparent 65%);
+  background-size: 250% 100%;
+}

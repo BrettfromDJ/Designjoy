@@ -64,6 +64,30 @@ const appearance: Appearance = {
   },
 };
 
+// The same, for the light theme.
+const lightAppearance: Appearance = {
+  theme: "stripe",
+  variables: {
+    ...appearance.variables,
+    colorPrimary: "#0b0b0b",
+    colorBackground: "#ffffff",
+    colorText: "#0b0b0b",
+    colorTextSecondary: "#4a4a4a",
+    colorTextPlaceholder: "#a3a29e",
+    colorDanger: "#d93636",
+    colorIcon: "#8c8b88",
+  },
+  rules: {
+    ".Input": { backgroundColor: "#ffffff", border: "1px solid rgba(0, 0, 0, 0.14)", boxShadow: "none", padding: "13px 14px" },
+    ".Input:focus": { border: "1px solid rgba(0, 0, 0, 0.4)", boxShadow: "none" },
+    ".Input--invalid": { border: "1px solid #d93636", boxShadow: "none" },
+    ".Label": { fontSize: "12px", color: "#4a4a4a", marginBottom: "6px" },
+    ".Tab": { backgroundColor: "#ffffff", border: "1px solid rgba(0, 0, 0, 0.14)", boxShadow: "none" },
+    ".Tab--selected": { border: "1px solid rgba(0, 0, 0, 0.5)", boxShadow: "none" },
+    ".Block": { backgroundColor: "#ffffff", border: "1px solid rgba(0, 0, 0, 0.14)", boxShadow: "none" },
+  },
+};
+
 /** The payment form for a plan, or a "book a call" fallback if checkout can't load. */
 export function CheckoutForm({
   plan,
@@ -100,6 +124,11 @@ export function CheckoutForm({
     [plan.id],
   );
 
+  // The light theme preview (see ThemePreview) gets light card fields.
+  const [light] = useState(
+    () => typeof document !== "undefined" && document.documentElement.dataset.theme === "light",
+  );
+
   const cardClass = embedded
     ? `${styles.card} ${styles.embedded}`
     : styles.card;
@@ -111,7 +140,7 @@ export function CheckoutForm({
       stripe={stripePromise}
       options={{
         clientSecret,
-        elementsOptions: { appearance, loader: "never" },
+        elementsOptions: { appearance: light ? lightAppearance : appearance, loader: "never" },
       }}
     >
       <PayForm plan={plan} className={cardClass} />

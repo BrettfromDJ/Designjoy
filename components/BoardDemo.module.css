@@ -406,3 +406,98 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .column {
+  background: #f6f6f4;
+   border-color: rgba(0, 0, 0, 0.07);
+}
+
+:global(html[data-theme="light"]) .column.target {
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+:global(html[data-theme="light"]) .count.limit {
+  background: #e9e9e6;
+}
+
+:global(html[data-theme="light"]) .count.full {
+  background: #0b0b0b;
+   color: #fff;
+}
+
+:global(html[data-theme="light"]) .card {
+  background: #fff;
+   border-color: rgba(0, 0, 0, 0.1);
+}
+
+:global(html[data-theme="light"]) .card.lift {
+  background: #fff;
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+}
+
+:global(html[data-theme="light"]) .bars b {
+  background: #e4e4e1;
+}
+
+:global(html[data-theme="light"]) .thumb {
+  background: #ececea;
+}
+
+:global(html[data-theme="light"]) .tag {
+  border-color: rgba(0, 0, 0, 0.1);
+   background: rgba(0, 0, 0, 0.04);
+   color: #333;
+}
+
+:global(html[data-theme="light"]) .tag svg {
+  color: #0b0b0b;
+}
+
+:global(html[data-theme="light"]) .status i {
+  background: #0b0b0b;
+}
+
+:global(html[data-theme="light"]) .card.working {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+:global(html[data-theme="light"]) .cover {
+  background-color: #ececea;
+   background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
+:global(html[data-theme="light"]) .cover::before {
+  background: #0b0b0b;
+   box-shadow: 0 0 12px 2px rgba(0, 0, 0, 0.25);
+}
+
+:global(html[data-theme="light"]) .slide {
+  background: #f1f1ef;
+}
+
+:global(html[data-theme="light"]) .slide b {
+  background: #d9d9d6;
+}
+
+:global(html[data-theme="light"]) .slide b:first-child {
+  background: #2a2a2a;
+}
+
+:global(html[data-theme="light"]) .slide b:last-child {
+  background: #e4e4e1;
+}
+
+:global(html[data-theme="light"]) .bubble {
+  background: #0b0b0b;
+   color: #fff;
+}
+
+:global(html[data-theme="light"]) .bubble.reply {
+  background: #ececea;
+   color: #0b0b0b;
+}
+
+:global(html[data-theme="light"]) .cursor svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}

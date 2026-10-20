@@ -54,3 +54,8 @@
   font-size: 12px;
   color: var(--text-muted);
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .tag {
+  background: rgba(0, 0, 0, 0.06);
+}

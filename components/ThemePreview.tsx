@@ -4,14 +4,18 @@ import { useEffect, useState } from "react";
 import styles from "./ThemePreview.module.css";
 
 /**
- * Preview-only: with ?theme in the address, a small switch flips the site
- * between dark and light. Without it, nothing shows and the site stays dark.
+ * Preview-only: once ?theme is in the address (remembered for the visit), a
+ * small switch flips the site between dark and light. Without it, nothing
+ * shows and the site stays dark.
  */
 export function ThemePreview() {
   const [theme, setTheme] = useState<"dark" | "light" | null>(null);
 
   useEffect(() => {
-    const param = new URLSearchParams(window.location.search).get("theme");
+    let param = new URLSearchParams(window.location.search).get("theme");
+    try {
+      param ??= sessionStorage.getItem("theme");
+    } catch {}
     if (param) setTheme(param === "light" ? "light" : "dark");
   }, []);
 
@@ -21,9 +25,9 @@ export function ThemePreview() {
     setTheme(next);
     if (next === "light") document.documentElement.dataset.theme = "light";
     else delete document.documentElement.dataset.theme;
-    const url = new URL(window.location.href);
-    url.searchParams.set("theme", next);
-    window.history.replaceState(null, "", url);
+    try {
+      sessionStorage.setItem("theme", next);
+    } catch {}
   };
 
   return (

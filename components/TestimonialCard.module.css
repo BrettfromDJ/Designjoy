@@ -150,3 +150,8 @@
 :global(html[data-theme="light"]) .avatar {
   background: #e8e8e5;
 }
+
+/* ---------- Light theme (more) ---------- */
+:global(html[data-theme="light"]) .typing {
+  background: rgba(0, 0, 0, 0.05);
+}

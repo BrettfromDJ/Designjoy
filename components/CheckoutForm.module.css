@@ -168,3 +168,40 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .field input {
+  background: #fff;
+   border-color: rgba(0, 0, 0, 0.14);
+}
+
+:global(html[data-theme="light"]) .field input::placeholder {
+  color: #a3a29e;
+}
+
+:global(html[data-theme="light"]) .field input:focus {
+  border-color: rgba(0, 0, 0, 0.4);
+}
+
+:global(html[data-theme="light"]) .field input:-webkit-autofill,
+:global(html[data-theme="light"]) .field input:-webkit-autofill:hover,
+:global(html[data-theme="light"]) .field input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px #fff inset;
+}
+
+:global(html[data-theme="light"]) .skeleton {
+  background: linear-gradient(90deg, #efefec 0%, #f7f7f5 50%, #efefec 100%) 0 0 / 200% 100%;
+}
+
+:global(html[data-theme="light"]) .pay {
+  background: #0b0b0b;
+   color: #fff;
+}
+
+:global(html[data-theme="light"]) .pay:hover {
+  background: #2a2a2a;
+}
+
+:global(html[data-theme="light"]) .error {
+  color: #d93636;
+}

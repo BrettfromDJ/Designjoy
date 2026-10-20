@@ -461,3 +461,26 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .liveDot,
+:global(html[data-theme="light"]) .liveDot::after {
+  background: var(--text);
+}
+
+:global(html[data-theme="light"]) .submit {
+  background: #0b0b0b;
+  color: #fff;
+}
+
+:global(html[data-theme="light"]) .submit:hover {
+  background: #2a2a2a;
+}
+
+:global(html[data-theme="light"]) .chips button:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+:global(html[data-theme="light"]) .glow {
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.08), transparent 62%);
+}
