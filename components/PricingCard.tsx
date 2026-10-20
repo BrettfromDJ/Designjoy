@@ -32,9 +32,9 @@ export function PricingCard() {
   return (
     <section className={styles.card} aria-labelledby="pricing-title">
       <h2 id="pricing-title" className={styles.title}>
-        <span className={styles.line}>One subscription.</span>
+        <span className={styles.line}>Design,</span>
         <br />
-        <span className={`${styles.line} ${styles.muted}`}>Endless possibilities.</span>
+        <span className={`${styles.line} ${styles.muted}`}>on subscription</span>
       </h2>
       <p className={styles.subtitle}>
         Subscribe today and most requests land {day ? `by ${day}` : "in about two days"}. Pause or cancel
