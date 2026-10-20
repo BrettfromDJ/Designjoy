@@ -22,6 +22,8 @@
   flex-direction: column;
   margin: 0;
   padding: 0;
+  /* The same grey as the intro call card's time tiles. */
+  background: #121212;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   overflow: hidden;
@@ -338,4 +340,8 @@
 
 :global(html[data-theme="light"]) .secondary:hover {
   color: var(--text);
+}
+
+:global(html[data-theme="light"]) .plans {
+  background: #f6f6f4;
 }

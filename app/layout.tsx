@@ -15,12 +15,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Light theme preview: ?theme=light (remembered for the visit, so
-            it carries across pages; the admin stays dark), set before the
-            page paints. */}
+            it carries across pages; the admin and the welcome page with its
+            lanyard stay dark), set before the page paints. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              'try{var t=new URLSearchParams(location.search).get("theme");if(t)sessionStorage.setItem("theme",t);else t=sessionStorage.getItem("theme");if(t==="light"&&!location.pathname.startsWith("/admin"))document.documentElement.dataset.theme="light"}catch(e){}',
+              'try{var t=new URLSearchParams(location.search).get("theme");if(t)sessionStorage.setItem("theme",t);else t=sessionStorage.getItem("theme");if(t==="light"&&!location.pathname.startsWith("/admin")&&!location.pathname.startsWith("/welcome"))document.documentElement.dataset.theme="light"}catch(e){}',
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./ThemePreview.module.css";
 
 /**
@@ -10,6 +11,14 @@ import styles from "./ThemePreview.module.css";
  */
 export function ThemePreview() {
   const [theme, setTheme] = useState<"dark" | "light" | null>(null);
+  // The welcome page, with its lanyard, always stays dark.
+  const dark = usePathname().startsWith("/welcome");
+
+  useEffect(() => {
+    if (!theme) return;
+    if (theme === "light" && !dark) document.documentElement.dataset.theme = "light";
+    else delete document.documentElement.dataset.theme;
+  }, [theme, dark]);
 
   useEffect(() => {
     let param = new URLSearchParams(window.location.search).get("theme");
@@ -19,12 +28,10 @@ export function ThemePreview() {
     if (param) setTheme(param === "light" ? "light" : "dark");
   }, []);
 
-  if (!theme) return null;
+  if (!theme || dark) return null;
 
   const pick = (next: "dark" | "light") => {
     setTheme(next);
-    if (next === "light") document.documentElement.dataset.theme = "light";
-    else delete document.documentElement.dataset.theme;
     try {
       sessionStorage.setItem("theme", next);
     } catch {}

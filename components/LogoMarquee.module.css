@@ -95,3 +95,8 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .logo {
+  filter: brightness(0);
+}

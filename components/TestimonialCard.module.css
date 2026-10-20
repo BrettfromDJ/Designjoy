@@ -152,6 +152,12 @@
 }
 
 /* ---------- Light theme (more) ---------- */
+:global(html[data-theme="light"]) .bubble,
 :global(html[data-theme="light"]) .typing {
   background: rgba(0, 0, 0, 0.05);
+}
+
+/* Company logos are shown white; on light they're shown black. */
+:global(html[data-theme="light"]) .logo {
+  filter: brightness(0);
 }
