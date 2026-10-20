@@ -1,5 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { AskBox } from "@/components/AskBox";
+import { ThemePreview } from "@/components/ThemePreview";
 import { getFaqs } from "@/lib/faqs";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Nav />
       {children}
       <AskBox faqs={faqs} />
+      <ThemePreview />
     </>
   );
 }

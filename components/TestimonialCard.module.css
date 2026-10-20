@@ -145,3 +145,8 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .avatar {
+  background: #e8e8e5;
+}

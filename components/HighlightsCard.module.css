@@ -124,3 +124,12 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .dots button {
+  background: #d6d6d3;
+}
+
+:global(html[data-theme="light"]) .dots button[aria-current] {
+  background: var(--text);
+}

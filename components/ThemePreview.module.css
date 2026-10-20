@@ -1,0 +1,38 @@
+/* Preview-only switch. */
+.switch {
+  position: fixed;
+  right: 16px;
+  bottom: 40px;
+  z-index: 60;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-float);
+}
+
+.switch button {
+  height: 30px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-nav);
+  cursor: pointer;
+}
+
+.switch button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+@media (max-width: 819px) {
+  .switch {
+    bottom: auto;
+    top: 88px;
+  }
+}

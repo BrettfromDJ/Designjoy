@@ -413,3 +413,48 @@
     opacity: 0;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .card {
+  --stroke: rgba(0, 0, 0, 0.07);
+}
+
+:global(html[data-theme="light"]) .radio:checked {
+  border-color: var(--text);
+}
+
+:global(html[data-theme="light"]) .radio:checked::before,
+:global(html[data-theme="light"]) .liveDot,
+:global(html[data-theme="light"]) .liveDot::after {
+  background: var(--text);
+}
+
+:global(html[data-theme="light"]) .tag {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+:global(html[data-theme="light"]) .tagGlow {
+  background: #fff;
+}
+
+:global(html[data-theme="light"]) .tagGlow::before {
+  background: conic-gradient(
+    from var(--glow-angle),
+    rgba(0, 0, 0, 0.1) 0 70%,
+    rgba(0, 0, 0, 0.7) 85%,
+    rgba(0, 0, 0, 0.1)
+  );
+}
+
+:global(html[data-theme="light"]) .primary {
+  background: var(--text);
+  color: #fff;
+}
+
+:global(html[data-theme="light"]) .primary:hover {
+  background: #2a2a2a;
+}
+
+:global(html[data-theme="light"]) .secondary:hover {
+  color: var(--text);
+}

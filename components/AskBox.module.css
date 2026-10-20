@@ -588,3 +588,43 @@
     font-size: 16px;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .back:hover {
+  color: var(--text);
+}
+
+:global(html[data-theme="light"]) .close:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+:global(html[data-theme="light"]) .me {
+  color: #fff;
+}
+
+:global(html[data-theme="light"]) .dj {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:global(html[data-theme="light"]) .action {
+  background: var(--text);
+  color: #fff;
+}
+
+:global(html[data-theme="light"]) .action:hover {
+  background: #2a2a2a;
+}
+
+:global(html[data-theme="light"]) .action[data-secondary] {
+  background: none;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+}
+
+:global(html[data-theme="light"]) .action[data-secondary]:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:global(html[data-theme="light"]) .chips button {
+  border-color: rgba(0, 0, 0, 0.2);
+}

@@ -150,3 +150,21 @@
     animation: none;
   }
 }
+
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .card:hover {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+:global(html[data-theme="light"]) .dashes i {
+  background: #e2e2df;
+}
+
+:global(html[data-theme="light"]) .dashes i[data-on] {
+  background: var(--text);
+}
+
+:global(html[data-theme="light"]) .play {
+  background: var(--text);
+  color: #fff;
+}

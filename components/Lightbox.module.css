@@ -163,3 +163,9 @@
   visibility: hidden;
 }
 
+/* ---------- Light theme ---------- */
+:global(html[data-theme="light"]) .close:hover,
+:global(html[data-theme="light"]) .arrow:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  background: #f2f2f0;
+}
