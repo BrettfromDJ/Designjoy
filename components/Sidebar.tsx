@@ -21,9 +21,9 @@ function cardHeight(kind: string, fallback: number) {
 }
 
 /**
- * Everything that isn't artwork, in one column on the right that scrolls on
+ * Everything that isn't artwork, in one column on the left that scrolls on
  * its own: the homepage cards at full size, pricing first.
- * The artwork scrolls on the left.
+ * The artwork scrolls on the right.
  */
 export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Highlight[] }) {
   const innerRef = useRef<HTMLDivElement>(null);

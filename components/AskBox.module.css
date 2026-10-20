@@ -35,7 +35,7 @@
 /* With the sidebar, it opens centred over the work instead of the whole screen. */
 @media (min-width: 820px) {
   :global(body[data-sidebar]) .wrapper {
-    left: calc(50% - 178px);
+    left: calc(50% + 178px);
     width: min(412px, calc(100vw - 388px));
   }
 

@@ -1,12 +1,12 @@
-/* A fixed column on the right, a grid column wide; the artwork scrolls beside it. */
+/* A fixed column on the left, a grid column wide; the artwork scrolls beside it. */
 .sidebar {
   position: fixed;
-  right: 0;
+  left: 0;
   top: 0;
   bottom: 0;
   z-index: 10;
   width: var(--sidebar);
-  padding-right: var(--gap);
+  padding-left: var(--gap);
 }
 
 /* Fills the screen height and scrolls on its own, separately from the work,

@@ -14,7 +14,7 @@
 
 @media (min-width: 820px) {
   :global(body[data-sidebar]) .overlay {
-    right: calc(var(--sidebar) + var(--gap));
+    left: calc(var(--sidebar) + var(--gap));
     z-index: 9;
   }
 

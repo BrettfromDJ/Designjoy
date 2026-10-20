@@ -31,14 +31,14 @@
   padding-top: var(--gap);
 }
 
-/* Beside the fixed sidebar on the right, starting right at the top. */
+/* Beside the fixed sidebar on the left, starting right at the top. */
 .beside {
-  margin-right: var(--sidebar);
+  margin-left: var(--sidebar);
   padding-top: var(--gap);
 }
 
 @media (max-width: 819px) {
   .beside {
-    margin-right: 0;
+    margin-left: 0;
   }
 }

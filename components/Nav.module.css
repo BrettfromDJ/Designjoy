@@ -176,8 +176,8 @@
 @media (min-width: 820px) {
   :global(body[data-sidebar]) .nav {
     top: var(--gap);
-    right: var(--gap);
-    left: auto;
+    left: var(--gap);
+    right: auto;
     width: 340px;
     gap: 20px;
     padding: 0 20px;
