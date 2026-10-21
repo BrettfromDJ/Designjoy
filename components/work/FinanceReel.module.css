@@ -24,6 +24,8 @@
   inset: 0;
   opacity: 0;
   transition: opacity 1s ease;
+  /* Its own layer, so the blur is drawn once rather than every frame. */
+  will-change: opacity;
 }
 
 .backdrop[data-on] {
@@ -49,13 +51,21 @@
   position: relative;
   grid-area: 1 / 1;
   pointer-events: none;
+  /* Quick to leave, gentle to land: lighter than easing in and out. */
   transition:
-    opacity 0.9s ease,
-    transform 1s cubic-bezier(0.65, 0, 0.25, 1);
+    opacity 0.7s ease,
+    transform 0.9s cubic-bezier(0.32, 0.72, 0, 1);
+  /* Each card on its own layer, so sliding just moves it on the GPU. */
+  will-change: transform, opacity;
 }
 
 .slide[data-pos="current"] {
   z-index: 2;
+}
+
+/* The glass panels skip their blur off to the sides (see the cards). */
+.slide:not([data-pos="current"]) {
+  --frost: 0;
 }
 
 .slide[data-pos="next"] {
@@ -72,6 +82,8 @@
   opacity: 0;
   transform: translateX(210%) scale(0.8);
   transition: none;
+  /* Out of sight, so not drawn at all. */
+  visibility: hidden;
 }
 
 /* Which card is showing. */

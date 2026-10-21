@@ -42,8 +42,12 @@
   height: calc(532.122 * var(--s));
   border-radius: calc(22.374 * var(--s));
   background: linear-gradient(137.6deg, rgba(255, 255, 255, 0.125) 18.822%, rgba(232, 212, 195, 0.025) 89.206%);
-  -webkit-backdrop-filter: blur(calc(33.56 * var(--s)));
-  backdrop-filter: blur(calc(33.56 * var(--s)));
+  /* Frosted only in the middle of the reel (see FinanceCards' panel). */
+  -webkit-backdrop-filter: blur(calc(33.56 * var(--s) * var(--frost, 1)));
+  backdrop-filter: blur(calc(33.56 * var(--s) * var(--frost, 1)));
+  transition:
+    -webkit-backdrop-filter 0.5s ease,
+    backdrop-filter 0.5s ease;
   box-shadow:
     calc(17.899 * var(--s)) calc(17.899 * var(--s)) calc(178.988 * var(--s)) 0 rgba(138, 0, 0, 0.05),
     inset 0 calc(1.79 * var(--s)) calc(2.685 * var(--s)) 0 rgba(255, 255, 255, 0.25),
@@ -128,9 +132,10 @@
 
 /* ---------- Motion, each time it comes into view ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  /* The meadow eases out of a slow zoom, like the other cards' photos. */
+  /* The meadow settles out of a zoom as the card lands, like the other
+     cards' photos. Kept short: the glass over it re-blurs while it moves. */
   .card[data-play] .photo {
-    animation: drift 7s ease-out both;
+    animation: drift 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   }
 
   .card[data-play] .panel {

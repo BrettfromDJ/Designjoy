@@ -62,8 +62,13 @@
   width: calc(359 * var(--k));
   border-radius: calc(16 * var(--k));
   background: linear-gradient(var(--angle), rgba(0, 0, 0, 0.12) 23.559%, rgba(0, 0, 0, 0.014) 89.206%);
-  -webkit-backdrop-filter: blur(calc(62 * var(--k)));
-  backdrop-filter: blur(calc(62 * var(--k)));
+  /* Frosted only on the card in the middle (the reel sets --frost to 0 on
+     the others): the blur is the costliest thing to draw as they slide. */
+  -webkit-backdrop-filter: blur(calc(62 * var(--k) * var(--frost, 1)));
+  backdrop-filter: blur(calc(62 * var(--k) * var(--frost, 1)));
+  transition:
+    -webkit-backdrop-filter 0.5s ease,
+    backdrop-filter 0.5s ease;
 }
 
 /* Placed like the budget card's caption, so it holds still as they turn. */
@@ -335,7 +340,7 @@
 /* ---------- Motion, each time the card comes round ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .card[data-play] .photos > :first-child {
-    animation: drift 7s ease-out both;
+    animation: drift 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   }
 
   .card[data-play] .panel {
