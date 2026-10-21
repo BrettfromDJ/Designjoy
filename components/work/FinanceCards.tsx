@@ -31,7 +31,6 @@ function Card({
     <div className={styles.card} data-play={play > 0 || undefined}>
       <div className={styles.photos} aria-hidden="true">
         {photo}
-        <span className={styles.fade} />
       </div>
       <div className={styles.stage}>
         <div className={styles.panel} style={{ "--angle": `${angle}deg` } as CSSProperties}>

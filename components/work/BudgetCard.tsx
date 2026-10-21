@@ -48,7 +48,6 @@ export function BudgetCard({ play, large = false }: { play: number; large?: bool
             sizes={large ? "70vw" : "(min-width: 1600px) 30vw, 60vw"}
             className={styles.photo}
           />
-          <span className={styles.fade} />
         </div>
 
         <div className={styles.panel}>
