@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import type { Highlight } from "@/lib/highlight-icons";
 import { layoutMasonry } from "@/lib/masonry";
@@ -8,7 +8,6 @@ import { HighlightsCard } from "./HighlightsCard";
 import { HowItWorksCard } from "./HowItWorksCard";
 import { InfoCard } from "./InfoCard";
 import { LabsCard } from "./LabsCard";
-import { Lightbox } from "./Lightbox";
 import { PricingCard } from "./PricingCard";
 import { ScopeBoard } from "./ScopeBoard";
 import { TestimonialCard } from "./TestimonialCard";
@@ -29,7 +28,8 @@ const SIDEBAR_QUERIES: [string, ColumnCount][] = [
   ["(min-width: 1600px)", 2],
 ];
 // Image sizes to match those columns (the sidebar takes ~372px).
-const SIDEBAR_SIZES = "(min-width: 2400px) 30vw, (min-width: 1600px) 40vw, (min-width: 820px) 75vw, 100vw";
+const SIDEBAR_SIZES =
+  "(min-width: 2400px) 30vw, (min-width: 1600px) 40vw, (min-width: 820px) 75vw, 100vw";
 
 function getColumnCount(queries = QUERIES): ColumnCount {
   for (const [query, count] of queries) {
@@ -51,9 +51,12 @@ function visibleFixedCards(highlights: Highlight[]) {
 }
 
 function subscribe(onChange: () => void) {
-  const lists = [...QUERIES, ...SIDEBAR_QUERIES].map(([query]) => window.matchMedia(query));
+  const lists = [...QUERIES, ...SIDEBAR_QUERIES].map(([query]) =>
+    window.matchMedia(query),
+  );
   lists.forEach((list) => list.addEventListener("change", onChange));
-  return () => lists.forEach((list) => list.removeEventListener("change", onChange));
+  return () =>
+    lists.forEach((list) => list.removeEventListener("change", onChange));
 }
 
 /** `workOnly` leaves out the fixed cards, for the sidebar layout where they live on the left. */
@@ -71,62 +74,63 @@ export function MasonryGrid({
     () => getColumnCount(workOnly ? SIDEBAR_QUERIES : QUERIES),
     () => (workOnly ? 1 : 4) as ColumnCount,
   );
-  const columns = layoutMasonry(columnCount, work, workOnly ? [] : visibleFixedCards(highlights));
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const columns = layoutMasonry(
+    columnCount,
+    work,
+    workOnly ? [] : visibleFixedCards(highlights),
+  );
 
   return (
-    <>
-      <div
-        className={workOnly ? `${styles.grid} ${styles.beside}` : styles.grid}
-        data-single={(workOnly && columnCount === 1) || undefined}
-        style={{ "--columns": columnCount } as React.CSSProperties}
-      >
-        {columns.map((column, i) => (
-          <div key={i} className={styles.column}>
-            {column.map((cell, row) => {
-              if (cell.type === "work") {
-                return (
-                  <WorkCard
-                    key={cell.item.id}
-                    item={cell.item}
-                    priority={i < 3}
-                    order={row * columns.length + i}
-                    onOpen={() => setOpenIndex(work.indexOf(cell.item))}
-                    sizes={workOnly ? SIDEBAR_SIZES : undefined}
-                  />
-                );
-              }
-              if (cell.card.kind === "testimonial") {
-                return <TestimonialCard key={cell.card.id} height={cell.card.minHeight} />;
-              }
-              if (cell.card.kind === "scope") {
-                return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
-              }
-              if (cell.card.kind === "highlights") {
-                return <HighlightsCard key={cell.card.id} highlights={highlights} />;
-              }
-              if (cell.card.kind === "howItWorks") {
-                return <HowItWorksCard key={cell.card.id} />;
-              }
-              if (cell.card.kind === "labs") {
-                return <LabsCard key={cell.card.id} work={work} />;
-              }
-              if (cell.card.kind === "pricing") {
-                return <PricingCard key={cell.card.id} />;
-              }
-              return <InfoCard key={cell.card.id} card={cell.card} />;
-            })}
-          </div>
-        ))}
-      </div>
-      {openIndex !== null && work[openIndex] && (
-        <Lightbox
-          items={work}
-          index={openIndex}
-          onIndex={setOpenIndex}
-          onClose={() => setOpenIndex(null)}
-        />
-      )}
-    </>
+    <div
+      className={workOnly ? `${styles.grid} ${styles.beside}` : styles.grid}
+      data-single={(workOnly && columnCount === 1) || undefined}
+      style={{ "--columns": columnCount } as React.CSSProperties}
+    >
+      {columns.map((column, i) => (
+        <div key={i} className={styles.column}>
+          {column.map((cell, row) => {
+            if (cell.type === "work") {
+              return (
+                <WorkCard
+                  key={cell.item.id}
+                  item={cell.item}
+                  priority={i < 3}
+                  order={row * columns.length + i}
+                  sizes={workOnly ? SIDEBAR_SIZES : undefined}
+                />
+              );
+            }
+            if (cell.card.kind === "testimonial") {
+              return (
+                <TestimonialCard
+                  key={cell.card.id}
+                  height={cell.card.minHeight}
+                />
+              );
+            }
+            if (cell.card.kind === "scope") {
+              return (
+                <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />
+              );
+            }
+            if (cell.card.kind === "highlights") {
+              return (
+                <HighlightsCard key={cell.card.id} highlights={highlights} />
+              );
+            }
+            if (cell.card.kind === "howItWorks") {
+              return <HowItWorksCard key={cell.card.id} />;
+            }
+            if (cell.card.kind === "labs") {
+              return <LabsCard key={cell.card.id} work={work} />;
+            }
+            if (cell.card.kind === "pricing") {
+              return <PricingCard key={cell.card.id} />;
+            }
+            return <InfoCard key={cell.card.id} card={cell.card} />;
+          })}
+        </div>
+      ))}
+    </div>
   );
 }

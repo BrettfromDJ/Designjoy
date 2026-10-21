@@ -16,7 +16,6 @@ export function WorkCard({
   item,
   priority,
   order = 0,
-  onOpen,
   sizes = SIZES,
 }: {
   item: WorkItem;
@@ -25,7 +24,6 @@ export function WorkCard({
   sizes?: string;
   /** Position in the grid, used to cascade the reveal. */
   order?: number;
-  onOpen?: () => void;
 }) {
   // Coded pieces have nothing to load.
   const [loaded, setLoaded] = useState(item.kind === "coded");
@@ -100,14 +98,6 @@ export function WorkCard({
             />
           ))}
         </>
-      )}
-      {onOpen && (
-        <button
-          type="button"
-          className={styles.open}
-          onClick={onOpen}
-          aria-label={`View ${item.title || "project"}`}
-        />
       )}
     </figure>
   );
