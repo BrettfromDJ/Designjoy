@@ -59,12 +59,13 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
   }, []);
 
   // Entrance: the cards rise in one after another (see Sidebar.module.css).
-  // Those on screen at load are staggered; the rest arrive as the column is
-  // scrolled to them.
+  // The first two start in CSS as the page paints; the rest are staggered in
+  // as the column is scrolled to them.
   useEffect(() => {
     const el = innerRef.current;
     if (!el) return;
-    const items = Array.from(el.children) as HTMLElement[];
+    // Past the hidden h1 and the two cards CSS brings in.
+    const items = Array.from(el.children).slice(3) as HTMLElement[];
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       items.forEach((item) => item.setAttribute("data-in", ""));
       return;
@@ -76,7 +77,7 @@ export function Sidebar({ work, highlights }: { work: WorkItem[]; highlights: Hi
           .filter((entry) => entry.isIntersecting)
           .forEach((entry, i) => {
             const item = entry.target as HTMLElement;
-            item.style.setProperty("--d", `${(atLoad ? 260 : 0) + i * (atLoad ? 130 : 90)}ms`);
+            item.style.setProperty("--d", `${(atLoad ? 240 : 0) + i * (atLoad ? 120 : 90)}ms`);
             item.setAttribute("data-in", "");
             observer.unobserve(item);
           });

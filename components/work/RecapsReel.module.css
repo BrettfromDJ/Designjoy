@@ -258,7 +258,7 @@
 
 .wealth {
   translate: -50% 0;
-  font-family: "Instrument Serif", Georgia, serif;
+  font-family: var(--font-instrument-serif), Georgia, serif;
   font-weight: 400;
   font-size: calc(82.733 * var(--u));
   line-height: 0.99;

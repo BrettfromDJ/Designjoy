@@ -15,9 +15,9 @@
 
   /* SF Pro on Apple devices; swap in licensed Suisse Intl files under
      public/fonts to match the display type exactly. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", var(--font-inter), "Helvetica Neue", Arial, sans-serif;
   --font-display: "Suisse Intl", var(--font-sans);
-  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: var(--font-roboto-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --shadow-float:
     0 11px 25px rgba(0, 0, 0, 0.92),

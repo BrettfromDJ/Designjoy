@@ -53,7 +53,7 @@
 /* Typeface styles for text logos. */
 .serif,
 .serif-italic {
-  font-family: "Instrument Serif", Georgia, serif;
+  font-family: var(--font-instrument-serif), Georgia, serif;
   font-size: 19px;
 }
 
@@ -62,13 +62,13 @@
 }
 
 .display {
-  font-family: "Syne", var(--font-sans);
+  font-family: var(--font-syne), var(--font-sans);
   font-weight: 800;
   letter-spacing: -0.04em;
 }
 
 .grotesk {
-  font-family: "Space Grotesk", var(--font-sans);
+  font-family: var(--font-space-grotesk), var(--font-sans);
   font-weight: 700;
   letter-spacing: -0.03em;
 }

@@ -109,18 +109,30 @@
 
 /* ---------- Entrance ----------
    Each card rises and unveils from the top down while its contents
-   cascade in out of a soft blur. Cards wait hidden until the script
-   marks them [data-in]; without scripting, or with reduced motion, they're
-   simply there. */
+   cascade in out of a soft blur. The first two cards (after the hidden h1)
+   start as the page first paints, without waiting for the script, so the
+   page shows at once; the rest wait hidden until the script marks them
+   [data-in] as they're scrolled to. Without scripting, or with reduced
+   motion, they're simply there. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .inner > :not([data-in]) {
+  .inner > :nth-child(2) {
+    --d: 0ms;
+  }
+
+  .inner > :nth-child(3) {
+    --d: 120ms;
+  }
+
+  .inner > :nth-child(n + 4):not([data-in]) {
     opacity: 0;
   }
 
+  .inner > :nth-child(-n + 3),
   .inner > [data-in] {
     animation: card-in 1.2s var(--d, 0ms) cubic-bezier(0.22, 1, 0.36, 1) backwards;
   }
 
+  .inner > :nth-child(-n + 3) > *,
   .inner > [data-in] > * {
     animation: child-in 0.9s calc(var(--d, 0ms) + 60ms + var(--c, 0) * 60ms)
       cubic-bezier(0.16, 1, 0.3, 1) backwards;
@@ -136,6 +148,18 @@
   .inner > [data-in] > :nth-child(9) { --c: 8; }
 
   /* The pricing checklist ticks in line by line, once its list arrives. */
+  /* The first card shows from the very first frame (its contents rise and
+     sharpen rather than fade up from nothing), so the page counts as shown
+     at once rather than after the scripts have run. */
+  .inner > :nth-child(2) {
+    animation-name: card-rise;
+  }
+
+  .inner > :nth-child(2) > * {
+    animation-name: child-sharpen;
+  }
+
+  .inner > :nth-child(-n + 3) > ul > li,
   .inner > [data-in] > ul > li {
     animation: child-in 0.7s calc(var(--d, 0ms) + 320ms + var(--l, 0) * 50ms)
       cubic-bezier(0.16, 1, 0.3, 1) backwards;
@@ -161,6 +185,19 @@
   }
   to {
     clip-path: inset(0 0 -40px 0 round var(--radius-card));
+  }
+}
+
+@keyframes card-rise {
+  from {
+    transform: translateY(28px);
+  }
+}
+
+@keyframes child-sharpen {
+  from {
+    transform: translateY(14px);
+    filter: blur(5px);
   }
 }
 

@@ -1,7 +1,12 @@
-/* The board is drawn at 800 × 380 and scaled to the width of .fit. */
+/* The board is drawn at 800 × 400 and scaled to the width of .fit. Its
+   shape is set here too, and anything past its edge clipped, so before the
+   script has scaled it the page keeps its layout and never runs wider than
+   the screen. */
 .fit {
   position: relative;
   width: 100%;
+  aspect-ratio: 800 / 400;
+  overflow: hidden;
 }
 
 .stage {

@@ -17,7 +17,7 @@
   overflow: hidden;
   isolation: isolate;
   background: #000;
-  font-family: Inter, var(--font-sans);
+  font-family: var(--font-inter), var(--font-sans);
   color: #fff;
 }
 

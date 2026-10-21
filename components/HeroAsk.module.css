@@ -401,7 +401,7 @@
 
 /* 9. "on subscription." in the serif, italic. */
 .hero[data-variant="9"] .w2 {
-  font-family: "Instrument Serif", serif;
+  font-family: var(--font-instrument-serif), serif;
   font-style: italic;
   font-weight: 400;
   letter-spacing: -0.03em;
