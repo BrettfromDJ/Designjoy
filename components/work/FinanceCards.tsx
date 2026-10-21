@@ -45,7 +45,10 @@ function Card({
   );
 }
 
-const SIZES = "(min-width: 1600px) 20vw, 40vw";
+/** How wide a card's photo shows: about half the tile, whose width follows
+ *  the work's columns (see MasonryGrid). Kept close, so phones and laptops
+ *  don't download a bigger photo than they draw. */
+export const CARD_SIZES = "(min-width: 2400px) 15vw, (min-width: 1600px) 20vw, (min-width: 820px) 36vw, 48vw";
 
 // ---------- Analyst ratings ----------
 
@@ -83,7 +86,7 @@ export function RatingsCard({ play, large = false }: { play: number; large?: boo
       photo={
         // Cropped as in the design.
         <span className={styles.forest}>
-          <Image src={`${DIR}/forest.jpg`} alt="" fill sizes={large ? "90vw" : "60vw"} />
+          <Image src={`${DIR}/forest.jpg`} alt="" fill sizes={large ? "90vw" : CARD_SIZES} />
         </span>
       }
     >
@@ -129,7 +132,7 @@ export function EarningsCard({ play, large = false }: { play: number; large?: bo
       angle={144.546}
       title="Stay ahead of earnings season"
       body="Compare earnings estimates to actual results to track company performance over time."
-      photo={<Image src={`${DIR}/leaf.jpg`} alt="" fill sizes={large ? "40vw" : SIZES} className={styles.cover} />}
+      photo={<Image src={`${DIR}/leaf.jpg`} alt="" fill sizes={large ? "40vw" : CARD_SIZES} className={styles.cover} />}
     >
       {ESTIMATES.map(([x, y], n) => (
         <span
@@ -211,7 +214,7 @@ export function StatsCard({ play, large = false }: { play: number; large?: boole
       angle={149.676}
       title="Dig into the fundamentals"
       body="Access financial statements, growth metrics, and key details about every company in your portfolio."
-      photo={<Image src={`${DIR}/frond.jpg`} alt="" fill sizes={large ? "40vw" : SIZES} className={styles.cover} />}
+      photo={<Image src={`${DIR}/frond.jpg`} alt="" fill sizes={large ? "40vw" : CARD_SIZES} className={styles.cover} />}
     >
       <div className={styles.stats}>
         {STATS.map((row, r) => (

@@ -54,8 +54,8 @@ export function FinanceReel({ large = false }: { large?: boolean }) {
     <div ref={ref} className={styles.tile} aria-label="Finance app: budget, analyst ratings, earnings and fundamentals">
       {BACKDROPS.map((src, i) => (
         <div key={src} className={styles.backdrop} data-on={i === current || undefined} aria-hidden="true">
-          {/* Small is plenty under the blur. */}
-          <Image src={src} alt="" fill sizes="320px" />
+          {/* Tiny is plenty under that much blur. */}
+          <Image src={src} alt="" fill sizes="64px" quality={75} />
         </div>
       ))}
       {SLIDES.map((Slide, i) => (

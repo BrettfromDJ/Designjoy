@@ -104,7 +104,11 @@ export function RecapsReel({ large = false }: { large?: boolean }) {
   }, [visible, current]);
 
   const state = STATES[current];
-  const photo = large ? "60vw" : "(min-width: 1600px) 25vw, 50vw";
+  // About as wide as the tile (whose width follows the work's columns), so
+  // no bigger photo is downloaded than is drawn. The clouds are soft and
+  // mostly out of view, so they get by on less.
+  const photo = large ? "90vw" : "(min-width: 2400px) 30vw, (min-width: 1600px) 40vw, (min-width: 820px) 72vw, 100vw";
+  const clouds = "50vw";
 
   return (
     <div
@@ -121,19 +125,19 @@ export function RecapsReel({ large = false }: { large?: boolean }) {
           className={`${styles.layer} ${styles.cloud} ${styles.driftA}`}
           style={{ ...box(-36.182, 549.667, 5699.84, 3800.357), opacity: 0.68 }}
         >
-          <Image src={`${DIR}/cloud-02.webp`} alt="" fill sizes="100vw" className={styles.cover} />
+          <Image src={`${DIR}/cloud-02.webp`} alt="" fill sizes={clouds} className={styles.cover} />
         </div>
         <div
           className={`${styles.layer} ${styles.cloud} ${styles.driftB}`}
           style={{ ...box(-2941.764, -407.728, 3904.834, 2603.54), opacity: 0.3 }}
         >
-          <Image src={`${DIR}/cloud-04.webp`} alt="" fill sizes="100vw" className={styles.cover} />
+          <Image src={`${DIR}/cloud-04.webp`} alt="" fill sizes={clouds} className={styles.cover} />
         </div>
         <div
           className={`${styles.layer} ${styles.cloud} ${styles.driftA}`}
           style={{ ...box(630.377, -417.469, 4422.464, 2948.669), opacity: 0.4 }}
         >
-          <Image src={`${DIR}/cloud-02.webp`} alt="" fill sizes="100vw" className={styles.cover} />
+          <Image src={`${DIR}/cloud-02.webp`} alt="" fill sizes={clouds} className={styles.cover} />
         </div>
       </div>
 
@@ -163,7 +167,7 @@ export function RecapsReel({ large = false }: { large?: boolean }) {
           <Image src={`${DIR}/sky-rawpixel.webp`} alt="" fill sizes={photo} className={styles.cover} />
         </div>
         <div className={`${styles.turned} ${styles.driftSky}`} style={turned(885.24, -13.85, 2439.561, 3658.895, -23.2)}>
-          <Image src={`${DIR}/sky-davies.jpg`} alt="" fill sizes={large ? "200vw" : "100vw"} className={styles.cover} />
+          <Image src={`${DIR}/sky-davies.jpg`} alt="" fill sizes={photo} className={styles.cover} />
         </div>
 
         <div className={`${styles.layer} ${styles.phone}`} style={box(163.398, 110.656, 350.149, 640.149)}>

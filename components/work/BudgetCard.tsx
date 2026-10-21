@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import Image from "next/image";
+import { CARD_SIZES } from "./FinanceCards";
 import { useCountUp } from "./useCountUp";
 import styles from "./BudgetCard.module.css";
 
@@ -45,7 +46,7 @@ export function BudgetCard({ play, large = false }: { play: number; large?: bool
             src={`${DIR}/meadow.jpg`}
             alt=""
             fill
-            sizes={large ? "70vw" : "(min-width: 1600px) 30vw, 60vw"}
+            sizes={large ? "70vw" : CARD_SIZES}
             className={styles.photo}
           />
         </div>
