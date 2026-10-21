@@ -1,6 +1,7 @@
-/* The portrait cards from the Figma design (453 × 696), measured in the
-   design's pixels and scaled by --k. They're drawn at the same height as
-   the budget card, so their text matches its size. */
+/* The cards from the Figma design, measured in its pixels and scaled by --k
+   (drawn at the budget card's height, so their text matches its size). In
+   the design they're portrait (453 × 696); here they're square like the
+   budget card, so the reel keeps one shape as it turns. */
 .card {
   --k: calc(var(--s) * 1.5651);
   position: relative;
@@ -9,8 +10,8 @@
   align-items: center;
   justify-content: flex-end;
   gap: calc(48 * var(--k));
-  width: calc(453.333 * var(--k));
-  height: calc(696 * var(--k));
+  width: calc(1076.765 * var(--s));
+  height: calc(1089.285 * var(--s));
   padding: calc(48 * var(--k)) calc(24 * var(--k));
   border-radius: calc(16 * var(--k));
   overflow: hidden;
@@ -29,13 +30,10 @@
   object-fit: cover;
 }
 
-/* The forest is cropped and placed as in the design. */
+/* The forest fills the card. */
 .forest {
   position: absolute;
-  left: -87.97%;
-  top: -50.67%;
-  width: 335.07%;
-  height: 163.42%;
+  inset: 0;
 }
 
 .forest img {
@@ -66,9 +64,11 @@
   backdrop-filter: blur(calc(62 * var(--k)));
 }
 
+/* Placed like the budget card's caption, so it holds still as they turn. */
 .copy {
-  align-self: stretch;
-  padding-right: calc(96 * var(--k));
+  align-self: flex-start;
+  width: calc(751.231 * var(--s));
+  margin-left: calc(50.08 * var(--s));
   font-family: var(--font-display);
   font-size: calc(16 * var(--k));
   line-height: 1.5;
