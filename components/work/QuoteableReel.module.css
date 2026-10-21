@@ -29,7 +29,7 @@ img.layer {
 /* The blocks turn a quarter about the pivot for the portrait. */
 .blocks {
   transform-origin: calc(var(--px) * var(--u)) calc(var(--py) * var(--u));
-  transition: transform 1.5s cubic-bezier(0.7, 0, 0.2, 1);
+  transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1);
 }
 
 .tile[data-scene="portrait"] .blocks {
@@ -41,7 +41,7 @@ img.layer {
 .window {
   overflow: hidden;
   clip-path: inset(calc(114 * var(--u)) 0 0 calc(610 * var(--u)) round 0);
-  transition: clip-path 1.5s cubic-bezier(0.7, 0, 0.2, 1);
+  transition: clip-path 1s cubic-bezier(0.7, 0, 0.2, 1);
 }
 
 .tile[data-scene="portrait"] .window {
@@ -51,22 +51,17 @@ img.layer {
   );
 }
 
-.window > .home,
+/* No fade: the portrait wipes up over the app as the window closes in,
+   like a blind going up, and back down on the way back. */
 .portrait {
-  transition: opacity 0.8s 0.35s ease;
-}
-
-.portrait {
+  z-index: 1;
   isolation: isolate;
-  opacity: 0;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1s cubic-bezier(0.7, 0, 0.2, 1);
 }
 
 .tile[data-scene="portrait"] .portrait {
-  opacity: 1;
-}
-
-.tile[data-scene="portrait"] .window > .home {
-  opacity: 0;
+  clip-path: inset(0);
 }
 
 .cover {
@@ -136,7 +131,7 @@ img.layer {
     0 calc(28.581 * var(--u)) calc(28.581 * var(--u)) rgba(0, 0, 0, 0.35),
     0 calc(6.351 * var(--u)) calc(15.878 * var(--u)) rgba(0, 0, 0, 0.4);
   transform: translateY(calc(var(--to) * var(--u)));
-  transition: transform 0.55s cubic-bezier(0.3, 0.9, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.3, 0.9, 0.3, 1);
 }
 
 .ripple {
@@ -203,7 +198,7 @@ img.layer {
 
 .cursor {
   transform: translateY(calc(var(--to) * var(--u)));
-  transition: transform 0.7s cubic-bezier(0.5, 0, 0.2, 1);
+  transition: transform 0.45s cubic-bezier(0.5, 0, 0.2, 1);
 }
 
 /* ---------- Motion, only while on screen ---------- */
@@ -217,7 +212,7 @@ img.layer {
   }
 
   .tile[data-running] .ripple {
-    animation: ripple 0.7s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: ripple 0.55s 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .tile[data-running] .portraitClouds {

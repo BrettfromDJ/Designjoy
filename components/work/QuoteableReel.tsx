@@ -8,9 +8,9 @@ const DIR = "/work/quoteable";
 // are placed in its own coordinates.
 const HOME_X = 610;
 const HOME_Y = 114;
-const STEP_MS = 2800;
+const STEP_MS = 1600;
 // How long the portrait shows before it turns back into the app.
-const PORTRAIT_MS = 6000;
+const PORTRAIT_MS = 3800;
 // The colour blocks turn a quarter about this point (in the frame) to go
 // from one design to the other: it's where the two layouts line up.
 const PIVOT = [717.2, 595.2];
@@ -61,13 +61,13 @@ export function QuoteableReel() {
   // The cursor moves to the next page, then clicks it, down to the last.
   useEffect(() => {
     if (!visible || scene !== "app" || active === PAGES.length - 1) return;
-    const move = setTimeout(() => setTarget((t) => t + 1), STEP_MS - 900);
+    const move = setTimeout(() => setTarget((t) => t + 1), STEP_MS - 550);
     return () => clearTimeout(move);
   }, [visible, scene, active]);
 
   useEffect(() => {
     if (!visible || target === active) return;
-    const click = setTimeout(() => setActive(target), 750);
+    const click = setTimeout(() => setActive(target), 480);
     return () => clearTimeout(click);
   }, [visible, target, active]);
 
@@ -77,13 +77,13 @@ export function QuoteableReel() {
     if (!visible) return;
     if (scene === "app") {
       if (active !== PAGES.length - 1) return;
-      const turn = setTimeout(() => setScene("portrait"), 1800);
+      const turn = setTimeout(() => setScene("portrait"), 900);
       return () => clearTimeout(turn);
     }
     const reset = setTimeout(() => {
       setTarget(0);
       setActive(0);
-    }, 1600);
+    }, 1100);
     const back = setTimeout(() => setScene("app"), PORTRAIT_MS);
     return () => {
       clearTimeout(reset);
