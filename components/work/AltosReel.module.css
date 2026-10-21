@@ -165,6 +165,17 @@
   transform: scaleY(1);
 }
 
+/* Between changes the stripes are put away for the next one, which may
+   turn them the other way: out of sight, and without animating, so they
+   never sweep across a second time. */
+.stage:is([data-sweep="idle"], [data-sweep="enter"]) .sweep {
+  visibility: hidden;
+}
+
+.stage:is([data-sweep="idle"], [data-sweep="enter"]) .sweep span {
+  transition: none;
+}
+
 /* Rise: up from the bottom, and away out of the top. */
 .stage[data-sweep="reveal"] .sweep span {
   transform-origin: top;
