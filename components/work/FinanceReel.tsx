@@ -1,39 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { BudgetCard } from "./BudgetCard";
 import { EarningsCard, RatingsCard, StatsCard } from "./FinanceCards";
 import styles from "./FinanceReel.module.css";
 
 const SLIDES = [BudgetCard, RatingsCard, EarningsCard, StatsCard];
 const SLIDE_MS = 6500;
-
-/*
- * Ways to move between the cards, previewed with ?reel=1…6 and a small
- * switcher. Without ?reel it cross-fades (1).
- */
-const TRANSITIONS = ["Cross-fade", "Carousel", "Deck", "Flip", "Blur", "Wipe"] as const;
-
-function useTransition() {
-  const [n, setN] = useState(1);
-  const [preview, setPreview] = useState(false);
-  useEffect(() => {
-    const v = Number(new URLSearchParams(window.location.search).get("reel"));
-    if (v >= 1 && v <= TRANSITIONS.length) {
-      setN(v);
-      setPreview(true);
-    }
-  }, []);
-  const go = (to: number) => {
-    const next = ((to - 1 + TRANSITIONS.length) % TRANSITIONS.length) + 1;
-    const url = new URL(window.location.href);
-    url.searchParams.set("reel", String(next));
-    window.history.replaceState(null, "", url);
-    setN(next);
-  };
-  return [n, preview, go] as const;
-}
 
 /** Where a card is relative to the one showing: next up, just gone, or out of the way. */
 function position(i: number, current: number) {
@@ -42,9 +15,10 @@ function position(i: number, current: number) {
 }
 
 /**
- * The finance app work sample: the cards from the Figma designs on a black
- * tile, taking turns. Each animates in as it comes round; it only moves
- * while on screen, and stays on the first card with reduced motion.
+ * The finance app work sample: the cards from the Figma designs in a
+ * carousel, the neighbours peeking in at the sides, taking turns. Each
+ * animates in as it comes round; it only moves while on screen, and stays
+ * on the first card with reduced motion.
  */
 export function FinanceReel({ large = false }: { large?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -52,7 +26,6 @@ export function FinanceReel({ large = false }: { large?: boolean }) {
   const [current, setCurrent] = useState(0);
   // How many times each card has come round, to replay its animation.
   const [plays, setPlays] = useState<number[]>(() => SLIDES.map(() => 0));
-  const [transition, preview, goTransition] = useTransition();
 
   useEffect(() => {
     const el = ref.current;
@@ -75,7 +48,7 @@ export function FinanceReel({ large = false }: { large?: boolean }) {
   }, [visible, current]);
 
   return (
-    <div ref={ref} className={styles.tile} data-transition={transition} aria-label="Finance app: budget, analyst ratings, earnings and fundamentals">
+    <div ref={ref} className={styles.tile} aria-label="Finance app: budget, analyst ratings, earnings and fundamentals">
       {SLIDES.map((Slide, i) => (
         <div
           key={i}
@@ -93,22 +66,6 @@ export function FinanceReel({ large = false }: { large?: boolean }) {
           <span key={i} data-on={i === current || undefined} />
         ))}
       </div>
-      {preview &&
-        !large &&
-        createPortal(
-          <div className={styles.switcher} role="group" aria-label="Card transition preview">
-            <button type="button" onClick={() => goTransition(transition - 1)} aria-label="Previous">
-              ‹
-            </button>
-            <span>
-              <b>{transition}</b>/{TRANSITIONS.length} · {TRANSITIONS[transition - 1]}
-            </span>
-            <button type="button" onClick={() => goTransition(transition + 1)} aria-label="Next">
-              ›
-            </button>
-          </div>,
-          document.body,
-        )}
     </div>
   );
 }
