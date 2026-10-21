@@ -14,21 +14,143 @@
   overflow: hidden;
 }
 
-/* The cards share one spot and cross-fade, the next easing up as the last
-   one settles back. */
+/* The cards share one spot. How they move between each other depends on the
+   transition (data-transition); each card knows where it stands
+   (data-pos: current, next, prev — just gone — or away). A card moving
+   "away" jumps there unseen. */
 .slide {
   grid-area: 1 / 1;
-  opacity: 0;
-  transform: scale(0.96);
+  pointer-events: none;
   transition:
     opacity 0.7s ease,
-    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
-  pointer-events: none;
+    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.9s ease,
+    clip-path 0.9s cubic-bezier(0.7, 0, 0.2, 1);
 }
 
-.slide[data-active] {
+.slide[data-pos="away"] {
+  transition: none;
+  opacity: 0;
+}
+
+/* 1. Cross-fade: the next eases up as the last settles back. */
+.tile[data-transition="1"] .slide {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.tile[data-transition="1"] .slide[data-pos="current"] {
   opacity: 1;
   transform: none;
+}
+
+/* 2. Carousel: the neighbours peek in at the sides, and the row slides. */
+.tile[data-transition="2"] .slide {
+  transition-duration: 0.9s, 1s, 0.9s, 0.9s;
+  transition-timing-function: ease, cubic-bezier(0.65, 0, 0.25, 1), ease, ease;
+}
+
+.tile[data-transition="2"] .slide[data-pos="current"] {
+  z-index: 2;
+}
+
+.tile[data-transition="2"] .slide[data-pos="next"] {
+  opacity: 0.45;
+  transform: translateX(105%) scale(0.8);
+}
+
+.tile[data-transition="2"] .slide[data-pos="prev"] {
+  opacity: 0.45;
+  transform: translateX(-105%) scale(0.8);
+}
+
+.tile[data-transition="2"] .slide[data-pos="away"] {
+  transform: translateX(210%) scale(0.8);
+}
+
+/* 3. Deck: the next card waits just behind; the top one drops away and
+   the next comes forward. */
+.tile[data-transition="3"] .slide[data-pos="current"] {
+  z-index: 3;
+}
+
+.tile[data-transition="3"] .slide[data-pos="next"] {
+  z-index: 2;
+  opacity: 0.6;
+  transform: translateY(-6%) scale(0.92);
+}
+
+.tile[data-transition="3"] .slide[data-pos="prev"] {
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(18%) rotate(-4deg) scale(1.02);
+  transition-duration: 0.6s, 0.8s, 0.8s, 0.8s;
+}
+
+.tile[data-transition="3"] .slide[data-pos="away"] {
+  transform: translateY(-10%) scale(0.86);
+}
+
+/* 4. Flip: the card turns over to show the next. */
+.tile[data-transition="4"] {
+  perspective: calc(2400 * var(--s));
+}
+
+.tile[data-transition="4"] .slide {
+  backface-visibility: hidden;
+  transition:
+    opacity 0.01s linear 0.45s,
+    transform 0.9s cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+.tile[data-transition="4"] .slide[data-pos="current"] {
+  transition:
+    opacity 0.01s linear 0.45s,
+    transform 0.9s cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+.tile[data-transition="4"] .slide[data-pos="next"] {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
+
+.tile[data-transition="4"] .slide[data-pos="prev"] {
+  opacity: 0;
+  transform: rotateY(-180deg);
+}
+
+/* 5. Blur: the last card swells and melts away as the next comes into focus. */
+.tile[data-transition="5"] .slide {
+  opacity: 0;
+  filter: blur(calc(40 * var(--s)));
+  transform: scale(0.94);
+}
+
+.tile[data-transition="5"] .slide[data-pos="prev"] {
+  transform: scale(1.06);
+}
+
+.tile[data-transition="5"] .slide[data-pos="current"] {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+/* 6. Wipe: the next card is revealed across the last, right to left. */
+.tile[data-transition="6"] .slide {
+  clip-path: inset(0 0 0 100% round calc(25 * var(--s)));
+}
+
+.tile[data-transition="6"] .slide[data-pos="current"] {
+  z-index: 2;
+  clip-path: inset(0 0 0 0 round calc(25 * var(--s)));
+}
+
+.tile[data-transition="6"] .slide[data-pos="prev"] {
+  z-index: 1;
+  clip-path: inset(0 0 0 0 round calc(25 * var(--s)));
+  transform: translateX(-4%);
+  opacity: 0.6;
 }
 
 /* Which card is showing. */
@@ -58,5 +180,52 @@
 @media (prefers-reduced-motion: reduce) {
   .slide {
     transition: none;
+  }
+}
+
+/* Preview-only switcher. */
+.switcher {
+  position: fixed;
+  left: 16px;
+  bottom: 40px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 4px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-nav);
+  box-shadow: var(--shadow-float);
+}
+
+.switcher b {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.switcher button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--border-subtle);
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.switcher span {
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 819px) {
+  .switcher {
+    bottom: auto;
+    top: 88px;
   }
 }
