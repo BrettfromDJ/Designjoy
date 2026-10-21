@@ -21,7 +21,10 @@
   flex-direction: column;
   gap: var(--gap);
   height: 100%;
-  padding: calc(var(--gap) * 2 + 49px) 0 var(--gap);
+  /* Reaches a gap past the cards on each side (to the screen's edge and to
+     the work), so their shadows aren't cut off by the scrolling edge. */
+  margin: 0 calc(var(--gap) * -1);
+  padding: calc(var(--gap) * 2 + 49px) var(--gap) var(--gap);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -96,6 +99,7 @@
 
   .inner {
     height: auto;
+    margin: 0;
     padding: 0;
     overflow: visible;
     -webkit-mask: none;
