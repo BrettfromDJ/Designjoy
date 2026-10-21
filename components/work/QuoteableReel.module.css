@@ -26,6 +26,62 @@ img.layer {
 }
 
 /* ---------- Behind the app ---------- */
+/* The blocks turn a quarter about the pivot for the portrait. */
+.blocks {
+  transform-origin: calc(var(--px) * var(--u)) calc(var(--py) * var(--u));
+  transition: transform 1.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.tile[data-scene="portrait"] .blocks {
+  transform: rotate(90deg);
+}
+
+/* The window onto the app (to the frame's edges) closes in to the portrait
+   card, as the one fades into the other. */
+.window {
+  overflow: hidden;
+  clip-path: inset(calc(114 * var(--u)) 0 0 calc(610 * var(--u)) round 0);
+  transition: clip-path 1.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.tile[data-scene="portrait"] .window {
+  clip-path: inset(
+    calc(114 * var(--u)) calc(406.16 * var(--u)) calc(112 * var(--u)) calc(405.44 * var(--u))
+      round calc(7.5 * var(--u))
+  );
+}
+
+.window > .home,
+.portrait {
+  transition: opacity 0.8s 0.35s ease;
+}
+
+.portrait {
+  isolation: isolate;
+  opacity: 0;
+}
+
+.tile[data-scene="portrait"] .portrait {
+  opacity: 1;
+}
+
+.tile[data-scene="portrait"] .window > .home {
+  opacity: 0;
+}
+
+.cover {
+  object-fit: cover;
+}
+
+.softLight {
+  mix-blend-mode: soft-light;
+}
+
+/* She breathes from the shoulders, not the middle. */
+.person {
+  transform-origin: 50% 100%;
+}
+
 .sunset {
   background: linear-gradient(#a6c1f1, #e1d4e6 53.365%, #fedaa7);
 }
@@ -164,11 +220,27 @@ img.layer {
     animation: ripple 0.7s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
+  .tile[data-running] .portraitClouds {
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+
+  .tile[data-running] .cardWriting {
+    animation: sway 12s ease-in-out infinite alternate;
+  }
+
+  .tile[data-running] .person {
+    animation: settle 8s ease-in-out infinite alternate;
+  }
+
   .tile[data-running] .sparkle {
     animation: turn 14s linear infinite;
   }
 
   .clouds,
+  .portraitClouds,
+  .cardWriting,
+  .person,
+  .blocks,
   .sparkle,
   .button,
   .cursor {
@@ -182,6 +254,25 @@ img.layer {
   }
   to {
     transform: translate(3%, -1.5%) scale(1.04);
+  }
+}
+
+/* The handwriting drifts slowly sideways across the card. */
+@keyframes sway {
+  from {
+    transform: translateX(-2%);
+  }
+  to {
+    transform: translateX(2%);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.025);
   }
 }
 
