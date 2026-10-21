@@ -72,7 +72,8 @@
   width: calc(751.231 * var(--s));
   margin-left: calc(50.08 * var(--s));
   font-family: var(--font-display);
-  font-size: calc(16 * var(--k));
+  /* Matches the budget card's caption (29 of its pixels). */
+  font-size: calc(29 * var(--s));
   line-height: 1.5;
 }
 

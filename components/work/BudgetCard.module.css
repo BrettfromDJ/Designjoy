@@ -108,7 +108,8 @@
   width: calc(751.231 * var(--s));
   margin-left: calc(50.08 * var(--s));
   font-family: var(--font-display);
-  font-size: calc(25.041 * var(--s));
+  /* A step up from the design (25.041) so it reads in the grid. */
+  font-size: calc(29 * var(--s));
   line-height: 1.5;
 }
 
