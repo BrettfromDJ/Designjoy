@@ -1,0 +1,212 @@
+/* The tile: in the same 1440 × 1024 shape as the uploaded work, showing the
+   Figma frame (1533 × 1092) edge to edge. --u is one of the design's pixels. */
+.tile {
+  --u: calc(100cqw / 1532.81);
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 1440 / 1024;
+  overflow: hidden;
+  isolation: isolate;
+  background: #fff;
+}
+
+/* Everything sits at the design's coordinates (see `box` in the component). */
+.layer {
+  position: absolute;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--w) * var(--u));
+  height: calc(var(--h) * var(--u));
+  max-width: none;
+  margin: 0;
+}
+
+img.layer {
+  display: block;
+}
+
+/* ---------- Behind the app ---------- */
+.sunset {
+  background: linear-gradient(#a6c1f1, #e1d4e6 53.365%, #fedaa7);
+}
+
+/* The paper grain over everything, multiplied in. */
+.paper {
+  object-fit: cover;
+  object-position: bottom;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.writing {
+  opacity: 0.23;
+}
+
+/* ---------- The app's home screen ---------- */
+.home {
+  overflow: hidden;
+  isolation: isolate;
+  background: #fff;
+}
+
+.clouds {
+  object-fit: cover;
+}
+
+.cloudFade {
+  background: linear-gradient(rgba(255, 255, 255, 0) 61.258%, #fff 87.636%);
+}
+
+.nav {
+  overflow: hidden;
+  isolation: isolate;
+  box-sizing: border-box;
+  background: #f6f6f6;
+  border: calc(2.922 * var(--u)) solid rgba(0, 0, 0, 0.1);
+  border-radius: calc(46.75 * var(--u));
+}
+
+/* The dark button behind the page that's open; it slides to each. */
+.button {
+  box-sizing: border-box;
+  border: calc(8.14 * var(--u)) solid #1b1b1b;
+  border-radius: calc(35.062 * var(--u));
+  background: linear-gradient(#323232, #1b1b1b);
+  box-shadow:
+    0 calc(174.66 * var(--u)) calc(47.635 * var(--u)) rgba(0, 0, 0, 0.01),
+    0 calc(111.147 * var(--u)) calc(44.459 * var(--u)) rgba(0, 0, 0, 0.06),
+    0 calc(63.513 * var(--u)) calc(38.108 * var(--u)) rgba(0, 0, 0, 0.2),
+    0 calc(28.581 * var(--u)) calc(28.581 * var(--u)) rgba(0, 0, 0, 0.35),
+    0 calc(6.351 * var(--u)) calc(15.878 * var(--u)) rgba(0, 0, 0, 0.4);
+  transform: translateY(calc(var(--to) * var(--u)));
+  transition: transform 0.55s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+
+.ripple {
+  position: absolute;
+  inset: calc(-8.14 * var(--u));
+  border-radius: inherit;
+  border: calc(4 * var(--u)) solid rgba(255, 255, 255, 0.55);
+  opacity: 0;
+}
+
+/* Each icon drawn in its colour from its own shape: the design's olive, or
+   on the dark button, the home icon's white (fading in toward its base). */
+.iconBox {
+  overflow: hidden;
+}
+
+.icon {
+  position: absolute;
+  background: #a5a591;
+  -webkit-mask: var(--icon) center / 100% 100% no-repeat;
+  mask: var(--icon) center / 100% 100% no-repeat;
+  transition: background-color 0.35s ease;
+}
+
+.iconBox[data-on] .icon {
+  background: linear-gradient(rgba(255, 255, 255, 0.5), #fff);
+}
+
+.greeting {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  font-size: calc(128.562 * var(--u));
+  line-height: normal;
+  letter-spacing: calc(-3.857 * var(--u));
+  color: #fff;
+  white-space: nowrap;
+}
+
+.greeting em {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ask {
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: calc(70.125 * var(--u));
+  background: #fff;
+  box-shadow:
+    calc(169.469 * var(--u)) calc(558.078 * var(--u)) calc(163.625 * var(--u)) rgba(63, 69, 162, 0),
+    calc(108.109 * var(--u)) calc(356.469 * var(--u)) calc(149.016 * var(--u)) rgba(63, 69, 162, 0.01),
+    calc(61.359 * var(--u)) calc(201.609 * var(--u)) calc(125.641 * var(--u)) rgba(63, 69, 162, 0.05),
+    calc(26.297 * var(--u)) calc(90.578 * var(--u)) calc(93.5 * var(--u)) rgba(63, 69, 162, 0.08),
+    calc(5.844 * var(--u)) calc(23.375 * var(--u)) calc(52.594 * var(--u)) rgba(63, 69, 162, 0.09);
+}
+
+.placeholder {
+  font-family: var(--font-display);
+  font-size: calc(46.75 * var(--u));
+  line-height: normal;
+  color: rgba(67, 67, 34, 0.3);
+  white-space: nowrap;
+}
+
+.cursor {
+  transform: translateY(calc(var(--to) * var(--u)));
+  transition: transform 0.7s cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+/* ---------- Motion, only while on screen ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .tile[data-running] .clouds {
+    animation: drift 24s ease-in-out infinite alternate;
+  }
+
+  .tile[data-running] .writing {
+    animation: breathe 9s ease-in-out infinite alternate;
+  }
+
+  .tile[data-running] .ripple {
+    animation: ripple 0.7s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .tile[data-running] .sparkle {
+    animation: turn 14s linear infinite;
+  }
+
+  .clouds,
+  .sparkle,
+  .button,
+  .cursor {
+    will-change: transform;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(-3%, 1.5%) scale(1.02);
+  }
+  to {
+    transform: translate(3%, -1.5%) scale(1.04);
+  }
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 0.28;
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes turn {
+  to {
+    rotate: 360deg;
+  }
+}
