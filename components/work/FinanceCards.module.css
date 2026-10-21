@@ -55,7 +55,9 @@
   justify-content: center;
 }
 
+/* Drawn 1.3× the design's size, so the glass card fills more of the photo. */
 .panel {
+  zoom: 1.3;
   position: relative;
   width: calc(359 * var(--k));
   border-radius: calc(16 * var(--k));

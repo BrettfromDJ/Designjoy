@@ -8,7 +8,8 @@
   justify-content: space-between;
   width: calc(1076.765 * var(--s));
   height: calc(1089.285 * var(--s));
-  padding: calc(226.934 * var(--s)) calc(37.562 * var(--s)) calc(75.123 * var(--s));
+  /* Less room above than in the design (226.934), for the larger panel. */
+  padding: calc(110 * var(--s)) calc(37.562 * var(--s)) calc(75.123 * var(--s));
   border-radius: calc(25.041 * var(--s));
   overflow: hidden;
   isolation: isolate;
@@ -32,7 +33,9 @@
 }
 
 /* ---------- The glass chart panel ---------- */
+/* Drawn 1.3× the design's size, so the glass card fills more of the photo. */
 .panel {
+  zoom: 1.3;
   position: relative;
   flex: none;
   width: calc(532.122 * var(--s));
