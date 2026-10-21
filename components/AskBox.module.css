@@ -172,6 +172,15 @@
   }
 }
 
+/* On phones the closed box's light holds still: travelling round, it's
+   redrawn every frame for as long as the page is open. */
+@media (max-width: 819px) {
+  .shell:not([data-open="true"]) .box::before,
+  .shell:not([data-open="true"]) .box::after {
+    animation: none;
+  }
+}
+
 .field {
   position: relative;
   display: flex;

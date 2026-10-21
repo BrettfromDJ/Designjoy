@@ -35,6 +35,16 @@
   }
 }
 
+/* On phones, without the blur (costly to redraw each frame). */
+@media (max-width: 819px) {
+  @keyframes line-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+}
+
 @media (max-width: 559px) {
   .title {
     font-size: 27px;
@@ -191,6 +201,13 @@
   mask-composite: exclude;
   animation: tag-spin 3s linear infinite;
   pointer-events: none;
+}
+
+/* On phones it holds still (see the ask box). */
+@media (max-width: 819px) {
+  .tagGlow::before {
+    animation: none;
+  }
 }
 
 @keyframes tag-spin {

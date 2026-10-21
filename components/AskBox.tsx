@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { plans, type Faq, type Plan } from "@/content/site";
 import {
   OPEN_ASK_BOX_EVENT,
@@ -11,10 +12,13 @@ import { NEXT_STEP_LABELS, parseAnswer, type NextStep } from "@/lib/chat";
 import { ChatError, streamChat } from "@/lib/chat-client";
 import { BotFace } from "./BotFace";
 import { BookCall, BookCallMeta } from "./BookCall";
-import { CheckoutPanel } from "./CheckoutPanel";
 import { Tour } from "./HowItWorksCard";
 import { PlanPicker } from "./PlanPicker";
 import styles from "./AskBox.module.css";
+
+// The checkout (and Stripe with it) loads only once someone goes to pay,
+// rather than with every page.
+const CheckoutPanel = dynamic(() => import("./CheckoutPanel").then((m) => m.CheckoutPanel), { ssr: false });
 
 // `content` keeps the raw answer; `bookCall` forces the booking button (used for errors);
 // `typing` shows dots while a FAQ answer is "being typed".

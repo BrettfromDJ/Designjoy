@@ -107,6 +107,13 @@
   }
 }
 
+/* The cards further down aren't drawn (nor their animations run) until
+   they're near the screen, so the page has less to do as it loads. */
+.inner > :nth-child(n + 4) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
+
 /* ---------- Entrance ----------
    Each card rises and unveils from the top down while its contents
    cascade in out of a soft blur. The first two cards (after the hidden h1)
@@ -206,5 +213,30 @@
     opacity: 0;
     transform: translateY(14px);
     filter: blur(5px);
+  }
+}
+
+/* On phones the entrance skips the blur and the unveil, which the phone
+   has to redraw every frame; it just rises and fades, which it can hand to
+   the graphics chip. */
+@media (max-width: 819px) {
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+  }
+
+  @keyframes child-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @keyframes child-sharpen {
+    from {
+      transform: translateY(14px);
+    }
   }
 }

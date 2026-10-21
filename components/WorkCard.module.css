@@ -5,6 +5,10 @@
   overflow: hidden;
   border-radius: var(--radius-card);
   background: var(--surface);
+  /* Its shape from the piece's own, so it holds its size before it's drawn. */
+  aspect-ratio: var(--ratio);
+  /* Not drawn (nor its animations run) until it's near the screen. */
+  content-visibility: auto;
 }
 
 /* The same stroke as the site's other cards, drawn over the artwork so the
