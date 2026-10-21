@@ -1,7 +1,7 @@
 import { HeroAsk } from "@/components/HeroAsk";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { LEGAL } from "@/content/legal";
-import { sampleWork, type WorkItem } from "@/content/site";
+import type { WorkItem } from "@/content/site";
 import { getFaqs } from "@/lib/faqs";
 import { getHighlights } from "@/lib/highlights";
 import { getProjects } from "@/lib/projects";
@@ -18,17 +18,15 @@ export const revalidate = 3600;
 
 export default async function ClassicHome() {
   const [projects, highlights, { faqs }] = await Promise.all([getProjects(), getHighlights(), getFaqs()]);
-  const work: WorkItem[] = projects.length
-    ? projects.map(({ id, title, kind, url, width, height, frames }) => ({
-        id,
-        title,
-        kind,
-        src: url,
-        width,
-        height,
-        ...(kind === "image" && frames?.length ? { frames } : {}),
-      }))
-    : sampleWork;
+  const work: WorkItem[] = projects.map(({ id, title, kind, url, width, height, frames }) => ({
+    id,
+    title,
+    kind,
+    src: url,
+    width,
+    height,
+    ...(kind === "image" && frames?.length ? { frames } : {}),
+  }));
 
   return (
     <main>

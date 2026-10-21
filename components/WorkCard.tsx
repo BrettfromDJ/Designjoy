@@ -99,7 +99,8 @@ export function WorkCard({
           ))}
         </>
       )}
-      {item.company && <span className={styles.tag}>{item.company}</span>}
+      {/* Every piece is tagged: its company, else its title. */}
+      {(item.company || item.title) && <span className={styles.tag}>{item.company || item.title}</span>}
     </figure>
   );
 }

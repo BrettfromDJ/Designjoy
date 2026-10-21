@@ -1,6 +1,6 @@
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { Sidebar } from "@/components/Sidebar";
-import { codedWork, sampleWork, type WorkItem } from "@/content/site";
+import { codedWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
 import { getProjects } from "@/lib/projects";
 
@@ -12,18 +12,16 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const [projects, highlights] = await Promise.all([getProjects(), getHighlights()]);
-  const uploaded: WorkItem[] = projects.length
-    ? projects.map(({ id, title, company, kind, url, width, height, frames }) => ({
-        id,
-        title,
-        company,
-        kind,
-        src: url,
-        width,
-        height,
-        ...(kind === "image" && frames?.length ? { frames } : {}),
-      }))
-    : sampleWork;
+  const uploaded: WorkItem[] = projects.map(({ id, title, company, kind, url, width, height, frames }) => ({
+    id,
+    title,
+    company,
+    kind,
+    src: url,
+    width,
+    height,
+    ...(kind === "image" && frames?.length ? { frames } : {}),
+  }));
   // The coded pieces come first.
   const work = [...codedWork, ...uploaded];
 

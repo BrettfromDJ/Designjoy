@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { NavTop } from "@/components/NavTop";
 import { Welcome } from "@/components/welcome/Welcome";
-import { plans, sampleWork, trelloInviteEta } from "@/content/site";
+import { plans, trelloInviteEta } from "@/content/site";
 import { memberNumber } from "@/lib/members";
 import { getProjects } from "@/lib/projects";
 import { getStripe } from "@/lib/stripe";
@@ -70,9 +70,9 @@ export default async function WelcomePage({
   const member = details ? details.member : Number(previewMember) || undefined;
   // Portfolio images, for the wall behind the page.
   const projects = await getProjects().catch(() => []);
-  const art = (projects.length ? projects.map((p) => ({ kind: p.kind, src: p.url })) : sampleWork)
-    .filter((w) => w.kind === "image")
-    .map((w) => w.src)
+  const art = projects
+    .filter((p) => p.kind === "image")
+    .map((p) => p.url)
     .slice(0, 12);
 
   return (

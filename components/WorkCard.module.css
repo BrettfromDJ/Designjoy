@@ -74,18 +74,17 @@
   transition-delay: var(--reveal-delay, 0ms);
 }
 
-/* The client's name, on the artwork's top-left corner. */
+/* The client's name, on the artwork's top-left corner, styled like the
+   cards in the sidebar. */
 .tag {
   position: absolute;
   top: 8px;
   left: 8px;
-  z-index: 2;
+  z-index: 3;
   padding: 5px 8px;
-  border-radius: 0;
-  background: rgba(0, 0, 0, 0.55);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  color: #fff;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 500;
@@ -94,6 +93,10 @@
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
+}
+
+:global(html[data-theme="light"]) .tag {
+  border-color: rgba(0, 0, 0, 0.07);
 }
 
 @media (prefers-reduced-motion: reduce) {

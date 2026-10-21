@@ -28,8 +28,7 @@ const SIDEBAR_QUERIES: [string, ColumnCount][] = [
   ["(min-width: 1600px)", 2],
 ];
 // Image sizes to match those columns (the sidebar takes ~372px).
-const SIDEBAR_SIZES =
-  "(min-width: 2400px) 30vw, (min-width: 1600px) 40vw, (min-width: 820px) 75vw, 100vw";
+const SIDEBAR_SIZES = "(min-width: 2400px) 30vw, (min-width: 1600px) 40vw, (min-width: 820px) 75vw, 100vw";
 
 function getColumnCount(queries = QUERIES): ColumnCount {
   for (const [query, count] of queries) {
@@ -51,12 +50,9 @@ function visibleFixedCards(highlights: Highlight[]) {
 }
 
 function subscribe(onChange: () => void) {
-  const lists = [...QUERIES, ...SIDEBAR_QUERIES].map(([query]) =>
-    window.matchMedia(query),
-  );
+  const lists = [...QUERIES, ...SIDEBAR_QUERIES].map(([query]) => window.matchMedia(query));
   lists.forEach((list) => list.addEventListener("change", onChange));
-  return () =>
-    lists.forEach((list) => list.removeEventListener("change", onChange));
+  return () => lists.forEach((list) => list.removeEventListener("change", onChange));
 }
 
 /** `workOnly` leaves out the fixed cards, for the sidebar layout where they live on the left. */
@@ -74,11 +70,7 @@ export function MasonryGrid({
     () => getColumnCount(workOnly ? SIDEBAR_QUERIES : QUERIES),
     () => (workOnly ? 1 : 4) as ColumnCount,
   );
-  const columns = layoutMasonry(
-    columnCount,
-    work,
-    workOnly ? [] : visibleFixedCards(highlights),
-  );
+  const columns = layoutMasonry(columnCount, work, workOnly ? [] : visibleFixedCards(highlights));
 
   return (
     <div
@@ -101,22 +93,13 @@ export function MasonryGrid({
               );
             }
             if (cell.card.kind === "testimonial") {
-              return (
-                <TestimonialCard
-                  key={cell.card.id}
-                  height={cell.card.minHeight}
-                />
-              );
+              return <TestimonialCard key={cell.card.id} height={cell.card.minHeight} />;
             }
             if (cell.card.kind === "scope") {
-              return (
-                <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />
-              );
+              return <ScopeBoard key={cell.card.id} height={cell.card.minHeight} />;
             }
             if (cell.card.kind === "highlights") {
-              return (
-                <HighlightsCard key={cell.card.id} highlights={highlights} />
-              );
+              return <HighlightsCard key={cell.card.id} highlights={highlights} />;
             }
             if (cell.card.kind === "howItWorks") {
               return <HowItWorksCard key={cell.card.id} />;

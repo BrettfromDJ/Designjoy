@@ -117,21 +117,6 @@ export const codedWork: WorkItem[] = [
   { id: "finance", title: "Finance app", kind: "coded", src: "", width: 1440, height: 1024 },
 ];
 
-// Sample portfolio pieces, shown until projects are uploaded at /admin.
-// Work flows into the masonry grid around the fixed cards, in order, each
-// piece going into whichever column is currently shortest.
-export const sampleWork: WorkItem[] = [
-  { id: "ordin-subway-poster", kind: "image", company: "Ordin", title: "Ordin — subway poster", src: "/work/ordin-subway-poster.png", width: 340, height: 242 },
-  { id: "ordin-billboard-night", kind: "image", company: "Ordin", title: "Ordin — billboard", src: "/work/ordin-billboard-night.png", width: 340, height: 241 },
-  { id: "ordin-billboard-bridge", kind: "image", company: "Ordin", title: "Ordin — street billboard", src: "/work/ordin-billboard-bridge.png", width: 340, height: 241 },
-  { id: "ordin-horse-poster", kind: "image", company: "Ordin", title: "Ordin — poster", src: "/work/ordin-horse-poster.png", width: 340, height: 241 },
-  { id: "ordin-operating-system", kind: "image", company: "Ordin", title: "Ordin — illustration", src: "/work/ordin-operating-system.png", width: 340, height: 242 },
-  { id: "ordin-machine-order", kind: "image", company: "Ordin", title: "Ordin — typography", src: "/work/ordin-machine-order.png", width: 340, height: 242 },
-  { id: "ordin-machines-in-motion", kind: "image", company: "Ordin", title: "Ordin — logomark", src: "/work/ordin-machines-in-motion.png", width: 338, height: 240 },
-  { id: "ordin-embossed-mark", kind: "image", company: "Ordin", title: "Ordin — embossed mark", src: "/work/ordin-embossed-mark.png", width: 340, height: 242 },
-  { id: "ordin-type-specimen", kind: "image", company: "Ordin", title: "Ordin — type specimen", src: "/work/ordin-type-specimen.png", width: 340, height: 237 },
-];
-
 export type ColumnCount = 1 | 2 | 3 | 4;
 
 // Where a fixed card sits for each column count: `column` is 0-based (or
