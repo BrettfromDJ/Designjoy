@@ -1,10 +1,12 @@
-/* The tile: black and square, like the Figma frame (1617 × 1617). --s scales
-   the design's pixels to the tile, for every card inside. */
+/* The tile: black, in the same 1440 × 1024 shape as the uploaded work, with
+   the cards centred on it at the size they had in the square Figma frame
+   (1617 × 1617) as tall as the tile. --s scales the design's pixels to the
+   tile, for every card inside. */
 .tile {
-  --s: calc(100cqw / 1617);
+  --s: calc(100cqw * 1024 / 1440 / 1617);
   position: relative;
   container-type: inline-size;
-  aspect-ratio: 1;
+  aspect-ratio: 1440 / 1024;
   display: grid;
   place-items: center;
   background: #000;
