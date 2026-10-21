@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { BudgetCard } from "./BudgetCard";
 import { EarningsCard, RatingsCard, StatsCard } from "./FinanceCards";
 import styles from "./FinanceReel.module.css";
 
 const SLIDES = [BudgetCard, RatingsCard, EarningsCard, StatsCard];
 const SLIDE_MS = 6500;
+// Each card's photo, blurred behind the carousel while that card is showing.
+const BACKDROPS = ["/work/budget/meadow.jpg", "/work/finance/forest.jpg", "/work/finance/leaf.jpg", "/work/finance/frond.jpg"];
 
 /** Where a card is relative to the one showing: next up, just gone, or out of the way. */
 function position(i: number, current: number) {
@@ -49,6 +52,12 @@ export function FinanceReel({ large = false }: { large?: boolean }) {
 
   return (
     <div ref={ref} className={styles.tile} aria-label="Finance app: budget, analyst ratings, earnings and fundamentals">
+      {BACKDROPS.map((src, i) => (
+        <div key={src} className={styles.backdrop} data-on={i === current || undefined} aria-hidden="true">
+          {/* Small is plenty under the blur. */}
+          <Image src={src} alt="" fill sizes="320px" />
+        </div>
+      ))}
       {SLIDES.map((Slide, i) => (
         <div
           key={i}

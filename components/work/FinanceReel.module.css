@@ -17,7 +17,36 @@
 /* A carousel: the cards share one spot, the one showing in the middle and
    its neighbours peeking in at the sides (data-pos: current, next, prev, or
    away — which jumps there unseen), and the row slides along. */
+/* The showing card's photo, blurred to fill the tile; they cross-fade as
+   the cards turn. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.backdrop[data-on] {
+  opacity: 1;
+}
+
+.backdrop img {
+  object-fit: cover;
+  filter: blur(40px) saturate(1.1);
+  /* Grown so the blur's soft edge falls outside the tile. */
+  transform: scale(1.2);
+}
+
+/* Dimmed a touch, so the cards stand out from it. */
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+}
+
 .slide {
+  position: relative;
   grid-area: 1 / 1;
   pointer-events: none;
   transition:
@@ -48,6 +77,7 @@
 /* Which card is showing. */
 .dots {
   position: absolute;
+  z-index: 3;
   left: 50%;
   bottom: calc(60 * var(--s));
   display: flex;
@@ -59,17 +89,19 @@
   width: calc(14 * var(--s));
   height: calc(14 * var(--s));
   border-radius: 50%;
-  background: var(--border);
+  /* White, as they sit on the photo. */
+  background: rgba(255, 255, 255, 0.35);
   transition: background-color 0.4s ease, width 0.4s ease;
 }
 
 .dots span[data-on] {
   width: calc(42 * var(--s));
   border-radius: calc(14 * var(--s));
-  background: var(--text);
+  background: #fff;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .backdrop,
   .slide {
     transition: none;
   }
