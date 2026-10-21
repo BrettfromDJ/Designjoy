@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { Anta } from "next/font/google";
 import { ALTOS_SLIDES } from "./AltosSlides";
 import styles from "./AltosReel.module.css";
@@ -41,6 +41,19 @@ export function AltosReel() {
   // How many changes so far, which picks the next transition.
   const [turn, setTurn] = useState(0);
   const transition = TRANSITIONS[turn % TRANSITIONS.length];
+
+  // The slides are drawn at 1440 wide and scaled to the tile's width, set
+  // here (before it paints, and again whenever the tile resizes). The CSS
+  // works it out too, but not in every browser.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fit = () => el.style.setProperty("--k", String(el.clientWidth / 1440));
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = ref.current;

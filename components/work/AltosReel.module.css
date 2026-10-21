@@ -1,6 +1,7 @@
 /* The tile: the uploads' 1440 × 1024 shape, as are the slides, which are
-   drawn at that size and scaled to the tile (the tan(atan2()) works out the
-   tile's width ÷ 1440 as a plain number, for `scale`). */
+   drawn at that size and scaled to the tile: by --k, the tile's width ÷ 1440,
+   set by the reel; until then (before its script runs) the tan(atan2())
+   works the same out in CSS, where the browser can. */
 .tile {
   position: relative;
   container-type: inline-size;
@@ -16,7 +17,7 @@
   width: 1440px;
   height: 1024px;
   transform-origin: 0 0;
-  scale: tan(atan2(100cqw, 1440px));
+  scale: var(--k, tan(atan2(100cqw, 1440px)));
 }
 
 .current,
