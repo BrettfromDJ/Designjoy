@@ -103,7 +103,7 @@ export function CallCard() {
 
       {/* Or skip the call and email. */}
       <div className={styles.email}>
-        <span className={styles.emailLabel}>Prefer email?</span>
+        <span className={styles.emailLabel}>Or email</span>
         <a href={`mailto:${LEGAL.email}`} className={styles.address}>
           {LEGAL.email}
         </a>

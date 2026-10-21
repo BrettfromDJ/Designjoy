@@ -13,7 +13,7 @@
 .label {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1px;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -70,14 +70,14 @@
   background: #121212;
   color: var(--text);
   font: inherit;
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: -0.3px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
 
 .slot span {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -105,7 +105,7 @@
 }
 
 .zone {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: -0.36px;
   color: var(--text-muted);
   white-space: nowrap;
@@ -116,7 +116,7 @@
   border: 0;
   background: none;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: -0.36px;
   color: var(--text-muted);
   cursor: pointer;
@@ -138,7 +138,7 @@
 
 .emailLabel {
   flex: none;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: -0.36px;
   color: var(--text-muted);
 }
@@ -149,7 +149,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: -0.3px;
   color: var(--text);
   text-decoration: none;
@@ -168,7 +168,7 @@
   border-radius: 999px;
   background: none;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-nav);
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;

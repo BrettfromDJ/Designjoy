@@ -23,7 +23,7 @@
 .label {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1px;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -52,7 +52,7 @@
 
 .toolName {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.2;
   letter-spacing: -0.42px;
 }
@@ -60,7 +60,7 @@
 .toolDescription {
   display: block;
   margin-top: 2px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.2;
   letter-spacing: -0.36px;
   color: var(--text-muted);

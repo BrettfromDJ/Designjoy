@@ -255,3 +255,15 @@
     filter: blur(4px);
   }
 }
+
+/* ---------- Light theme ---------- */
+/* Half-strength links are too faint on white. */
+:global(html[data-theme="light"]) .link {
+  opacity: 0.75;
+}
+
+:global(html[data-theme="light"]) .link:hover,
+:global(html[data-theme="light"]) .active,
+:global(html[data-theme="light"]) .cta {
+  opacity: 1;
+}

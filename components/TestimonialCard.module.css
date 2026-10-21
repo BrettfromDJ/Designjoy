@@ -12,7 +12,7 @@
 .label {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1px;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -56,11 +56,11 @@
 }
 
 .name {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .role {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
