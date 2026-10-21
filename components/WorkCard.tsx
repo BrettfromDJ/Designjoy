@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { WorkItem } from "@/content/site";
 import { useFrameCycle } from "@/lib/use-frame-cycle";
+import { CodedWork } from "./work/CodedWork";
 import styles from "./WorkCard.module.css";
 
 const SIZES = "(min-width: 1100px) 25vw, (min-width: 820px) 33vw, (min-width: 560px) 50vw, 100vw";
@@ -26,7 +27,8 @@ export function WorkCard({
   order?: number;
   onOpen?: () => void;
 }) {
-  const [loaded, setLoaded] = useState(false);
+  // Coded pieces have nothing to load.
+  const [loaded, setLoaded] = useState(item.kind === "coded");
   const videoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLElement>(null);
   const frames = item.kind === "image" ? [item.src, ...(item.frames ?? [])] : [item.src];
@@ -49,7 +51,9 @@ export function WorkCard({
         } as React.CSSProperties
       }
     >
-      {item.kind === "video" ? (
+      {item.kind === "coded" ? (
+        <CodedWork item={item} />
+      ) : item.kind === "video" ? (
         <video
           ref={videoRef}
           src={item.src}

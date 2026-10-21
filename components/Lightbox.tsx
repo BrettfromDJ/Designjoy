@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { WorkItem } from "@/content/site";
 import { useFrameCycle } from "@/lib/use-frame-cycle";
+import { CodedWork } from "./work/CodedWork";
 import styles from "./Lightbox.module.css";
 
 const isGif = (src: string) => src.toLowerCase().split("?")[0].endsWith(".gif");
@@ -111,7 +112,15 @@ export function Lightbox({
         className={styles.stage}
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
-        {item.kind === "video" ? (
+        {item.kind === "coded" ? (
+          <div
+            className={styles.media}
+            style={{ "--ratio": item.width / item.height } as React.CSSProperties}
+            aria-label={item.title}
+          >
+            <CodedWork item={item} large />
+          </div>
+        ) : item.kind === "video" ? (
           <video
             src={item.src}
             width={item.width}

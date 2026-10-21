@@ -1,6 +1,6 @@
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { Sidebar } from "@/components/Sidebar";
-import { sampleWork, type WorkItem } from "@/content/site";
+import { codedWork, sampleWork, type WorkItem } from "@/content/site";
 import { getHighlights } from "@/lib/highlights";
 import { getProjects } from "@/lib/projects";
 
@@ -12,7 +12,7 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const [projects, highlights] = await Promise.all([getProjects(), getHighlights()]);
-  const work: WorkItem[] = projects.length
+  const uploaded: WorkItem[] = projects.length
     ? projects.map(({ id, title, kind, url, width, height, frames }) => ({
         id,
         title,
@@ -23,6 +23,8 @@ export default async function Home() {
         ...(kind === "image" && frames?.length ? { frames } : {}),
       }))
     : sampleWork;
+  // The coded pieces come first.
+  const work = [...codedWork, ...uploaded];
 
   return (
     <main style={{ "--sidebar": "356px" } as React.CSSProperties}>

@@ -169,3 +169,8 @@
   border-color: rgba(0, 0, 0, 0.3);
   background: #f2f2f0;
 }
+
+/* Coded pieces are a box rather than an image, so round their corners. */
+div.media {
+  overflow: hidden;
+}

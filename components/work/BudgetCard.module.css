@@ -1,0 +1,254 @@
+/* The tile: black, square like the Figma frame (1617 × 1617), with the card
+   centred on it. Everything inside is measured in the design's pixels and
+   scaled by --s, so the card keeps its proportions at any size. */
+.tile {
+  --s: calc(100cqw / 1617);
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: #000;
+  overflow: hidden;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(1076.765 * var(--s));
+  height: calc(1089.285 * var(--s));
+  padding: calc(226.934 * var(--s)) calc(37.562 * var(--s)) calc(75.123 * var(--s));
+  border-radius: calc(25.041 * var(--s));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ---------- Background photos, fading to black at the bottom ---------- */
+.photos {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.photo {
+  object-fit: cover;
+}
+
+.photo:not(:first-child) {
+  opacity: 0;
+}
+
+.fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, #000);
+}
+
+/* ---------- The glass chart panel ---------- */
+.panel {
+  position: relative;
+  flex: none;
+  width: calc(532.122 * var(--s));
+  height: calc(532.122 * var(--s));
+  border-radius: calc(22.374 * var(--s));
+  background: linear-gradient(137.6deg, rgba(255, 255, 255, 0.125) 18.822%, rgba(232, 212, 195, 0.025) 89.206%);
+  -webkit-backdrop-filter: blur(calc(33.56 * var(--s)));
+  backdrop-filter: blur(calc(33.56 * var(--s)));
+  box-shadow:
+    calc(17.899 * var(--s)) calc(17.899 * var(--s)) calc(178.988 * var(--s)) 0 rgba(138, 0, 0, 0.05),
+    inset 0 calc(1.79 * var(--s)) calc(2.685 * var(--s)) 0 rgba(255, 255, 255, 0.25),
+    inset 0 calc(-1.79 * var(--s)) calc(2.685 * var(--s)) 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Placed at the design's coordinates (--x, --y, --w, --h). */
+.panel > * {
+  position: absolute;
+  left: calc(var(--x) * var(--s));
+  top: calc(var(--y) * var(--s));
+  margin: 0;
+}
+
+.line,
+.bar,
+.dot {
+  display: block;
+  max-width: none;
+  width: calc(var(--w) * var(--s));
+  height: calc(var(--h) * var(--s));
+}
+
+.label,
+.month {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #fafafa;
+  white-space: nowrap;
+}
+
+.label {
+  font-size: calc(15.964 * var(--s));
+  line-height: calc(17.301 * var(--s));
+  letter-spacing: calc(1.7301 * var(--s));
+}
+
+.amount {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: calc(39.909 * var(--s));
+  line-height: 1.35;
+  color: #fafafa;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.month {
+  width: calc(var(--w) * var(--s));
+  height: calc(23.868 * var(--s));
+  font-size: calc(15.444 * var(--s));
+  line-height: 1.35;
+  letter-spacing: calc(1.5444 * var(--s));
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* ---------- The copy under it ---------- */
+.copy {
+  align-self: flex-start;
+  width: calc(751.231 * var(--s));
+  margin-left: calc(50.08 * var(--s));
+  font-family: var(--font-display);
+  font-size: calc(25.041 * var(--s));
+  line-height: 1.5;
+}
+
+.heading,
+.body {
+  margin: 0;
+}
+
+.heading {
+  color: rgba(250, 250, 250, 0.9);
+}
+
+.body {
+  color: rgba(250, 250, 250, 0.6);
+}
+
+/* ---------- Motion, each time it comes into view ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* The photos cross-fade in turn, each easing out of a slow zoom. */
+  .card[data-play] .photo {
+    animation: photo 18s linear infinite both;
+  }
+
+  .card[data-play] .photo:nth-child(2) {
+    animation-delay: -12s;
+  }
+
+  .card[data-play] .photo:nth-child(3) {
+    animation-delay: -6s;
+  }
+
+  .card[data-play] .panel {
+    animation: rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .card[data-play] .bar {
+    transform-origin: bottom;
+    animation: grow 1s calc(0.45s + var(--i) * 0.08s) cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+
+  .card[data-play] .budget {
+    animation: draw 1s 1.3s cubic-bezier(0.6, 0, 0.2, 1) both;
+  }
+
+  .card[data-play] .dot {
+    animation:
+      pop 0.5s 2.2s cubic-bezier(0.2, 1.6, 0.4, 1) both,
+      pulse 2.4s 2.8s ease-in-out infinite;
+  }
+
+  .card[data-play] .month,
+  .card[data-play] .label {
+    animation: fade 0.8s 0.3s ease both;
+  }
+
+  .card[data-play] .copy {
+    animation: up 0.9s 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@keyframes photo {
+  0% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  28% {
+    opacity: 1;
+  }
+  33.3% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  95% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6%) scale(0.96);
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.35);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

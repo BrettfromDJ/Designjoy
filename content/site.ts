@@ -100,13 +100,20 @@ export const clientLogos: ClientLogo[] = [
 export type WorkItem = {
   id: string;
   title: string;
-  kind: "image" | "video";
+  /** "coded": a piece built in code (see components/work), named by `id`. */
+  kind: "image" | "video" | "coded";
   src: string;
   width: number;
   height: number;
   /** More images after `src`, cycled through like a GIF. */
   frames?: string[];
 };
+
+// Pieces built in code rather than uploaded, shown first in the work.
+// Their `id` picks the component (see components/work/CodedWork.tsx).
+export const codedWork: WorkItem[] = [
+  { id: "budget", title: "Shared budget app", kind: "coded", src: "", width: 1617, height: 1617 },
+];
 
 // Sample portfolio pieces, shown until projects are uploaded at /admin.
 // Work flows into the masonry grid around the fixed cards, in order, each
