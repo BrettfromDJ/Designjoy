@@ -18,9 +18,6 @@ const BARS = [
   { month: "JUN", x: 468.94, top: 270.84, w: 15.444, h: 171.29, label: 457.71, lw: 36.504 },
 ];
 
-// Backgrounds, cross-fading in turn; the meadow is the one in the design.
-const PHOTOS = ["meadow.jpg", "sand.jpg", "rock.jpg"];
-
 const BUDGET = 9500;
 
 /** Places an element at the design's coordinates, scaled to the card. */
@@ -35,7 +32,7 @@ const at = (x: number, y: number, w?: number, h?: number) =>
 /**
  * The "Shared budget" card from the Figma design: its chart animates each
  * time `play` changes (the bars grow, the budget counts up, the budget line
- * draws across) while the background slowly cross-fades between photos.
+ * draws across) while the meadow behind it slowly settles.
  * Shown in the finance reel (see FinanceReel).
  */
 export function BudgetCard({ play, large = false }: { play: number; large?: boolean }) {
@@ -44,16 +41,13 @@ export function BudgetCard({ play, large = false }: { play: number; large?: bool
   return (
     <div className={styles.card} data-play={play > 0 || undefined}>
         <div className={styles.photos} aria-hidden="true">
-          {PHOTOS.map((src) => (
-            <Image
-              key={src}
-              src={`${DIR}/${src}`}
-              alt=""
-              fill
-              sizes={large ? "70vw" : "(min-width: 1600px) 30vw, 60vw"}
-              className={styles.photo}
-            />
-          ))}
+          <Image
+            src={`${DIR}/meadow.jpg`}
+            alt=""
+            fill
+            sizes={large ? "70vw" : "(min-width: 1600px) 30vw, 60vw"}
+            className={styles.photo}
+          />
           <span className={styles.fade} />
         </div>
 

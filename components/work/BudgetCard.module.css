@@ -14,7 +14,7 @@
   isolation: isolate;
 }
 
-/* ---------- Background photos, fading to black at the bottom ---------- */
+/* ---------- The background photo, fading to black at the bottom ---------- */
 .photos {
   position: absolute;
   inset: 0;
@@ -23,10 +23,6 @@
 
 .photo {
   object-fit: cover;
-}
-
-.photo:not(:first-child) {
-  opacity: 0;
 }
 
 .fade {
@@ -128,17 +124,9 @@
 
 /* ---------- Motion, each time it comes into view ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  /* The photos cross-fade in turn, each easing out of a slow zoom. */
+  /* The meadow eases out of a slow zoom, like the other cards' photos. */
   .card[data-play] .photo {
-    animation: photo 18s linear infinite both;
-  }
-
-  .card[data-play] .photo:nth-child(2) {
-    animation-delay: -12s;
-  }
-
-  .card[data-play] .photo:nth-child(3) {
-    animation-delay: -6s;
+    animation: drift 7s ease-out both;
   }
 
   .card[data-play] .panel {
@@ -170,24 +158,8 @@
   }
 }
 
-@keyframes photo {
-  0% {
-    opacity: 1;
-    transform: scale(1.08);
-  }
-  28% {
-    opacity: 1;
-  }
-  33.3% {
-    opacity: 0;
-    transform: scale(1);
-  }
-  95% {
-    opacity: 0;
-    transform: scale(1.08);
-  }
-  100% {
-    opacity: 1;
+@keyframes drift {
+  from {
     transform: scale(1.08);
   }
 }
