@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { fixedCards, type ColumnCount, type WorkItem } from "@/content/site";
 import type { Highlight } from "@/lib/highlight-icons";
 import { layoutMasonry } from "@/lib/masonry";
@@ -64,11 +65,25 @@ export function MasonryGrid({
   highlights: Highlight[];
   workOnly?: boolean;
 }) {
-  const columnCount = useSyncExternalStore(
+  const gridCount = useSyncExternalStore(
     subscribe,
     () => getColumnCount(workOnly ? SIDEBAR_QUERIES : QUERIES),
     () => (workOnly ? 3 : 4) as ColumnCount,
   );
+  // Preview: ?cols=1 shows the work in a single column, with a switch to
+  // compare against the grid.
+  const [single, setSingle] = useState<boolean | null>(null);
+  useEffect(() => {
+    const cols = new URLSearchParams(window.location.search).get("cols");
+    if (workOnly && cols) setSingle(cols === "1");
+  }, [workOnly]);
+  const columnCount = (single ? 1 : gridCount) as ColumnCount;
+  const pickLayout = (one: boolean) => {
+    setSingle(one);
+    const url = new URL(window.location.href);
+    url.searchParams.set("cols", one ? "1" : "grid");
+    window.history.replaceState(null, "", url);
+  };
   const columns = layoutMasonry(columnCount, work, workOnly ? [] : visibleFixedCards(highlights));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -86,6 +101,7 @@ export function MasonryGrid({
                     priority={i < 3}
                     order={row * columns.length + i}
                     onOpen={() => setOpenIndex(work.indexOf(cell.item))}
+                    sizes={single ? "(min-width: 820px) 75vw, 100vw" : undefined}
                   />
                 );
               }
@@ -120,6 +136,18 @@ export function MasonryGrid({
           onClose={() => setOpenIndex(null)}
         />
       )}
+      {single !== null &&
+        createPortal(
+          <div className={styles.switcher} role="group" aria-label="Layout preview">
+            <button type="button" aria-pressed={!single} onClick={() => pickLayout(false)}>
+              Grid
+            </button>
+            <button type="button" aria-pressed={single} onClick={() => pickLayout(true)}>
+              One column
+            </button>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

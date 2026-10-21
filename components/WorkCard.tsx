@@ -16,9 +16,12 @@ export function WorkCard({
   priority,
   order = 0,
   onOpen,
+  sizes = SIZES,
 }: {
   item: WorkItem;
   priority?: boolean;
+  /** How wide it shows, for picking the image size (default: a grid column). */
+  sizes?: string;
   /** Position in the grid, used to cascade the reveal. */
   order?: number;
   onOpen?: () => void;
@@ -68,7 +71,7 @@ export function WorkCard({
             alt={item.title}
             width={item.width}
             height={item.height}
-            sizes={SIZES}
+            sizes={sizes}
             quality={QUALITY}
             priority={priority}
             // Resizing would drop a GIF's animation.
@@ -85,7 +88,7 @@ export function WorkCard({
               src={src}
               alt=""
               fill
-              sizes={SIZES}
+              sizes={sizes}
               quality={QUALITY}
               unoptimized={isGif(src)}
               className={styles.frame}
