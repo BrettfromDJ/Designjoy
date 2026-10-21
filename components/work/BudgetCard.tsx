@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import Image from "next/image";
+import { useCountUp } from "./useCountUp";
 import styles from "./BudgetCard.module.css";
 
 const DIR = "/work/budget";
@@ -21,7 +22,6 @@ const BARS = [
 const PHOTOS = ["meadow.jpg", "sand.jpg", "rock.jpg"];
 
 const BUDGET = 9500;
-const COUNT_MS = 1400;
 
 /** Places an element at the design's coordinates, scaled to the card. */
 const at = (x: number, y: number, w?: number, h?: number) =>
@@ -33,50 +33,16 @@ const at = (x: number, y: number, w?: number, h?: number) =>
   }) as CSSProperties;
 
 /**
- * A work sample built in code from the "Shared budget" design: the card on
- * black, with its chart animating each time it comes into view (the bars
- * grow, the budget counts up, the budget line draws across) while the
- * background slowly cross-fades between photos.
+ * The "Shared budget" card from the Figma design: its chart animates each
+ * time `play` changes (the bars grow, the budget counts up, the budget line
+ * draws across) while the background slowly cross-fades between photos.
+ * Shown in the finance reel (see FinanceReel).
  */
-export function BudgetCard({ large = false }: { large?: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [play, setPlay] = useState(0);
-  const [amount, setAmount] = useState(BUDGET);
-
-  // Replay each time it comes into view.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setPlay((n) => n + 1);
-      },
-      { threshold: 0.35 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // The budget counts up as the bars grow.
-  useEffect(() => {
-    if (!play) return;
-    let raf = 0;
-    const start = performance.now() + 500;
-    const tick = (now: number) => {
-      const t = Math.min(1, Math.max(0, (now - start) / COUNT_MS));
-      const eased = 1 - Math.pow(1 - t, 3);
-      setAmount(Math.round((BUDGET * eased) / 10) * 10);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [play]);
+export function BudgetCard({ play, large = false }: { play: number; large?: boolean }) {
+  const amount = Math.round(useCountUp(BUDGET, play) / 10) * 10;
 
   return (
-    <div ref={ref} className={styles.tile} aria-label="Shared budget app: a monthly budget chart">
-      {/* `key` restarts the CSS animations on each replay. */}
-      <div key={play} className={styles.card} data-play={play > 0 || undefined}>
+    <div className={styles.card} data-play={play > 0 || undefined}>
         <div className={styles.photos} aria-hidden="true">
           {PHOTOS.map((src) => (
             <Image
@@ -130,7 +96,6 @@ export function BudgetCard({ large = false }: { large?: boolean }) {
             life changes.
           </p>
         </div>
-      </div>
     </div>
   );
 }

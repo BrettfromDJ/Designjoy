@@ -1,0 +1,403 @@
+/* The portrait cards from the Figma design (453 × 696), measured in the
+   design's pixels and scaled by --k. They're drawn at the same height as
+   the budget card, so their text matches its size. */
+.card {
+  --k: calc(var(--s) * 1.5651);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: calc(48 * var(--k));
+  width: calc(453.333 * var(--k));
+  height: calc(696 * var(--k));
+  padding: calc(48 * var(--k)) calc(24 * var(--k));
+  border-radius: calc(16 * var(--k));
+  overflow: hidden;
+  isolation: isolate;
+  font-family: Inter, var(--font-sans);
+  color: #fff;
+}
+
+.photos {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.cover {
+  object-fit: cover;
+}
+
+/* The forest is cropped and placed as in the design. */
+.forest {
+  position: absolute;
+  left: -87.97%;
+  top: -50.67%;
+  width: 335.07%;
+  height: 163.42%;
+}
+
+.forest img {
+  object-fit: cover;
+}
+
+.fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, #000);
+}
+
+.stage {
+  flex: 1 0 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  position: relative;
+  width: calc(359 * var(--k));
+  border-radius: calc(16 * var(--k));
+  background: linear-gradient(var(--angle), rgba(0, 0, 0, 0.12) 23.559%, rgba(0, 0, 0, 0.014) 89.206%);
+  -webkit-backdrop-filter: blur(calc(62 * var(--k)));
+  backdrop-filter: blur(calc(62 * var(--k)));
+}
+
+.copy {
+  align-self: stretch;
+  padding-right: calc(96 * var(--k));
+  font-family: var(--font-display);
+  font-size: calc(16 * var(--k));
+  line-height: 1.5;
+}
+
+.heading,
+.body {
+  margin: 0;
+}
+
+.heading {
+  color: rgba(250, 250, 250, 0.9);
+}
+
+.body {
+  color: rgba(250, 250, 250, 0.6);
+}
+
+/* Shared type: a small label and a value. */
+.label {
+  font-size: calc(12 * var(--k));
+  line-height: calc(20 * var(--k));
+  letter-spacing: calc(-0.12 * var(--k));
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+}
+
+.value {
+  font-size: calc(14 * var(--k));
+  font-weight: 500;
+  line-height: calc(20 * var(--k));
+  letter-spacing: calc(-0.14 * var(--k));
+  color: #fff;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: rgba(255, 255, 255, 0.32);
+}
+
+/* ---------- Analyst ratings ---------- */
+.ratings {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16 * var(--k));
+  padding: calc(16 * var(--k)) 0;
+}
+
+.rating {
+  display: flex;
+  flex-direction: column;
+  gap: calc(8 * var(--k));
+  padding: 0 calc(16 * var(--k));
+}
+
+.ratingHead {
+  display: flex;
+  align-items: center;
+  gap: calc(4 * var(--k));
+  height: calc(20 * var(--k));
+}
+
+.ratingHead .label {
+  flex: 1;
+}
+
+.track {
+  display: flex;
+  gap: calc(4 * var(--k));
+  height: calc(4 * var(--k));
+}
+
+.fill,
+.rest {
+  height: 100%;
+  border-radius: calc(100 * var(--k));
+}
+
+.fill {
+  width: calc(var(--w) * var(--k));
+  background: #ebebf3;
+  transform-origin: left;
+}
+
+.rest {
+  flex: 1;
+  background: rgba(235, 235, 243, 0.12);
+}
+
+/* ---------- Earnings graph ---------- */
+.earnings {
+  display: flex;
+  flex-direction: column;
+  gap: calc(24 * var(--k));
+  padding: calc(16 * var(--k));
+}
+
+.graph,
+.levels {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16 * var(--k));
+}
+
+.level {
+  position: relative;
+  height: calc(24 * var(--k));
+}
+
+.gridLine {
+  position: absolute;
+  left: 0;
+  top: calc(23 * var(--k));
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: max(1px, calc(1 * var(--k)));
+}
+
+.level span {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: calc(12 * var(--k));
+  font-weight: 500;
+  line-height: calc(18 * var(--k));
+  letter-spacing: calc(-0.12 * var(--k));
+  color: rgba(235, 235, 243, 0.3);
+}
+
+.quarters {
+  display: flex;
+  width: calc(299 * var(--k));
+}
+
+.quarter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2 * var(--k));
+  font-size: calc(12 * var(--k));
+  letter-spacing: calc(-0.12 * var(--k));
+  white-space: nowrap;
+}
+
+.quarter b {
+  font-weight: 500;
+  line-height: calc(18 * var(--k));
+  color: #fff;
+}
+
+.quarter span {
+  line-height: calc(20 * var(--k));
+  color: rgba(235, 235, 243, 0.3);
+}
+
+.legend {
+  display: flex;
+  gap: calc(8 * var(--k));
+}
+
+.legend > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(4 * var(--k));
+}
+
+.legendLabel {
+  display: flex;
+  align-items: center;
+  gap: calc(4 * var(--k));
+  font-size: calc(12 * var(--k));
+  line-height: calc(20 * var(--k));
+  letter-spacing: calc(-0.12 * var(--k));
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+}
+
+.dot,
+.legendDot {
+  display: block;
+  box-sizing: border-box;
+  border-radius: calc(28 * var(--k));
+}
+
+.dot {
+  position: absolute;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(16 * var(--k));
+  height: calc(16 * var(--k));
+}
+
+.legendDot {
+  width: calc(10 * var(--k));
+  height: calc(10 * var(--k));
+}
+
+.estimate {
+  background: rgba(255, 255, 255, 0.08);
+  border: max(1px, calc(1 * var(--k))) solid #d7f5ff;
+}
+
+.actual {
+  background: #9be1f6;
+  border: calc(0.5 * var(--k)) solid rgba(1, 0, 10, 0.24);
+}
+
+/* ---------- Fundamentals ---------- */
+.stats,
+.statGroup {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16 * var(--k));
+}
+
+.stats {
+  padding: calc(16 * var(--k));
+}
+
+.rule {
+  display: flex;
+  gap: calc(32 * var(--k));
+}
+
+.rule img {
+  flex: 1 0 0;
+  min-width: 0;
+  display: block;
+  height: max(1px, calc(1 * var(--k)));
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  gap: calc(16 * var(--k));
+  height: calc(44 * var(--k));
+}
+
+.vRule {
+  flex: none;
+  display: block;
+  width: max(1px, calc(1 * var(--k)));
+  height: 100%;
+}
+
+.stat {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--k));
+}
+
+/* ---------- Motion, each time the card comes round ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .card[data-play] .photos > :first-child {
+    animation: drift 7s ease-out both;
+  }
+
+  .card[data-play] .panel {
+    animation: rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .card[data-play] .copy {
+    animation: up 0.9s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .card[data-play] .fill {
+    animation: grow 1s calc(0.4s + var(--i) * 0.09s) cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+
+  .card[data-play] .level {
+    animation: fade 0.8s 0.3s ease both;
+  }
+
+  .card[data-play] .estimate.dot {
+    animation: pop 0.5s calc(0.6s + var(--i) * 0.12s) cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  }
+
+  .card[data-play] .actual.dot {
+    animation: pop 0.5s calc(1.3s + var(--i) * 0.12s) cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  }
+
+  .card[data-play] .stat {
+    animation: up 0.7s calc(0.4s + var(--i) * 0.06s) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6%) scale(0.96);
+  }
+}
+
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+}

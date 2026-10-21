@@ -112,7 +112,7 @@ export type WorkItem = {
 // Pieces built in code rather than uploaded, shown first in the work.
 // Their `id` picks the component (see components/work/CodedWork.tsx).
 export const codedWork: WorkItem[] = [
-  { id: "budget", title: "Shared budget app", kind: "coded", src: "", width: 1617, height: 1617 },
+  { id: "finance", title: "Finance app", kind: "coded", src: "", width: 1617, height: 1617 },
 ];
 
 // Sample portfolio pieces, shown until projects are uploaded at /admin.

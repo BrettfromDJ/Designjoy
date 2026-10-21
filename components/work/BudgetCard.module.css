@@ -1,17 +1,5 @@
-/* The tile: black, square like the Figma frame (1617 × 1617), with the card
-   centred on it. Everything inside is measured in the design's pixels and
-   scaled by --s, so the card keeps its proportions at any size. */
-.tile {
-  --s: calc(100cqw / 1617);
-  position: relative;
-  container-type: inline-size;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  background: #000;
-  overflow: hidden;
-}
-
+/* Measured in the design's pixels and scaled by --s (set by the reel's
+   tile), so the card keeps its proportions at any size. */
 .card {
   position: relative;
   display: flex;
