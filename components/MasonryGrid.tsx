@@ -76,7 +76,11 @@ export function MasonryGrid({
 
   return (
     <>
-      <div className={workOnly ? `${styles.grid} ${styles.beside}` : styles.grid} style={{ "--columns": columnCount } as React.CSSProperties}>
+      <div
+        className={workOnly ? `${styles.grid} ${styles.beside}` : styles.grid}
+        data-single={(workOnly && columnCount === 1) || undefined}
+        style={{ "--columns": columnCount } as React.CSSProperties}
+      >
         {columns.map((column, i) => (
           <div key={i} className={styles.column}>
             {column.map((cell, row) => {

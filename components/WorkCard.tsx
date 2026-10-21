@@ -46,6 +46,7 @@ export function WorkCard({
       style={
         {
           "--reveal-delay": `${Math.min(order, 12) * 60}ms`,
+          "--ratio": item.width / item.height,
         } as React.CSSProperties
       }
     >

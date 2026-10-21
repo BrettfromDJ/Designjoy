@@ -43,3 +43,9 @@
   }
 }
 
+/* One piece across: each fits within the screen's height (tall pieces get
+   narrower, centred), so a whole piece is always in view as you scroll. */
+.beside[data-single] .column > * {
+  width: min(100%, calc((100dvh - var(--gap) * 2) * var(--ratio, 100)));
+  margin-inline: auto;
+}
