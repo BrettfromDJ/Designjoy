@@ -33,8 +33,9 @@
     0 373px 104px rgba(0, 0, 0, 0.01);
 }
 
-/* Light theme, previewed with ?theme=light (see ThemePreview). Components
-   with their own hard-coded colours adjust under html[data-theme="light"]. */
+/* Light theme, the default (set in app/layout.tsx; the nav's toggle switches
+   to dark). Components with their own hard-coded colours adjust under
+   html[data-theme="light"]. */
 html[data-theme="light"] {
   --bg: #f2f2f0;
   --surface: #fff;

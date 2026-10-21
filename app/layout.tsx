@@ -7,20 +7,21 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#f2f2f0",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Light theme preview: ?theme=light (remembered for the visit, so
-            it carries across pages; the admin and the welcome page with its
-            lanyard stay dark), set before the page paints. */}
+        {/* Light by default; dark if chosen with the toggle in the nav (or
+            ?theme=dark), remembered on this device. The admin and the
+            welcome page, with its lanyard, are always dark. Set before the
+            page paints so it never flashes the wrong theme. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              'try{var t=new URLSearchParams(location.search).get("theme");if(t)sessionStorage.setItem("theme",t);else t=sessionStorage.getItem("theme");if(t==="light"&&!location.pathname.startsWith("/admin")&&!location.pathname.startsWith("/welcome"))document.documentElement.dataset.theme="light"}catch(e){}',
+              'var t="light";try{var q=new URLSearchParams(location.search).get("theme");if(q)localStorage.setItem("theme",q);t=q||localStorage.getItem("theme")||"light"}catch(e){}var p=location.pathname;if(t!=="dark"&&!p.startsWith("/admin")&&!p.startsWith("/welcome"))document.documentElement.dataset.theme="light"',
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

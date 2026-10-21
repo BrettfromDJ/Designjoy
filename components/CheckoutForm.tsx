@@ -124,7 +124,7 @@ export function CheckoutForm({
     [plan.id],
   );
 
-  // The light theme preview (see ThemePreview) gets light card fields.
+  // The light theme (the default; see app/layout.tsx) gets light card fields.
   const [light] = useState(
     () => typeof document !== "undefined" && document.documentElement.dataset.theme === "light",
   );

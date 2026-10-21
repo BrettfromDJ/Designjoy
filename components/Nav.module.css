@@ -92,6 +92,33 @@
   margin-left: auto;
 }
 
+/* The far end: the light/dark toggle, then Book a call. */
+.end {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-nav);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.theme:hover {
+  opacity: 1;
+  background: var(--border-subtle);
+}
+
 /* "Book a call": a subtle dark grey pill, tucked toward the nav's right edge. */
 .cta,
 .cta:hover {
