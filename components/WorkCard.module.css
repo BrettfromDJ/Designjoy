@@ -7,15 +7,15 @@
   background: var(--surface);
 }
 
-/* Framed: the stroke the site's other cards have, drawn over the artwork so
-   the card stays the same size. The background is already the card colour,
-   so transparent PNGs sit on it. */
-.card[data-framed]::after {
+/* The same stroke as the site's other cards, drawn over the artwork so the
+   card stays the same size. The background is the card colour, so
+   transparent PNGs sit on it. */
+.card::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 2;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: inherit;
   pointer-events: none;
 }
@@ -125,4 +125,8 @@
 :global(html[data-theme="light"]) .card::before {
   background: linear-gradient(105deg, transparent 35%, rgba(0, 0, 0, 0.05) 50%, transparent 65%);
   background-size: 250% 100%;
+}
+
+:global(html[data-theme="light"]) .card::after {
+  border-color: rgba(0, 0, 0, 0.07);
 }

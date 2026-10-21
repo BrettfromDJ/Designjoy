@@ -19,7 +19,7 @@ export const revalidate = 3600;
 export default async function ClassicHome() {
   const [projects, highlights, { faqs }] = await Promise.all([getProjects(), getHighlights(), getFaqs()]);
   const work: WorkItem[] = projects.length
-    ? projects.map(({ id, title, kind, url, width, height, frames, framed }) => ({
+    ? projects.map(({ id, title, kind, url, width, height, frames }) => ({
         id,
         title,
         kind,
@@ -27,7 +27,6 @@ export default async function ClassicHome() {
         width,
         height,
         ...(kind === "image" && frames?.length ? { frames } : {}),
-        ...(framed ? { framed } : {}),
       }))
     : sampleWork;
 
