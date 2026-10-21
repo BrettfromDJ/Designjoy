@@ -82,6 +82,8 @@
   left: 8px;
   z-index: 3;
   padding: 5px 8px;
+  /* The artwork's corner less the 8px inset, so the two curves run parallel. */
+  border-radius: calc(var(--radius-card) - 8px);
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.07);
   color: var(--text);
