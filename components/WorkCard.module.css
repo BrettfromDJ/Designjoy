@@ -74,11 +74,6 @@
   transition-delay: var(--reveal-delay, 0ms);
 }
 
-.card[data-loaded="true"]:hover .media {
-  transform: scale(1.02);
-  transition-delay: 0ms;
-}
-
 /* Covers the tile so the whole thing opens the viewer. */
 .open {
   position: absolute;
@@ -115,15 +110,10 @@
 .frame {
   object-fit: cover;
   opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .card[data-loaded="true"] .frame {
   opacity: 1;
-}
-
-.card[data-loaded="true"]:hover .frame {
-  transform: scale(1.02);
 }
 
 .media[data-hidden],
