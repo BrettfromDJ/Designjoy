@@ -114,7 +114,7 @@ export type WorkItem = {
 // Pieces built in code rather than uploaded, shown first in the work.
 // Their `id` picks the component (see components/work/CodedWork.tsx).
 export const codedWork: WorkItem[] = [
-  { id: "finance", title: "Finance app", kind: "coded", src: "", width: 1440, height: 1024 },
+  { id: "finance", title: "Finance app", company: "Origin", kind: "coded", src: "", width: 1440, height: 1024 },
 ];
 
 export type ColumnCount = 1 | 2 | 3 | 4;
