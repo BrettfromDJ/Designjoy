@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="97" height="52" viewBox="0 0 97 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 6">
+<mask id="stroke0_0_4" fill="white">
+<path d="M97 26C97 40.3594 75.2858 52 48.5 52C21.7142 52 0 40.3594 0 26C0 11.6406 21.7142 0 48.5 0C75.2858 0 97 11.6406 97 26Z"/>
+</mask>
+<path id="Ellipse 6" d="M97 26C97 40.3594 75.2858 52 48.5 52C21.7142 52 0 40.3594 0 26C0 11.6406 21.7142 0 48.5 0C75.2858 0 97 11.6406 97 26Z" stroke-width="2" stroke="black" mask="url(#stroke0_0_4)"/>
+<path id="Ellipse 7" d="M74.5 26C74.5 40.0833 63.0833 51.5 49 51.5C34.9167 51.5 23.5 40.0833 23.5 26C23.5 11.9167 34.9167 0.5 49 0.5C63.0833 0.5 74.5 11.9167 74.5 26Z" stroke="black"/>
+<path id="Vector 9" d="M1 26H97" stroke="black"/>
+<path id="Vector 10" d="M49 52V1" stroke="black"/>
+</g>
+</svg>

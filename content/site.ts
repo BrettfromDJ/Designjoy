@@ -116,6 +116,7 @@ export type WorkItem = {
 export const codedWork: WorkItem[] = [
   { id: "finance", title: "Finance app", company: "Origin", kind: "coded", src: "", width: 1440, height: 1024 },
   { id: "recaps", title: "Daily recaps", company: "Origin", kind: "coded", src: "", width: 1440, height: 1024 },
+  { id: "altos", title: "Brand identity", company: "Altos", kind: "coded", src: "", width: 1440, height: 1024 },
 ];
 
 export type ColumnCount = 1 | 2 | 3 | 4;
