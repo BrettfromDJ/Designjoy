@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="2512.73" height="1413.41" viewBox="0 0 2512.73 1413.41" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 48099453">
+<rect id="Rectangle 46354" x="0.000181715" y="7.78777e-05" width="2512.73" height="1413.41" fill="#5694FF"/>
+<g id="Ellipse 2" filter="url(#filter0_f_0_4)">
+<path d="M1876.75 971.141C1876.75 1085.37 1598.95 1177.97 1256.25 1177.97C913.562 1177.97 635.754 1085.37 635.754 971.141C635.754 856.91 913.562 764.307 1256.25 764.307C1598.95 764.307 1876.75 856.91 1876.75 971.141Z" fill="#FF916C"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_0_4" x="553.021" y="681.574" width="1406.47" height="579.133" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="41.3667" result="effect1_foregroundBlur_0_4"/>
+</filter>
+</defs>
+</svg>
