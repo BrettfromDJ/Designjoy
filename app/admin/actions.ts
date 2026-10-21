@@ -56,6 +56,12 @@ export async function renameProject(id: string, title: string) {
   return update((projects) => projects.map((p) => (p.id === id ? { ...p, title: clean } : p)));
 }
 
+export async function setProjectCompany(id: string, company: string) {
+  await requireAdmin();
+  const clean = String(company).trim().slice(0, 60);
+  return update((projects) => projects.map((p) => (p.id === id ? { ...p, company: clean || undefined } : p)));
+}
+
 export async function reorderProjects(ids: string[]) {
   await requireAdmin();
   return update((projects) => {

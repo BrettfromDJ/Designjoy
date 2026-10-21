@@ -13,9 +13,10 @@ export const revalidate = 3600;
 export default async function Home() {
   const [projects, highlights] = await Promise.all([getProjects(), getHighlights()]);
   const uploaded: WorkItem[] = projects.length
-    ? projects.map(({ id, title, kind, url, width, height, frames }) => ({
+    ? projects.map(({ id, title, company, kind, url, width, height, frames }) => ({
         id,
         title,
+        company,
         kind,
         src: url,
         width,

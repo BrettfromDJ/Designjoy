@@ -99,6 +99,7 @@ export function WorkCard({
           ))}
         </>
       )}
+      {item.company && <span className={styles.tag}>{item.company}</span>}
     </figure>
   );
 }

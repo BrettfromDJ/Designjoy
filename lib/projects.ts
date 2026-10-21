@@ -5,6 +5,8 @@ export { blobConfigured };
 export type Project = {
   id: string;
   title: string;
+  /** The client, shown in a tag on the artwork. */
+  company?: string;
   kind: "image" | "video";
   url: string;
   width: number;

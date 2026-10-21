@@ -2,7 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { upload } from "@vercel/blob/client";
-import { addFrames, addProject, deleteProject, removeFrame, renameProject, reorderProjects } from "@/app/admin/actions";
+import { addFrames, addProject, deleteProject, removeFrame, renameProject, reorderProjects, setProjectCompany } from "@/app/admin/actions";
 import { ALLOWED_TYPES, MAX_UPLOAD_BYTES } from "@/lib/media";
 import { MAX_FRAMES, type Project } from "@/lib/projects";
 import styles from "./Admin.module.css";
@@ -455,6 +455,20 @@ export function ProjectManager({
                   onBlur={(e) => {
                     const title = e.target.value.trim();
                     if (title !== project.title) run(project.id, () => renameProject(project.id, title));
+                  }}
+                />
+                <label htmlFor={`company-${project.id}`} className="visually-hidden">
+                  Company
+                </label>
+                <input
+                  id={`company-${project.id}`}
+                  className={styles.field}
+                  defaultValue={project.company ?? ""}
+                  placeholder="Company (shown on the artwork)"
+                  onBlur={(e) => {
+                    const company = e.target.value.trim();
+                    if (company !== (project.company ?? ""))
+                      run(project.id, () => setProjectCompany(project.id, company));
                   }}
                 />
                 <span className={styles.hint}>
