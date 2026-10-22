@@ -111,43 +111,29 @@ function LogomarkSlide() {
         <div className={own.barTall} style={{ ...at([1001, 310, 16, 400]), ...play(380) }} />
         <div className={styles.fade} style={{ ...at([439, 310, 81, 399], { background: "rgba(48,48,48,0.4)" }), ...play(450) }} />
         <div className={styles.fade} style={{ ...at([920, 310, 81, 400], { background: "rgba(48,48,48,0.4)" }), ...play(450) }} />
-        {/* The hatching in those areas, as Figma turns and masks it. */}
-        <div className={`${own.turnBox} ${styles.fade}`} style={{ ...at([26.07, 56, 894.763, 883.717]), ...play(550) }}>
-          <div
-            className={own.hatch}
-            style={{
-              rotate: "-135.36deg",
-              transform: "skewX(-0.71deg)",
-              maskImage: `url(${src("o1-mask-l.svg")})`,
-              WebkitMaskImage: `url(${src("o1-mask-l.svg")})`,
-              maskPosition: "412.931px 254.004px",
-              WebkitMaskPosition: "412.931px 254.004px",
-              maskSize: "81px 399px",
-              WebkitMaskSize: "81px 399px",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src("o1-hatch.svg")} alt="" className={styles.fill} />
+        {/* The hatching in those areas: the lines turned to the diagonal and
+            clipped to each area (Figma masks the turned layer instead, which
+            browsers place differently). */}
+        {[
+          { box: [439, 310, 81, 399] as Box, turn: "-135.36deg" },
+          { box: [920, 310, 81, 400] as Box, turn: "44.64deg" },
+        ].map(({ box, turn }) => (
+          <div key={box[0]} className={styles.fade} style={{ ...at(box, { overflow: "hidden" }), ...play(550) }}>
+            <div
+              className={own.hatch}
+              style={{
+                position: "absolute",
+                left: box[2]! / 2 - 340.5,
+                top: box[3]! / 2 - 288.8,
+                rotate: turn,
+                transform: "skewX(-0.71deg)",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src("o1-hatch.svg")} alt="" className={styles.fill} />
+            </div>
           </div>
-        </div>
-        <div className={`${own.turnBox} ${styles.fade}`} style={{ ...at([519.17, 80.29, 894.763, 883.717]), ...play(550) }}>
-          <div
-            className={own.hatch}
-            style={{
-              rotate: "44.64deg",
-              transform: "skewX(-0.71deg)",
-              maskImage: `url(${src("o1-mask-r.svg")})`,
-              WebkitMaskImage: `url(${src("o1-mask-r.svg")})`,
-              maskPosition: "400.832px 229.713px",
-              WebkitMaskPosition: "400.832px 229.713px",
-              maskSize: "81px 400px",
-              WebkitMaskSize: "81px 400px",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src("o1-hatch.svg")} alt="" className={styles.fill} />
-          </div>
-        </div>
+        ))}
         <p className={`${own.axis} ${styles.fade}`} style={{ left: 719.5, top: 185, ...play(700) }}>
           Y
         </p>

@@ -54,19 +54,9 @@
   background: #303030;
 }
 
-.turnBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .hatch {
-  position: relative;
-  flex: none;
-  width: 680.001px;
+  width: 681px;
   height: 577.599px;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
 }
 
 .axis {
