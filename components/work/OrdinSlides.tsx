@@ -47,11 +47,10 @@ function Photo({ name, box, className }: { name: string; box: Box; className?: s
   );
 }
 
-/** The labels in the corners of the photo slides. */
+/** The labels in the corners of the signage slide. */
 function Corners() {
   return (
     <div className={`${styles.meta} ${own.corners}`}>
-      <p style={{ left: 24, top: 24 }}>ORDIN™ IDENTITY SYSTEM</p>
       <p style={{ right: 24, top: 24 }}>V1.0</p>
       <p style={{ left: 24, top: 984 }}>AN OFFMARKET BRAND</p>
       <p style={{ right: 24, top: 984 }}>INTELLIGENCE ABOVE MACHINES™</p>
@@ -211,6 +210,11 @@ function SignageSlide() {
 function LetterformsSlide() {
   return (
     <div className={styles.slide} style={{ background: "#ddded8" }}>
+      {/* The patch of background the design lays over the middle line's
+          word. That line isn't drawn here (only its ends, below), so the
+          patch goes under the big lines, not over them: with the stand-in
+          face's letters falling elsewhere, it would clip the descenders. */}
+      <Art name="o4-curve.svg" box={[159, 376.53, 1136, 305.469]} />
       <Display
         x={625.11}
         y={145}
@@ -236,9 +240,7 @@ function LetterformsSlide() {
         cets you so far.
       </Display>
       <p className={own.credit}>OVR DEMORNY TYPEFACE</p>
-      {/* A patch of the background over the middle word, and the word's
-          outlines drawn over that. */}
-      <Art name="o4-curve.svg" box={[159, 376.53, 1136, 305.469]} />
+      {/* The middle word, drawn as outlines. */}
       <Art name="o4-gridi.svg" box={[179, 384, 1082, 307]} className={styles.wipe} style={play(500)} />
     </div>
   );
@@ -289,7 +291,6 @@ function NightSlide() {
   return (
     <div className={styles.slide} style={{ background: "#ddded8" }}>
       <Photo name="o7-billboard" box={[0, 0, 1440, 1024]} className={styles.settle} />
-      <Corners />
     </div>
   );
 }
