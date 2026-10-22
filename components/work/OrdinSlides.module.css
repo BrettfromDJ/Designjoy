@@ -106,7 +106,7 @@
 
 /* ---------- Motion ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  [data-play] [data-slide] :is(.bar, .barTall, .build, .pill, .lineA, .lineB, .drift, .lightSweep) {
+  [data-play] [data-slide] :is(.bar, .barTall, .build, .pill, .lineA, .lineB, .lightSweep) {
     animation-delay: var(--d, 0ms);
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -152,12 +152,6 @@
     animation-timing-function: linear;
   }
 
-  /* "Order in control", above and below, rolls slowly upward. */
-  [data-play] [data-slide] .drift {
-    animation-name: rollUp;
-    animation-duration: 4.5s;
-    animation-timing-function: linear;
-  }
 
   /* The light slides across the embossed paper. */
   [data-play] [data-slide] .lightSweep {
@@ -212,14 +206,6 @@
   }
 }
 
-@keyframes rollUp {
-  from {
-    transform: translateY(70px);
-  }
-  to {
-    transform: translateY(-20px);
-  }
-}
 
 @keyframes lightSweep {
   from {

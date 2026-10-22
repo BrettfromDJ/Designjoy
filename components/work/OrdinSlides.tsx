@@ -258,12 +258,12 @@ function MotionSlide() {
   const type = { size: 192.863, tracking: -5.7859, lineHeight: 0.9 };
   return (
     <div className={styles.slide} style={{ background: "#121212" }}>
-      <Display x={720.5} y={-36} {...type} center className={`${own.ghost} ${own.drift}`}>
+      <Display x={720.5} y={-36} {...type} center className={own.ghost}>
         ORDER IN
         <br />
         CONTROL
       </Display>
-      <Display x={720.5} y={703} {...type} center className={`${own.ghost} ${own.drift}`}>
+      <Display x={720.5} y={703} {...type} center className={own.ghost}>
         ORDER IN
         <br />
         CONTROL
