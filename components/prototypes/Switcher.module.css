@@ -1,0 +1,53 @@
+/* Bottom right, clear of the ask box in the middle and the column on the left. */
+.switcher {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #0b0b0b;
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.switcher a {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 4px;
+  border-radius: 999px;
+}
+
+.switcher a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.switcher .name {
+  display: block;
+  line-height: 30px;
+  padding: 0 10px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+.name b {
+  font-weight: 500;
+  color: #fff;
+}
+
+/* On phones and tablets it sits just above the ask box. */
+@media (max-width: 819px) {
+  .switcher {
+    left: 50%;
+    right: auto;
+    bottom: 92px;
+    translate: -50% 0;
+  }
+}

@@ -1,0 +1,242 @@
+/* The card keeps its own black and white on either theme. */
+.wrap {
+  container-type: inline-size;
+  perspective: 1000px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.tilt {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1.586;
+  padding: clamp(18px, 5.5%, 28px);
+  border-radius: clamp(14px, 4%, 22px);
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.09), transparent 55%),
+    #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 24px 48px -12px rgba(0, 0, 0, 0.45),
+    0 60px 80px -40px rgba(0, 0, 0, 0.5);
+  animation: flip 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* A slow sheen across the card. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.1) 48%, transparent 60%);
+  transform: translateX(-100%);
+  animation: sheen 5s 1s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Pro: a holographic foil and an iridescent edge that travels round. */
+.card[data-plan="design-partner"] {
+  border: 1px solid transparent;
+  background:
+    radial-gradient(120% 90% at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.09), transparent 55%) padding-box,
+    linear-gradient(#000, #000) padding-box,
+    conic-gradient(from var(--glow-angle), #6f9bff, #c08bff, #6fffd8, #ffd28a, #6f9bff) border-box;
+  animation:
+    flip 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+    edge-spin 6s linear infinite;
+}
+
+.card[data-plan="design-partner"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(110, 160, 255, 0.12) 34%,
+    rgba(200, 140, 255, 0.12) 44%,
+    rgba(110, 255, 215, 0.09) 54%,
+    transparent 68%
+  );
+  background-size: 260% 260%;
+  mix-blend-mode: screen;
+  animation: holo 7s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.card[data-plan="design-partner"] .plan {
+  background: linear-gradient(100deg, #fff 20%, #cbb9ff 38%, #a3e9ff 52%, #fff 70%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+  animation: foil 6s linear infinite;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+/* (The site turns the smile dark on the light theme; the card stays black.) */
+.card img.smile[src] {
+  width: clamp(30px, 9%, 42px);
+  height: auto;
+  margin: -6px -5px 0;
+  filter: none;
+}
+
+.label {
+  display: block;
+  margin: 0 0 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.plan {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 8.5cqw;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: max(12px, 3cqw);
+  letter-spacing: -0.3px;
+}
+
+.foot > span:last-child {
+  text-align: right;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 8px #3ddc84;
+}
+
+.status[data-status="paused"] .dot {
+  background: #f5b84a;
+  box-shadow: 0 0 8px #f5b84a;
+}
+
+/* ---------- The plan switch ---------- */
+.switch {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--text);
+  translate: calc(var(--at) * 100%) 0;
+  transition: translate 0.45s cubic-bezier(0.65, 0, 0.2, 1);
+}
+
+.option {
+  position: relative;
+  padding: 8px 18px;
+  border: 0;
+  background: none;
+  font-size: 14px;
+  letter-spacing: -0.3px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.option[aria-checked="true"] {
+  color: var(--bg);
+}
+
+@keyframes flip {
+  from {
+    opacity: 0;
+    transform: rotateY(-70deg) translateZ(-40px);
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes sheen {
+  0%,
+  55% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes edge-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+@keyframes holo {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes foil {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card::after,
+  .card::before,
+  .card[data-plan="design-partner"],
+  .card[data-plan="design-partner"] .plan {
+    animation: none;
+  }
+}

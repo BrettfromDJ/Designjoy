@@ -1,0 +1,334 @@
+/* Prototype 3: an opening, five chapters, then the rest as in Story. */
+.page {
+  --pad: clamp(16px, 4vw, 40px);
+  font-family: var(--font-display);
+}
+
+.page p,
+.page h1,
+.page h2 {
+  margin: 0;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* ---------- Opening ---------- */
+.intro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  min-height: 100svh;
+  padding: 120px var(--pad) 96px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* A soft light behind the card. */
+.intro::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  z-index: -1;
+  width: min(1100px, 140vw);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, var(--glow), transparent);
+  opacity: 0.35;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-nav);
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.2);
+}
+
+.giant {
+  font-size: clamp(48px, 9vw, 136px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.introCard {
+  max-width: 440px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.introLede {
+  max-width: 460px;
+  font-size: 19px;
+  line-height: 1.35;
+  letter-spacing: -0.4px;
+}
+
+/* A line that runs down, to say there's more. */
+.cue {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(var(--text-muted), transparent);
+  animation: cue 2s ease-in-out infinite;
+  transform-origin: top;
+}
+
+/* ---------- The rail ---------- */
+.rail {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  translate: 0 -50%;
+  font-size: 13px;
+  letter-spacing: -0.2px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.rail[data-shown] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rail a {
+  display: flex;
+  gap: 10px;
+  color: var(--text-muted);
+  transition: color 0.3s ease, translate 0.3s ease;
+}
+
+.rail a span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.rail a[data-on] {
+  color: var(--text);
+  translate: 6px 0;
+}
+
+/* ---------- Chapters: the words scroll, the visual pins beside them ---------- */
+.chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 80px);
+  max-width: 1320px;
+  min-height: 150vh;
+  margin: 0 auto;
+  padding: 0 var(--pad) 0 max(var(--pad), 190px);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.no {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.title {
+  font-size: clamp(32px, 4.2vw, 60px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 420px;
+  font-size: 17px;
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+  color: var(--text-muted);
+}
+
+.cta {
+  height: 48px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 5px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.chips .moreChip {
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+.visual {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.visual > * {
+  width: 100%;
+}
+
+/* Each visual rises into place as its chapter arrives. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .visual > *,
+    .copy {
+      animation: arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+.cardStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cardStage > :first-child {
+  max-width: 520px;
+}
+
+.board {
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.pausing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.pausing > :first-child {
+  max-width: 480px;
+  transition: filter 0.6s ease, scale 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pausing[data-paused] > :first-child {
+  filter: grayscale(1) brightness(0.7);
+  scale: 0.96;
+}
+
+.caption {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+@keyframes float {
+  50% {
+    translate: 0 -10px;
+    rotate: -1deg;
+  }
+}
+
+@keyframes cue {
+  from {
+    transform: scaleY(0);
+  }
+  60% {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+}
+
+/* ---------- Narrower screens: one column, nothing pinned ---------- */
+@media (max-width: 899px) {
+  .rail {
+    display: none;
+  }
+
+  .chapter {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 28px;
+    padding: 72px var(--pad) 0;
+  }
+
+  .copy,
+  .visual {
+    position: static;
+    height: auto;
+  }
+
+  .board {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .introCard,
+  .cue {
+    animation: none;
+  }
+}
