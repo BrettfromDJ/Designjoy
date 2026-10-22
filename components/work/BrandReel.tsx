@@ -19,23 +19,8 @@ const ENTER_MS = 1250;
 //   push: sliding in and pushing the last aside;
 //   lift: rising from below and lifting the last away;
 //   frame: opening out from a box in the middle (`frame`, in the slide's px);
-//   mark: showing through the brand's mark as it grows (`mark`, an image;
-//     `markEnd` places it at the end, by default grown about its centre);
-//   slash: cut in along a diagonal (Kinobody's K);
-//   deal: dealt in from the side over the last, like a card onto a stack.
-export type Transition =
-  | "rise"
-  | "fall"
-  | "zip"
-  | "across"
-  | "doors"
-  | "sunrise"
-  | "push"
-  | "lift"
-  | "frame"
-  | "mark"
-  | "slash"
-  | "deal";
+//   mark: showing through the brand's mark as it grows (`mark`, an image).
+export type Transition = "rise" | "fall" | "zip" | "across" | "doors" | "sunrise" | "push" | "lift" | "frame" | "mark";
 const COVERS = new Set<Transition>(["rise", "zip", "across", "fall", "doors"]);
 
 /**
@@ -52,7 +37,6 @@ export function BrandReel({
   bars = [],
   frame,
   mark,
-  markEnd,
   label,
   className = "",
 }: {
@@ -64,8 +48,6 @@ export function BrandReel({
   frame?: [number, number, number, number];
   /** The image `mark` reveals through. */
   mark?: string;
-  /** Where the mark ends up: [width, height, left, top], in the slide's px. */
-  markEnd?: [number, number, number, number];
   label: string;
   /** For the brand's fonts (next/font variables). */
   className?: string;
@@ -145,10 +127,6 @@ export function BrandReel({
         {
           ...(frame && { "--frame": frame.map((n) => `${n}px`).join(" ") }),
           ...(mark && { "--mark": `url(${mark})` }),
-          ...(markEnd && {
-            "--mark-size": `${markEnd[0]}px ${markEnd[1]}px`,
-            "--mark-at": `${markEnd[2]}px ${markEnd[3]}px`,
-          }),
         } as CSSProperties
       }
       aria-label={label}
