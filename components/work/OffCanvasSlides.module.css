@@ -1,0 +1,54 @@
+/* Off Canvas's type. */
+
+/* The logotype's Delight, stood in for by Inter Tight (see OffCanvasReel). */
+.word {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-off-canvas), var(--font-sans);
+  line-height: normal;
+  white-space: nowrap;
+}
+
+/* The design's DX Mono, as the site's mono. */
+.mono {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 1.08px;
+  color: #d4d4d4;
+  white-space: nowrap;
+}
+
+.mono span {
+  display: block;
+}
+
+/* A box whose word is turned to run up or down it. */
+.turned {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.turned > .word {
+  position: relative;
+  left: auto !important;
+  top: auto !important;
+  flex: none;
+  rotate: var(--turn);
+}
+
+/* Eight rows of thirteen dots, 34px apart. */
+.dots {
+  display: grid;
+  grid-template-columns: repeat(13, 6px);
+  gap: 34px;
+}
+
+.dots img {
+  display: block;
+  width: 6px;
+  height: 6px;
+}

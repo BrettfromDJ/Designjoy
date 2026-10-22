@@ -20,7 +20,19 @@ const ENTER_MS = 1250;
 //   lift: rising from below and lifting the last away;
 //   frame: opening out from a box in the middle (`frame`, in the slide's px);
 //   mark: showing through the brand's mark as it grows (`mark`, an image).
-export type Transition = "rise" | "fall" | "zip" | "across" | "doors" | "sunrise" | "push" | "lift" | "frame" | "mark";
+// And cut: straight to the next slide.
+export type Transition =
+  | "rise"
+  | "fall"
+  | "zip"
+  | "across"
+  | "doors"
+  | "sunrise"
+  | "push"
+  | "lift"
+  | "frame"
+  | "mark"
+  | "cut";
 const COVERS = new Set<Transition>(["rise", "zip", "across", "fall", "doors"]);
 
 /**
@@ -37,6 +49,7 @@ export function BrandReel({
   bars = [],
   frame,
   mark,
+  showMs = SHOW_MS,
   label,
   className = "",
 }: {
@@ -48,6 +61,8 @@ export function BrandReel({
   frame?: [number, number, number, number];
   /** The image `mark` reveals through. */
   mark?: string;
+  /** How long each slide shows (ms). */
+  showMs?: number;
   label: string;
   /** For the brand's fonts (next/font variables). */
   className?: string;
@@ -91,14 +106,17 @@ export function BrandReel({
     let t: ReturnType<typeof setTimeout>;
     if (sweep === "idle") {
       t = setTimeout(() => {
-        if (COVERS.has(transition)) {
+        if (transition === "cut") {
+          setIndex(next);
+          setTurn((n) => n + 1);
+        } else if (COVERS.has(transition)) {
           setSweep("cover");
         } else {
           setLeaving(index);
           setIndex(next);
           setSweep("enter");
         }
-      }, SHOW_MS);
+      }, showMs);
     } else if (sweep === "cover") {
       t = setTimeout(() => {
         setIndex(next);
@@ -115,7 +133,7 @@ export function BrandReel({
       );
     }
     return () => clearTimeout(t);
-  }, [visible, sweep, transition, index, slides.length]);
+  }, [visible, sweep, transition, index, slides.length, showMs]);
 
   const Next = slides[(index + 1) % slides.length];
 
