@@ -1,0 +1,738 @@
+/* Direction 4, "Desk": a warm desk top, paper things with real shadows. */
+.page {
+  --desk: #e6e0d4;
+  --ink: #1d1b18;
+  --dim: #6f685c;
+  --paper: #fbfaf6;
+  --serif: var(--font-instrument-serif), Georgia, serif;
+  --pad: clamp(20px, 4vw, 56px);
+  --lift:
+    0 1px 1px rgba(60, 40, 10, 0.08),
+    0 6px 12px -2px rgba(60, 40, 10, 0.12),
+    0 18px 36px -12px rgba(60, 40, 10, 0.25);
+  --lift-high:
+    0 2px 2px rgba(60, 40, 10, 0.08),
+    0 20px 30px -6px rgba(60, 40, 10, 0.18),
+    0 50px 80px -20px rgba(60, 40, 10, 0.35);
+  background:
+    radial-gradient(120% 80% at 50% 0%, #efeadf, transparent 70%),
+    var(--desk);
+  color: var(--ink);
+  font-family: var(--font-display);
+  overflow-x: clip;
+}
+
+.page p,
+.page h1,
+.page h2 {
+  margin: 0;
+}
+
+.hand {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.h1 {
+  display: block;
+  font-size: clamp(48px, 7.4vw, 120px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.h1.hand {
+  font-size: clamp(56px, 8.6vw, 140px);
+  letter-spacing: -0.03em;
+}
+
+.h2 {
+  font-size: clamp(40px, 5.6vw, 88px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.h2 .hand {
+  color: var(--dim);
+}
+
+/* ---------- Buttons ---------- */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 20px;
+}
+
+.primary {
+  height: 50px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--lift);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--lift-high);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* ---------- The desk ---------- */
+.desk {
+  position: relative;
+  min-height: max(100svh, 760px);
+  overflow: hidden;
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px var(--pad) 80px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.center button,
+.center a {
+  pointer-events: auto;
+}
+
+.centerFoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.centerFoot p {
+  max-width: 400px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
+.thing {
+  position: absolute;
+  z-index: 3;
+  rotate: var(--turn);
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  transition: scale 0.25s ease, filter 0.25s ease;
+  animation: drop 1s var(--d) cubic-bezier(0.2, 1.2, 0.4, 1) backwards;
+}
+
+.thing[data-held] {
+  cursor: grabbing;
+  scale: 1.04;
+  filter: drop-shadow(0 30px 30px rgba(60, 40, 10, 0.25));
+}
+
+.cardThing {
+  width: clamp(220px, 20vw, 320px);
+}
+
+.polaroidThing {
+  width: clamp(200px, 21vw, 300px);
+}
+
+.sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  width: 190px;
+  min-height: 170px;
+  padding: 18px;
+  border: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1.05;
+  text-align: left;
+  color: var(--ink);
+  box-shadow: var(--lift);
+  /* The bottom corner curls up a little. */
+  border-bottom-right-radius: 28px 6px;
+}
+
+.sticky span {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(29, 27, 24, 0.6);
+}
+
+.sticky[data-tone="yellow"] {
+  background: linear-gradient(170deg, #fff6a8, #fbe97c);
+}
+
+.sticky[data-tone="pink"] {
+  background: linear-gradient(170deg, #ffd4dc, #ffbccb);
+}
+
+.polaroid {
+  margin: 0;
+  padding: 10px 10px 0;
+  background: var(--paper);
+  box-shadow: var(--lift);
+}
+
+.polaroid > figcaption {
+  padding: 12px 4px 14px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* A pencil, from gradients. */
+.pencil {
+  display: block;
+  width: 260px;
+  height: 18px;
+  border-radius: 2px 9px 9px 2px;
+  background:
+    linear-gradient(90deg, #2b2b2b 0 4%, #e8c88f 4% 13%, transparent 13%),
+    linear-gradient(90deg, transparent 13%, #f2c335 13% 88%, #d9d2c7 88% 92%, #e88a95 92%),
+    linear-gradient(#0000 0 33%, rgba(0, 0, 0, 0.08) 33% 66%, #0000 66%);
+  clip-path: polygon(0 50%, 13% 0, 100% 0, 100% 100%, 13% 100%);
+  filter: drop-shadow(0 6px 6px rgba(60, 40, 10, 0.25));
+}
+
+/* A coffee ring. */
+.coffee {
+  display: block;
+  width: 130px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 7px solid rgba(120, 75, 30, 0.13);
+  box-shadow: inset 0 0 0 3px rgba(120, 75, 30, 0.06);
+}
+
+.psst {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  translate: -50% 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--dim);
+  transition: opacity 0.6s ease;
+}
+
+.desk[data-touched] .psst {
+  opacity: 0;
+}
+
+/* ---------- Sections ---------- */
+.section {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(96px, 12vw, 180px) var(--pad) 0;
+}
+
+.section > .h2 {
+  margin-bottom: 56px;
+}
+
+/* Pinned up: prints on the wall, a little crooked, straightening on hover. */
+.wall {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px 40px;
+}
+
+.print {
+  position: relative;
+  padding: 12px 12px 0;
+  background: var(--paper);
+  box-shadow: var(--lift);
+  rotate: var(--tilt);
+  transition: rotate 0.5s cubic-bezier(0.2, 1.2, 0.4, 1), box-shadow 0.4s ease, transform 0.5s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.print:hover {
+  rotate: 0deg;
+  box-shadow: var(--lift-high);
+  transform: translateY(-6px);
+}
+
+.pin {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff7b6b, #c8321f 60%);
+  box-shadow: 0 4px 5px rgba(60, 20, 10, 0.35);
+}
+
+.tapeLabel {
+  padding: 14px 4px 16px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 20px;
+}
+
+/* How it works: steps beside the sticky-note board. */
+.how {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 0;
+  padding: 0 0 0 22px;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
+.steps b {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.board {
+  --col-w: calc((100% - 48px) / 3);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  height: 460px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fbfaf7;
+  box-shadow: var(--lift), inset 0 0 0 1px rgba(60, 40, 10, 0.06);
+}
+
+.column {
+  border-radius: 6px;
+  background: repeating-linear-gradient(transparent 0 27px, rgba(60, 40, 10, 0.05) 27px 28px);
+}
+
+.column p {
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.note {
+  position: absolute;
+  left: calc(12px + var(--col) * (var(--col-w) + 12px) + 10px);
+  top: calc(52px + var(--row) * 128px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: calc(var(--col-w) - 20px);
+  height: 112px;
+  padding: 14px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1;
+  rotate: var(--tilt);
+  box-shadow: var(--lift);
+  transition:
+    left 0.8s cubic-bezier(0.5, 0, 0.2, 1),
+    top 0.8s cubic-bezier(0.5, 0, 0.2, 1);
+  animation: none;
+}
+
+.note span {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(29, 27, 24, 0.6);
+}
+
+.note[data-tone="yellow"] {
+  background: linear-gradient(170deg, #fff6a8, #fbe97c);
+}
+
+.note[data-tone="pink"] {
+  background: linear-gradient(170deg, #ffd4dc, #ffbccb);
+}
+
+.note[data-tone="blue"] {
+  background: linear-gradient(170deg, #d6ecff, #bfdfff);
+}
+
+.note[data-col="2"] span {
+  color: #2f7d3a;
+}
+
+/* Receipts: printing out, top first, with a torn edge. */
+.receipts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 56px;
+}
+
+.receiptWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.receiptWrap:nth-child(1) .receipt {
+  rotate: -2deg;
+}
+
+.receiptWrap:nth-child(2) .receipt {
+  rotate: 1.5deg;
+}
+
+.receipt {
+  width: 340px;
+  padding: 28px 26px 40px;
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  filter: drop-shadow(0 18px 24px rgba(60, 40, 10, 0.18));
+  /* The torn edge at the foot. */
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .receipt {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-40px);
+    transition:
+      clip-path 2.2s steps(22, end),
+      transform 2.2s steps(22, end);
+  }
+
+  .receipt[data-in] {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+.receipt hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1.5px dashed rgba(29, 27, 24, 0.35);
+}
+
+.receipt ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.receipt li,
+.total {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.receiptHead {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+}
+
+.receiptHead img {
+  filter: invert(1);
+}
+
+.receiptSmall {
+  margin-top: 6px !important;
+  font-size: 11px;
+  text-align: center;
+  color: var(--dim);
+}
+
+.receiptPlan {
+  margin-bottom: 10px !important;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+
+.total {
+  font-size: 16px;
+}
+
+.barcode {
+  display: block;
+  height: 46px;
+  margin-top: 18px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 2px,
+    transparent 2px 4px,
+    var(--ink) 4px 5px,
+    transparent 5px 9px,
+    var(--ink) 9px 12px,
+    transparent 12px 13px
+  );
+}
+
+/* Kind words on index cards. */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.indexCard {
+  position: relative;
+  padding: 44px 36px 32px;
+  background:
+    linear-gradient(#e86a6a, #e86a6a) 0 40px / 100% 1px no-repeat,
+    repeating-linear-gradient(transparent 0 31px, rgba(80, 120, 200, 0.18) 31px 32px) 0 40px,
+    var(--paper);
+  box-shadow: var(--lift);
+}
+
+.indexCard:nth-child(1) {
+  rotate: -1.5deg;
+}
+
+.indexCard:nth-child(2) {
+  rotate: 1deg;
+}
+
+.indexCard p {
+  margin-bottom: 20px !important;
+  font-family: var(--serif);
+  font-size: clamp(28px, 2.8vw, 40px);
+  line-height: 1.1;
+}
+
+.from {
+  font-size: 14px;
+  color: var(--dim);
+}
+
+.tapeTop {
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  width: 110px;
+  height: 26px;
+  translate: -50% 0;
+  rotate: -3deg;
+  background: rgba(240, 230, 190, 0.8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Questions, on a notepad. */
+.notepad {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px clamp(24px, 5vw, 64px) 40px clamp(56px, 8vw, 96px);
+  background:
+    linear-gradient(#e86a6a, #e86a6a) clamp(36px, 6vw, 72px) 0 / 1px 100% no-repeat,
+    repeating-linear-gradient(transparent 0 35px, rgba(80, 120, 200, 0.16) 35px 36px),
+    var(--paper);
+  box-shadow: var(--lift);
+}
+
+.notepadTitle {
+  margin-bottom: 16px !important;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 48px;
+}
+
+.notepad details {
+  border-bottom: 1px solid rgba(29, 27, 24, 0.08);
+}
+
+.notepad summary {
+  padding: 14px 0;
+  font-size: 18px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.notepad summary::-webkit-details-marker {
+  display: none;
+}
+
+.notepad summary::before {
+  content: "☐ ";
+  color: var(--dim);
+}
+
+.notepad details[open] summary::before {
+  content: "☑ ";
+  color: var(--ink);
+}
+
+.notepad details p {
+  padding: 0 0 16px 24px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
+.notepad .link {
+  margin-top: 20px;
+}
+
+/* Close: the Pro card and a note to start. */
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  padding: clamp(120px, 14vw, 200px) var(--pad) 120px;
+}
+
+.closeCard {
+  width: min(420px, 80vw);
+  rotate: -6deg;
+}
+
+.ctaNote {
+  width: 240px;
+  min-height: 210px;
+  font-size: 34px;
+  rotate: 4deg;
+  cursor: pointer;
+  transition: rotate 0.4s cubic-bezier(0.2, 1.4, 0.4, 1), transform 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.ctaNote:hover {
+  rotate: 0deg;
+  transform: scale(1.05);
+}
+
+.footer {
+  display: flex;
+  gap: 20px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px var(--pad) 120px;
+  border-top: 1px solid rgba(29, 27, 24, 0.12);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.footer span {
+  margin-right: auto;
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-60px) scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thing {
+    animation: none;
+  }
+}
+
+/* ---------- Narrower screens: the desk tidied into a column ---------- */
+@media (max-width: 899px) {
+  .desk {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    min-height: 0;
+    padding: 110px var(--pad) 40px;
+  }
+
+  .center {
+    position: static;
+    padding: 0;
+  }
+
+  .thing {
+    position: static;
+  }
+
+  .thing:nth-of-type(n + 4) {
+    display: none;
+  }
+
+  .cardThing {
+    width: min(340px, 86vw);
+    order: -1;
+  }
+
+  .psst {
+    display: none;
+  }
+
+  .wall,
+  .cards,
+  .how {
+    grid-template-columns: 1fr;
+  }
+
+  .board {
+    height: 420px;
+  }
+
+  .note {
+    font-size: 17px;
+    padding: 10px;
+  }
+
+  .close {
+    flex-direction: column;
+  }
+}

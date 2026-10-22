@@ -1,0 +1,869 @@
+/* Direction 5, "Aurora": a moving aurora behind frosted glass. */
+.page {
+  --ink: #f6f7ff;
+  --dim: rgba(236, 238, 255, 0.6);
+  --glass: rgba(255, 255, 255, 0.07);
+  --glass-edge: rgba(255, 255, 255, 0.18);
+  --serif: var(--font-instrument-serif), Georgia, serif;
+  --spectrum: linear-gradient(100deg, #9db4ff, #e7a6ff 30%, #8ef0ff 55%, #b6ffd6 75%, #9db4ff);
+  --pad: clamp(20px, 4vw, 56px);
+  position: relative;
+  isolation: isolate;
+  background: #05060d;
+  color: var(--ink);
+  font-family: var(--font-display);
+  overflow-x: clip;
+}
+
+.page p,
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+}
+
+/* ---------- The aurora: four soft lights drifting, fixed behind the page ---------- */
+.aurora {
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  /* (Soft already; no blur filter, which is costly to animate.) */
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.aurora span {
+  position: absolute;
+  width: 46vmax;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  animation: float 26s ease-in-out infinite alternate;
+}
+
+.aurora span:nth-child(1) {
+  left: 10%;
+  top: 8%;
+  background: radial-gradient(closest-side, #4b4bff, transparent);
+}
+
+.aurora span:nth-child(2) {
+  right: 8%;
+  top: 18%;
+  background: radial-gradient(closest-side, #00c2ff, transparent);
+  animation-duration: 32s;
+  animation-delay: -8s;
+}
+
+.aurora span:nth-child(3) {
+  left: 30%;
+  bottom: 6%;
+  background: radial-gradient(closest-side, #d93cff, transparent);
+  animation-duration: 38s;
+  animation-delay: -14s;
+}
+
+.aurora span:nth-child(4) {
+  right: 24%;
+  bottom: 18%;
+  background: radial-gradient(closest-side, #29e0a0, transparent);
+  opacity: 0.6;
+  animation-duration: 30s;
+  animation-delay: -4s;
+}
+
+/* Text in the spectrum, its colours sliding along. */
+.shine {
+  background: var(--spectrum);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  padding-right: 0.06em;
+  animation: spectrum 8s linear infinite;
+}
+
+.micro {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.h1 {
+  font-size: clamp(52px, 7.4vw, 124px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.h2 {
+  font-size: clamp(44px, 6vw, 96px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-align: center;
+}
+
+.sub {
+  margin-top: 14px !important;
+  font-size: 15px;
+  color: var(--dim);
+  text-align: center;
+}
+
+/* ---------- Buttons ---------- */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.primary,
+.glassButton {
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.primary {
+  border: 0;
+  background: #fff;
+  color: #05060d;
+  box-shadow: 0 0 40px -8px rgba(160, 170, 255, 0.8);
+}
+
+.glassButton {
+  border: 1px solid var(--glass-edge);
+  background: var(--glass);
+  color: var(--ink);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.primary:hover,
+.glassButton:hover {
+  transform: translateY(-2px);
+}
+
+.primary:hover {
+  box-shadow: 0 0 60px -6px rgba(180, 190, 255, 0.95);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  max-width: 1360px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 140px var(--pad) 80px;
+}
+
+/* The light following the pointer. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(500px circle at var(--mx, 70%) var(--my, 40%), rgba(255, 255, 255, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.heroText > * {
+  animation: rise 1.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.heroText > :nth-child(2) { animation-delay: 0.08s; }
+.heroText > :nth-child(3) { animation-delay: 0.16s; }
+.heroText > :nth-child(4) { animation-delay: 0.24s; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6dffb8;
+  box-shadow: 0 0 10px #6dffb8;
+}
+
+.lede {
+  max-width: 480px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.heroCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: rise 1.4s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.switch {
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.switch button {
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-size: 14px;
+  color: var(--dim);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.switch button[aria-checked="true"] {
+  background: rgba(255, 255, 255, 0.9);
+  color: #05060d;
+}
+
+/* ---------- The glass card ---------- */
+.glassWrap {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 470px;
+  perspective: 1000px;
+  animation: hover-float 7s ease-in-out infinite;
+}
+
+.glassCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1.586;
+  padding: 6cqw;
+  border-radius: 5cqw;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(120% 100% at var(--gx, 20%) var(--gy, 0%), rgba(255, 255, 255, 0.28), transparent 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -20px 40px -20px rgba(255, 255, 255, 0.15),
+    0 40px 80px -30px rgba(0, 0, 0, 0.7);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* An iridescent sheen sliding across. */
+.glassCard::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(115deg, transparent 40%, rgba(180, 200, 255, 0.25) 47%, rgba(255, 180, 240, 0.2) 51%, transparent 58%);
+  animation: sweep 6s 1s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.glassCard[data-plan="design-partner"] {
+  border-color: transparent;
+  background:
+    radial-gradient(120% 100% at var(--gx, 20%) var(--gy, 0%), rgba(255, 255, 255, 0.28), transparent 50%) padding-box,
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05)) padding-box,
+    conic-gradient(from var(--glow-angle), #9db4ff, #e7a6ff, #8ef0ff, #b6ffd6, #9db4ff) border-box;
+  animation: edge-spin 6s linear infinite;
+}
+
+.glassTop,
+.glassFoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.glassFoot {
+  font-size: max(12px, 3.2cqw);
+}
+
+.glassFoot > span:last-child {
+  text-align: right;
+}
+
+.glassCard img.glassSmile[src] {
+  width: 9cqw;
+  margin: -1cqw -1cqw 0;
+  filter: none;
+}
+
+.glassPlan {
+  font-size: 9cqw;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+/* ---------- Numbers ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 var(--pad);
+  gap: 16px;
+}
+
+.stats > div {
+  padding: 28px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 24px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.statNum {
+  display: block;
+  font-size: clamp(44px, 5vw, 76px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.stats p {
+  margin-top: 10px !important;
+  font-size: 14px;
+  color: var(--dim);
+}
+
+/* ---------- Sections ---------- */
+.section {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: clamp(110px, 13vw, 190px) var(--pad) 0;
+}
+
+/* ---------- The ring ---------- */
+.orbit {
+  --tile: min(460px, 34vw);
+  --r: calc(var(--tile) / 2 / tan(180deg / var(--n)) + 70px);
+  position: relative;
+  height: calc(var(--tile) * 0.72 + 220px);
+  margin-top: 56px;
+  perspective: 2200px;
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  width: var(--tile);
+  margin-left: calc(var(--tile) / -2);
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--r) * -1)) rotateX(-6deg) rotateY(calc(var(--step) * 360deg / var(--n)));
+  transition: transform 1s cubic-bezier(0.65, 0, 0.2, 1);
+}
+
+.ringInner {
+  transform-style: preserve-3d;
+  animation: orbit 48s linear infinite;
+}
+
+.orbit:hover .ringInner {
+  animation-play-state: paused;
+}
+
+.slot {
+  position: absolute;
+  inset: 0 0 auto;
+  transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.slot > p {
+  margin-top: 12px !important;
+  font-size: 14px;
+  color: var(--dim);
+  text-align: center;
+}
+
+.slot > p b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.orbitControls {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  display: flex;
+  gap: 10px;
+  translate: -50% 0;
+}
+
+.orbitControls button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 50%;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--ink);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* ---------- Steps, lit in turn ---------- */
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 64px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The line joining them, a light running along it. */
+.steps::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 46px;
+  height: 1px;
+  background:
+    linear-gradient(90deg, transparent, #fff, transparent) 0 0 / 30% 100% no-repeat,
+    rgba(255, 255, 255, 0.15);
+  animation: run 6s linear infinite;
+}
+
+.steps li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 24px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: light 6s calc(var(--i) * 2s) ease-in-out infinite;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.steps h3 {
+  margin-top: 12px;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.steps p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+/* ---------- Pricing ---------- */
+.plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 56px auto 0;
+}
+
+.planInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  height: 100%;
+  padding: 36px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.planInner[data-highlight] {
+  border-color: transparent;
+  background:
+    linear-gradient(rgba(20, 22, 40, 0.75), rgba(20, 22, 40, 0.75)) padding-box,
+    conic-gradient(from var(--glow-angle), #9db4ff, #e7a6ff, #8ef0ff, #b6ffd6, #9db4ff) border-box;
+  box-shadow: 0 0 80px -30px rgba(200, 160, 255, 0.7);
+  animation: edge-spin 6s linear infinite;
+}
+
+.planName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+}
+
+.planName span {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--spectrum);
+  color: #05060d;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.planPrice {
+  margin-top: 8px !important;
+  font-size: clamp(52px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.planPrice small {
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--dim);
+}
+
+.planInner .sub {
+  margin-top: 0 !important;
+  text-align: left;
+}
+
+.planInner ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 18px 0 24px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--glass-edge);
+  list-style: none;
+  font-size: 15px;
+}
+
+.planInner li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.planInner button {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* ---------- Quotes ---------- */
+.quotes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.quote {
+  padding: 40px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.quote p {
+  margin-bottom: 24px !important;
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.2vw, 48px);
+  line-height: 1.08;
+}
+
+.quote span {
+  font-size: 14px;
+  color: var(--dim);
+}
+
+/* ---------- Questions ---------- */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 860px;
+  margin: 56px auto 0;
+}
+
+.faq details {
+  border: 1px solid var(--glass-edge);
+  border-radius: 20px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  font-size: 17px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: "+";
+  color: var(--dim);
+  transition: rotate 0.3s ease;
+}
+
+.faq details[open] summary::after {
+  rotate: 45deg;
+}
+
+.faq details p {
+  padding: 0 24px 20px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+/* ---------- Close ---------- */
+.close {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: clamp(140px, 16vw, 240px) var(--pad) 140px;
+  text-align: center;
+}
+
+.closeCard {
+  max-width: 380px;
+}
+
+.closeTitle {
+  font-size: clamp(52px, 8vw, 132px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.close .buttons {
+  justify-content: center;
+}
+
+.footer {
+  display: flex;
+  gap: 20px;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 24px var(--pad) 120px;
+  border-top: 1px solid var(--glass-edge);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.footer span {
+  margin-right: auto;
+}
+
+/* ---------- Motion ---------- */
+@keyframes float {
+  to {
+    transform: translate(12vmax, 8vmax) scale(1.2);
+  }
+}
+
+@keyframes spectrum {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(12px);
+  }
+}
+
+@keyframes hover-float {
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes sweep {
+  0%,
+  50% {
+    transform: translateX(-60%);
+  }
+  100% {
+    transform: translateX(60%);
+  }
+}
+
+@keyframes edge-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+@keyframes orbit {
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+
+@keyframes run {
+  from {
+    background-position: -30% 0, 0 0;
+  }
+  to {
+    background-position: 130% 0, 0 0;
+  }
+}
+
+@keyframes light {
+  0%,
+  100% {
+    border-color: var(--glass-edge);
+    box-shadow: none;
+  }
+  15%,
+  30% {
+    border-color: rgba(255, 255, 255, 0.55);
+    box-shadow: 0 0 60px -12px rgba(170, 180, 255, 0.6), inset 0 0 30px -10px rgba(255, 255, 255, 0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora span,
+  .shine,
+  .glassWrap,
+  .glassCard::after,
+  .glassCard[data-plan="design-partner"],
+  .ringInner,
+  .steps::before,
+  .steps li,
+  .planInner[data-highlight],
+  .heroText > *,
+  .heroCard {
+    animation: none;
+  }
+}
+
+/* ---------- Narrower screens ---------- */
+@media (max-width: 899px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 120px;
+  }
+
+  .heroCard {
+    order: -1;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* The ring becomes a row to swipe through. */
+  .orbit {
+    height: auto;
+    perspective: none;
+  }
+
+  .ring {
+    position: static;
+    width: auto;
+    margin: 0 calc(var(--pad) * -1);
+    transform: none;
+  }
+
+  .ringInner {
+    display: flex;
+    gap: 16px;
+    padding: 0 var(--pad);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    animation: none;
+    scrollbar-width: none;
+  }
+
+  .slot {
+    position: static;
+    flex: none;
+    width: 82vw;
+    transform: none;
+    scroll-snap-align: center;
+  }
+
+  .orbitControls {
+    display: none;
+  }
+
+  .steps,
+  .plans,
+  .quotes {
+    grid-template-columns: 1fr;
+  }
+
+  .steps::before {
+    display: none;
+  }
+}

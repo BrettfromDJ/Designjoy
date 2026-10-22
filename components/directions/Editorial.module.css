@@ -1,0 +1,693 @@
+/* Direction 2, "Editorial": warm paper, black ink, one red for the folios. */
+.page {
+  --paper: #efece4;
+  --ink: #151413;
+  --dim: #6c675d;
+  --rule: rgba(21, 20, 19, 0.18);
+  --red: #d2401e;
+  --serif: var(--font-instrument-serif), Georgia, serif;
+  --pad: clamp(20px, 4vw, 56px);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.page p,
+.page h1,
+.page h2 {
+  margin: 0;
+}
+
+/* (Not inside the work, whose own type is set already.) */
+.page em:not(figure em) {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ---------- Buttons ---------- */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+.primary,
+.outline {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.primary {
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.outline {
+  border: 1px solid var(--ink);
+  background: none;
+  color: var(--ink);
+}
+
+.primary:hover,
+.outline:hover {
+  transform: translateY(-2px);
+}
+
+.textLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  color: var(--ink);
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+}
+
+/* ---------- The cover ---------- */
+.cover {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 104px var(--pad) 56px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 3px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.meta span:first-child {
+  color: var(--red);
+}
+
+/* The wordmark across the full width, letters rising in turn. */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 1vw 0 0;
+  font-family: var(--serif);
+  font-size: clamp(80px, 20.5vw, 300px);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ink);
+}
+
+.masthead span {
+  display: inline-block;
+  padding-bottom: 0.12em;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .masthead span {
+    transform: translateY(105%);
+    transition: transform 1.2s calc(var(--i) * 55ms) cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .masthead[data-in] span {
+    transform: none;
+  }
+}
+
+.coverGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1.1fr;
+  align-items: start;
+  gap: clamp(24px, 4vw, 64px);
+  padding-top: 40px;
+}
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contents .label {
+  margin-bottom: 12px;
+}
+
+.contents a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  font-family: var(--serif);
+  font-size: 22px;
+}
+
+.contents a i,
+.index li i {
+  flex: 1;
+  border-bottom: 1px dotted var(--rule);
+  transform: translateY(-5px);
+}
+
+.contents a span:last-child {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--red);
+}
+
+.contents a:hover span:first-child {
+  font-style: italic;
+}
+
+/* The card, tipped in like an insert: taped down, a little crooked. */
+.insert {
+  position: relative;
+  padding: 22px;
+  border: 1px dashed var(--rule);
+  rotate: -3deg;
+  animation: tip-in 1.6s 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.insert > :nth-child(3) {
+  margin: 0 auto;
+}
+
+.tape {
+  position: absolute;
+  z-index: 2;
+  left: -14px;
+  top: 8px;
+  width: 92px;
+  height: 26px;
+  rotate: -32deg;
+  background: rgba(240, 230, 190, 0.75);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.tapeRight {
+  left: auto;
+  right: -14px;
+  top: auto;
+  bottom: 30px;
+  rotate: -28deg;
+}
+
+.cut {
+  margin-top: 14px !important;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  text-align: center;
+  color: var(--dim);
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.lead > p:nth-child(2) {
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+.dropcap::first-letter {
+  float: left;
+  margin: 6px 10px 0 0;
+  font-size: 92px;
+  line-height: 0.75;
+  color: var(--red);
+}
+
+/* ---------- Ticker ---------- */
+.ticker {
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tickerTrack {
+  display: flex;
+  width: max-content;
+  padding: 14px 0;
+  font-size: 26px;
+  animation: ticker 50s linear infinite;
+}
+
+.tickerTrack > span {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+  white-space: nowrap;
+}
+
+.tickerTrack b {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--red);
+}
+
+/* ---------- Sections ---------- */
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(80px, 11vw, 160px) var(--pad) 0;
+}
+
+.head {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 48px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ink);
+}
+
+.no {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--red);
+}
+
+.h2 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 112px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--dim);
+}
+
+/* Plates: wide ones across, the rest two by two. */
+.plates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px 32px;
+}
+
+.plate.wide,
+.pull {
+  grid-column: 1 / -1;
+}
+
+.plateCaption {
+  margin-top: 14px !important;
+  font-size: 14px;
+  color: var(--dim);
+}
+
+.plateCaption span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.plateCaption em {
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.pull {
+  margin: 40px 0;
+  padding: 0 8%;
+  text-align: center;
+}
+
+.pull blockquote {
+  margin: 0 0 20px;
+  font-family: var(--serif);
+  font-size: clamp(40px, 6vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.pull figcaption {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* How it works: an index with dotted leaders, beside a figure. */
+.how {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+
+.index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.indexNo {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--red);
+}
+
+.indexWhat {
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.2vw, 48px);
+  line-height: 1;
+}
+
+.index li:hover .indexWhat {
+  font-style: italic;
+}
+
+.indexWhen {
+  font-size: 15px;
+  color: var(--dim);
+}
+
+.figure {
+  margin: 0;
+}
+
+.figureFrame {
+  padding: 18px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  box-shadow: 0 30px 60px -30px rgba(40, 30, 10, 0.25);
+}
+
+.figure figcaption {
+  margin-top: 12px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--dim);
+}
+
+.figure figcaption span {
+  font-style: normal;
+  color: var(--red);
+}
+
+/* The rate card. */
+.rates table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rates th,
+.rates td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.rates thead th {
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.rates thead th:not(:first-child),
+.rates td {
+  width: 30%;
+  text-align: center;
+}
+
+.rates tbody th {
+  font-weight: 400;
+  font-size: 17px;
+}
+
+.rates td {
+  font-size: 13px;
+}
+
+.rates .none {
+  color: var(--dim);
+}
+
+.rates tfoot td {
+  padding-top: 28px;
+  border: 0;
+}
+
+.rateName,
+.ratePrice,
+.rateNote {
+  display: block;
+}
+
+.rateName {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+}
+
+.rateName sup {
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 10px;
+  color: var(--red);
+  text-transform: uppercase;
+}
+
+.ratePrice {
+  margin: 8px 0 6px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 5vw, 80px);
+  line-height: 1;
+}
+
+.ratePrice small {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--dim);
+}
+
+.rateNote {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--dim);
+}
+
+/* Letters: two columns. */
+.letters {
+  columns: 2;
+  column-gap: clamp(32px, 5vw, 80px);
+  column-rule: 1px solid var(--rule);
+}
+
+.letters article {
+  break-inside: avoid;
+  padding: 0 0 36px;
+}
+
+.dear {
+  margin-bottom: 10px !important;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.answer {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.answer::before {
+  content: "Ed. — ";
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--red);
+}
+
+.more {
+  margin-top: 8px !important;
+  font-family: var(--serif);
+  font-size: 20px;
+}
+
+/* The back cover. */
+.back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 1440px;
+  margin: clamp(100px, 14vw, 200px) auto 0;
+  padding: clamp(80px, 10vw, 140px) var(--pad);
+  border-top: 3px double var(--ink);
+  text-align: center;
+}
+
+.backTitle {
+  font-family: var(--serif);
+  font-size: clamp(64px, 11vw, 180px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+}
+
+.backQuote {
+  max-width: 560px;
+  margin: 32px 0 !important;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--dim);
+}
+
+.back .buttons {
+  justify-content: center;
+}
+
+.colophon {
+  max-width: 420px;
+  margin-top: 56px !important;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.footer {
+  display: flex;
+  gap: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px var(--pad) 120px;
+  border-top: 1px solid var(--ink);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.footer span {
+  margin-right: auto;
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+    rotate: -14deg;
+    transform: translate(40px, 80px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tickerTrack,
+  .insert {
+    animation: none;
+  }
+}
+
+/* ---------- Narrower screens ---------- */
+@media (max-width: 999px) {
+  .coverGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .insert {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .how {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 679px) {
+  .meta span:nth-child(2) {
+    display: none;
+  }
+
+  .coverGrid,
+  .plates {
+    grid-template-columns: 1fr;
+  }
+
+  .head {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .letters {
+    columns: 1;
+  }
+
+  .rates th,
+  .rates td {
+    padding: 12px 6px;
+  }
+
+  .rates tbody th {
+    font-size: 14px;
+  }
+
+  .rates tfoot button {
+    width: 100%;
+    padding: 0 8px;
+    font-size: 13px;
+  }
+
+  .tickerTrack {
+    font-size: 20px;
+  }
+}

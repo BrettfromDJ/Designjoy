@@ -5,24 +5,42 @@ import styles from "@/components/prototypes/Index.module.css";
 
 export const metadata: Metadata = { title: "Layout prototypes", robots: { index: false } };
 
+// The five art directions for the Story layout.
 const OPTIONS = [
   {
-    slug: "story",
-    name: "Story",
-    pitch: "The classic way down a page. The membership card leads, then proof, the work, how it works, pricing and questions, in the order a first-time visitor asks them.",
-    for: "Best for: traditional visitors who read top to bottom.",
+    slug: "vault",
+    name: "Vault",
+    pitch:
+      "Black-card luxury. The membership card turns in 3D as you scroll and flips to reveal the perks printed on its back, then the work glides past sideways like a private collection.",
+    for: "Feels like: an invitation to something exclusive.",
   },
   {
-    slug: "split",
-    name: "Split",
-    pitch: "Today's layout, tidied up. The work still fills the screen, but the left column becomes the membership card and a short set of tabs, one open at a time, instead of a long stack of cards.",
-    for: "Best for: keeping the work-first feel with less to wade through.",
+    slug: "editorial",
+    name: "Editorial",
+    pitch:
+      "A printed design magazine. A masthead, the card tipped in like an insert, the work as full-page plates with captions, an index for how it works and a rate card for pricing.",
+    for: "Feels like: taste, craft and confidence.",
   },
   {
-    slug: "chapters",
-    name: "Chapters",
-    pitch: "The story told in five beats as you scroll, each idea paired with a big piece of work or a live demo that pins beside it. Then the full body of work, pricing and questions.",
-    for: "Best for: a memorable, editorial first impression.",
+    slug: "kinetic",
+    name: "Kinetic",
+    pitch:
+      "Loud and fast. Huge rolling type, a pinned 48-hour clock that walks a request from asked to approved as you scroll, and the work stacking up card on card.",
+    for: "Feels like: speed, energy, no fluff.",
+  },
+  {
+    slug: "desk",
+    name: "Desk",
+    pitch:
+      "A designer's desk you can touch. Drag the card and notes around, the work pinned up as prints, sticky notes moving across a board, and prices that print out as receipts.",
+    for: "Feels like: warm, human, hands-on.",
+  },
+  {
+    slug: "aurora",
+    name: "Aurora",
+    pitch:
+      "Light and glass. A moving aurora behind a frosted glass card, the work on a 3D ring you can spin, and steps that light up one after another.",
+    for: "Feels like: premium, futuristic, polished.",
   },
 ];
 
@@ -32,7 +50,8 @@ export default function Prototypes() {
       <NavTop />
       <main className={styles.page}>
         <h1 className={styles.title}>
-          Three ways in. <span className={styles.muted}>Same work, same card, different ways to read Designjoy.</span>
+          Five directions for Story.{" "}
+          <span className={styles.muted}>Same story, same card, five very different ways to tell it.</span>
         </h1>
         <ol className={styles.list}>
           {OPTIONS.map((o, i) => (
@@ -52,7 +71,9 @@ export default function Prototypes() {
           ))}
         </ol>
         <p className={styles.note}>
-          Today&apos;s homepage stays as it is at <Link href="/">designjoy.co</Link> until you pick one.
+          Earlier explorations: <Link href="/prototypes/story">Story</Link>, <Link href="/prototypes/split">Split</Link>{" "}
+          and <Link href="/prototypes/chapters">Chapters</Link>. Today&apos;s homepage stays as it is at{" "}
+          <Link href="/">designjoy.co</Link> until you pick one.
         </p>
       </main>
     </>
