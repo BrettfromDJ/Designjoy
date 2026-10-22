@@ -1,8 +1,13 @@
 import Link from "next/link";
 import styles from "./Switcher.module.css";
 
-// The five art directions for the Story layout, stepped through in order.
+// The four looks for Vault, then the five art directions for the Story
+// layout, stepped through in order.
 export const PROTOTYPES = [
+  { slug: "obsidian", name: "Vault · Obsidian" },
+  { slug: "titanium", name: "Vault · Titanium" },
+  { slug: "gold", name: "Vault · Black & Gold" },
+  { slug: "noir", name: "Vault · Noir" },
   { slug: "vault", name: "Vault" },
   { slug: "editorial", name: "Editorial" },
   { slug: "kinetic", name: "Kinetic" },

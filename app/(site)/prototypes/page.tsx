@@ -5,6 +5,38 @@ import styles from "@/components/prototypes/Index.module.css";
 
 export const metadata: Metadata = { title: "Layout prototypes", robots: { index: false } };
 
+// The four looks for Vault.
+const LOOKS = [
+  {
+    slug: "obsidian",
+    name: "Obsidian",
+    pitch:
+      "A glossy black card under a single beam of light, dust drifting through it, reflected in a mirror-black floor. It glides as you scroll and catches the light as you move.",
+    for: "Feels like: a product launch at midnight.",
+  },
+  {
+    slug: "titanium",
+    name: "Titanium",
+    pitch:
+      "A brushed-metal card with etched type, under a studio light that follows your pointer across it. Silver type and buttons to match.",
+    for: "Feels like: precision, engineering, weight.",
+  },
+  {
+    slug: "gold",
+    name: "Black & Gold",
+    pitch:
+      "Matte black with gold foil type and a gold edge that shimmers, gold dust twinkling in warm light, gold prices and buttons.",
+    for: "Feels like: a private members' club.",
+  },
+  {
+    slug: "noir",
+    name: "Noir",
+    pitch:
+      "Cinematic: film grain, smoke, a warm key light, and letterbox bars that open as the card comes forward like the first shot of a film.",
+    for: "Feels like: a trailer, moody and confident.",
+  },
+];
+
 // The five art directions for the Story layout.
 const OPTIONS = [
   {
@@ -50,9 +82,29 @@ export default function Prototypes() {
       <NavTop />
       <main className={styles.page}>
         <h1 className={styles.title}>
-          Five directions for Story.{" "}
-          <span className={styles.muted}>Same story, same card, five very different ways to tell it.</span>
+          Vault, four ways.{" "}
+          <span className={styles.muted}>The same card and story, in four materials and four kinds of light.</span>
         </h1>
+        <ol className={styles.list}>
+          {LOOKS.map((o, i) => (
+            <li key={o.slug}>
+              <Link href={`/prototypes/${o.slug}`}>
+                <span className={styles.no}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={styles.name}>{o.name}</span>
+                <span className={styles.pitch}>
+                  {o.pitch}
+                  <span className={styles.for}>{o.for}</span>
+                </span>
+                <span className={styles.arrow} aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+        <h2 className={`${styles.title} ${styles.second}`}>
+          Five directions for Story. <span className={styles.muted}>The round before.</span>
+        </h2>
         <ol className={styles.list}>
           {OPTIONS.map((o, i) => (
             <li key={o.slug}>

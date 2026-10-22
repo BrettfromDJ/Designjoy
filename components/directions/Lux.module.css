@@ -1,0 +1,1336 @@
+/* Vault, in four looks (see Lux.tsx). The shared parts come from Vault;
+   the stage and each look's material and light follow. */
+/* Direction 1, "Vault": black velvet, white type, serif italics for the
+   moments that matter. */
+.page {
+  --ink: #f5f3ee;
+  --dim: rgba(245, 243, 238, 0.5);
+  --line: rgba(245, 243, 238, 0.12);
+  --serif: var(--font-instrument-serif), Georgia, serif;
+  --pad: clamp(20px, 4vw, 48px);
+  background: #050505;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.page p,
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+}
+
+/* (Not inside the work, whose own type is set already.) */
+.page em:not(figure em) {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.kicker,
+.small {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(56px, 10vw, 168px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+  text-align: center;
+}
+
+.h1 em {
+  font-size: 1.08em;
+}
+
+.h2 {
+  font-size: clamp(44px, 6.5vw, 104px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+/* ---------- Buttons ---------- */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.primary,
+.ghost {
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.primary {
+  border: 0;
+  background: var(--ink);
+  color: #050505;
+}
+
+.ghost {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.primary:hover,
+.ghost:hover {
+  transform: translateY(-2px);
+}
+
+.ghost:hover {
+  border-color: rgba(245, 243, 238, 0.4);
+}
+
+/* ---------- The card, with two faces ---------- */
+.scene {
+  perspective: 1400px;
+  width: 100%;
+  container-type: inline-size;
+}
+
+.card3d {
+  position: relative;
+  aspect-ratio: 1.586;
+  transform-style: preserve-3d;
+  transform: scale(var(--s, 1)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) rotateZ(var(--rz, 0deg));
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6.5cqw;
+  border-radius: 4.5cqw;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  color: #fff;
+  background:
+    radial-gradient(130% 100% at 20% 0%, rgba(255, 255, 255, 0.12), transparent 50%),
+    linear-gradient(160deg, #1a1a1a, #050505 60%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* A slow sheen. */
+.face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.1) 48%, transparent 60%);
+  transform: translateX(-100%);
+  animation: sheen 6s 1s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.back {
+  transform: rotateY(180deg);
+  justify-content: flex-start;
+  gap: 5cqw;
+  padding-top: 0;
+}
+
+.faceTop,
+.faceFoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.faceFoot {
+  font-size: max(11px, 3.2cqw);
+  letter-spacing: -0.02em;
+}
+
+.faceFoot > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faceFoot > span:last-child {
+  text-align: right;
+}
+
+.face img.smile[src] {
+  width: 10cqw;
+  margin: -1cqw -1cqw 0;
+  filter: none;
+}
+
+/* The chip: gold lines on a soft square. */
+.chip {
+  width: 11cqw;
+  aspect-ratio: 1.3;
+  border-radius: 1.6cqw;
+  background:
+    linear-gradient(90deg, transparent 32%, rgba(0, 0, 0, 0.25) 33%, transparent 34%, transparent 65%, rgba(0, 0, 0, 0.25) 66%, transparent 67%),
+    linear-gradient(0deg, transparent 48%, rgba(0, 0, 0, 0.25) 49%, transparent 51%),
+    linear-gradient(135deg, #e9d8a6, #b8995a 55%, #f3e6c0);
+}
+
+.small {
+  display: block;
+  margin-bottom: 4px;
+  font-size: max(8px, 2.2cqw);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.planName {
+  font-size: 9cqw;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.front[data-plan="design-partner"] {
+  border: 1px solid transparent;
+  background:
+    radial-gradient(130% 100% at 20% 0%, rgba(255, 255, 255, 0.12), transparent 50%) padding-box,
+    linear-gradient(160deg, #1a1a1a, #050505 60%) padding-box,
+    conic-gradient(from var(--glow-angle), #6f9bff, #c08bff, #6fffd8, #ffd28a, #6f9bff) border-box;
+  animation: edge-spin 6s linear infinite;
+}
+
+.front[data-plan="design-partner"] .planName {
+  background: linear-gradient(100deg, #fff 20%, #cbb9ff 38%, #a3e9ff 52%, #fff 70%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: foil 6s linear infinite;
+}
+
+.stripe {
+  height: 17%;
+  margin: 8% -6.5cqw 0;
+  background: linear-gradient(180deg, #000, #1c1c1c 40%, #0a0a0a);
+}
+
+.signature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 14%;
+  padding: 0 3cqw;
+  border-radius: 1cqw;
+  background:
+    repeating-linear-gradient(-45deg, #ece8dd 0 4px, #e2ddd0 4px 8px);
+  color: #1a1a1a;
+  font-size: 4.2cqw;
+}
+
+.signature em {
+  font-size: 5.4cqw;
+}
+
+.signature span {
+  font-family: var(--font-mono);
+  font-size: 2.6cqw;
+}
+
+.backPerks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2cqw 4cqw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: max(8px, 2.4cqw);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.backPerks li::before {
+  content: "— ";
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* A holographic sticker. */
+.holo {
+  position: absolute;
+  right: 6.5cqw;
+  bottom: 6.5cqw;
+  width: 12cqw;
+  aspect-ratio: 1.4;
+  border-radius: 1.2cqw;
+  background: conic-gradient(from var(--glow-angle), #6f9bff, #c08bff, #6fffd8, #ffd28a, #6f9bff);
+  opacity: 0.85;
+  animation: edge-spin 5s linear infinite;
+}
+
+/* ---------- The collection: pinned, the track gliding sideways ---------- */
+.collection {
+  position: relative;
+  height: calc(100vh + var(--travel, 0px));
+}
+
+.collectionPin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.collectionHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 var(--pad);
+}
+
+.track {
+  display: flex;
+  gap: clamp(20px, 3vw, 48px);
+  width: max-content;
+  padding: 0 var(--pad);
+  transform: translateX(calc(var(--p, 0) * var(--travel, 0px) * -1));
+  will-change: transform;
+}
+
+.piece {
+  flex: none;
+  width: min(calc(58vh * var(--ratio)), 78vw);
+  margin: 0;
+}
+
+.piece > figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 16px;
+  font-size: 15px;
+  color: var(--dim);
+}
+
+.piece > figcaption span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.piece > figcaption b {
+  font-weight: 400;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink);
+}
+
+.progress {
+  height: 1px;
+  margin: 0 var(--pad);
+  background: var(--line);
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+}
+
+/* ---------- Sections ---------- */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(96px, 14vw, 200px) var(--pad) 0;
+}
+
+.ritual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.ritual li {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px 32px 0 0;
+}
+
+.ritual li + li {
+  padding-left: 32px;
+  border-left: 1px solid var(--line);
+}
+
+.numeral {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(64px, 7vw, 110px);
+  line-height: 1;
+  color: rgba(245, 243, 238, 0.85);
+}
+
+.ritual h3 {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.ritual p {
+  max-width: 300px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+/* Tiers: the two cards, with their terms beneath. */
+.tiers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.tierCard .card3d {
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tierCard:hover .card3d {
+  --rx: 8deg;
+  --ry: -14deg;
+}
+
+.tierInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.tierPrice {
+  font-family: var(--serif);
+  font-size: clamp(56px, 6vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.tierPrice span {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--dim);
+}
+
+.tierInfo ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 8px 0 12px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  font-size: 15px;
+}
+
+.tierInfo li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tierInfo li svg {
+  flex: none;
+  opacity: 0.7;
+}
+
+/* Quotes: one at a time. */
+.quotes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(120px, 16vw, 240px) var(--pad) 0;
+  text-align: center;
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(40px, 5.5vw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  animation: quote-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.by {
+  font-size: 15px;
+  color: var(--ink);
+  animation: quote-in 1.2s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.by span {
+  color: var(--dim);
+}
+
+/* Questions: two columns of thin rules. */
+.faqs {
+  columns: 2;
+  column-gap: clamp(32px, 5vw, 80px);
+}
+
+.faqs details {
+  break-inside: avoid;
+  border-top: 1px solid var(--line);
+}
+
+.faqs summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqs summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqs summary::after {
+  content: "+";
+  color: var(--dim);
+  transition: rotate 0.3s ease;
+}
+
+.faqs details[open] summary::after {
+  rotate: 45deg;
+}
+
+.faqs details p {
+  padding: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+/* Close: the card turning slowly, front and back. */
+.close {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: clamp(140px, 18vw, 260px) var(--pad) 140px;
+}
+
+.spinning {
+  max-width: 400px;
+}
+
+.spinning .card3d {
+  animation: spin 14s linear infinite;
+}
+
+.footer {
+  display: flex;
+  gap: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px var(--pad) 120px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.footer span {
+  margin-right: auto;
+}
+
+/* ---------- Motion ---------- */
+@keyframes sheen {
+  0%,
+  55% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes edge-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+@keyframes foil {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@keyframes drip {
+  from {
+    transform: scaleY(0);
+  }
+  60% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotateX(8deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(8deg) rotateY(360deg);
+  }
+}
+
+@keyframes quote-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .face::after,
+  .front[data-plan="design-partner"],
+  .front[data-plan="design-partner"] .planName,
+  .holo,
+  .spinning .card3d,
+  .scrollHint::after {
+    animation: none;
+  }
+}
+
+/* =====================================================================
+   The stage: opening and unveiling in one pinned frame. The card's turn
+   (--rx, --ry, --rz, --s, --ty), the headline's exit (--head, 0 to 1), the
+   letterbox opening (--open) and the light on the card (--gx, --gy) are set
+   by the script each frame.
+   ===================================================================== */
+.stage {
+  position: relative;
+  height: 520vh;
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.atmosphere,
+.atmosphere > span,
+.dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dust {
+  width: 100%;
+  height: 100%;
+}
+
+.head {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 104px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 0 var(--pad);
+  opacity: calc(1 - var(--head, 0) * 1.4);
+  transform: translateY(calc(var(--head, 0) * -80px));
+  filter: blur(calc(var(--head, 0) * 10px));
+}
+
+.head .rule {
+  position: static;
+  width: 100%;
+}
+
+.head .h1 {
+  font-size: clamp(48px, 7.2vw, 128px);
+}
+
+.line {
+  display: block;
+  animation: line-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.line + .line {
+  animation-delay: 0.12s;
+}
+
+.cardSpot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: min(560px, 72vw);
+  translate: -50% -50%;
+  transform: translateY(var(--ty, 0));
+  animation: card-arrive 1.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.stageCard {
+  position: relative;
+  z-index: 1;
+}
+
+.foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9vh;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 0 var(--pad);
+  text-align: center;
+  opacity: calc(1 - var(--head, 0) * 1.6);
+  transform: translateY(calc(var(--head, 0) * 60px));
+  animation: line-in 1.4s 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.stage:not([data-phase="0"]) .foot {
+  pointer-events: none;
+}
+
+.foot .lede {
+  max-width: 420px;
+  font-size: 17px;
+}
+
+.stage .captions {
+  position: absolute;
+  top: 50%;
+  left: var(--pad);
+  z-index: 2;
+  width: min(28vw, 340px);
+  height: 180px;
+  translate: 0 -50%;
+}
+
+.stage .captions.right {
+  left: auto;
+  right: var(--pad);
+  text-align: right;
+}
+
+.caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(6px);
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s ease;
+}
+
+.stage[data-phase="1"] .caption[data-for="1"],
+.stage[data-phase="2"] .caption[data-for="2"],
+.stage[data-phase="3"] .caption[data-for="3"] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.capText {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.2vw, 32px);
+  line-height: 1.15;
+}
+
+.right .capText {
+  margin-left: auto;
+}
+
+.price {
+  font-family: var(--serif);
+  font-size: clamp(48px, 5.5vw, 88px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stage .scrollHint {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  translate: -50% 0;
+  opacity: calc(1 - var(--head, 0) * 3);
+}
+
+/* The light glancing off the card, following the pointer. */
+.glare {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.16), transparent 42%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.material {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.faceTop,
+.faceMid,
+.faceFoot,
+.stripe,
+.signature,
+.backPerks {
+  position: relative;
+  z-index: 1;
+}
+
+/* Film grain over the whole page (a fixed noise tile, nudged about). */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 50;
+  pointer-events: none;
+  opacity: var(--grain, 0.05);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(6) infinite;
+}
+
+.closeLight {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(1100px, 130vw);
+  height: 100%;
+  translate: -50% 0;
+  background: radial-gradient(closest-side at 50% 30%, var(--halo), transparent);
+  pointer-events: none;
+}
+
+.close {
+  position: relative;
+}
+
+@keyframes line-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(14px);
+  }
+}
+
+@keyframes card-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(30vh) scale(0.9);
+    filter: blur(20px);
+  }
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, 3%); }
+  40% { transform: translate(4%, -6%); }
+  60% { transform: translate(-3%, 7%); }
+  80% { transform: translate(6%, 2%); }
+  100% { transform: translate(-2%, -4%); }
+}
+
+@keyframes drift {
+  to {
+    transform: translate(8vw, -4vh) scale(1.15);
+  }
+}
+
+@keyframes foil-sweep {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* =====================================================================
+   Obsidian: a glossy black card under a single beam, over a mirror floor.
+   ===================================================================== */
+.page[data-look="obsidian"] {
+  --halo: rgba(255, 255, 255, 0.09);
+  background: #030303;
+}
+
+.page[data-look="obsidian"] .beam {
+  background: conic-gradient(
+    from 180deg at 50% -8%,
+    transparent 158deg,
+    rgba(255, 255, 255, 0.07) 168deg,
+    rgba(255, 255, 255, 0.2) 180deg,
+    rgba(255, 255, 255, 0.07) 192deg,
+    transparent 202deg
+  );
+  -webkit-mask: linear-gradient(#000 20%, transparent 88%);
+  mask: linear-gradient(#000 20%, transparent 88%);
+}
+
+.page[data-look="obsidian"] .floor {
+  top: 64%;
+  background:
+    radial-gradient(50% 40% at 50% 0%, rgba(255, 255, 255, 0.07), transparent 70%),
+    linear-gradient(rgba(255, 255, 255, 0.06), transparent 1px);
+}
+
+.page[data-look="obsidian"] .face {
+  background: linear-gradient(155deg, #222226 0%, #070707 48%, #111114 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 50px 90px -30px rgba(0, 0, 0, 1),
+    0 0 120px -40px rgba(255, 255, 255, 0.18);
+}
+
+.page[data-look="obsidian"] .glare {
+  background:
+    radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.22), transparent 38%),
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.07) 45%, transparent 55%);
+}
+
+/* The card's reflection in the floor: the same card, flipped, fading out. */
+.reflection {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 18px);
+  transform: scaleY(-1);
+  opacity: 0.2;
+  filter: blur(1.5px);
+  -webkit-mask: linear-gradient(to top, #000, transparent 55%);
+  mask: linear-gradient(to top, #000, transparent 55%);
+  pointer-events: none;
+}
+
+/* =====================================================================
+   Titanium: brushed metal, etched type, a studio light that follows you.
+   ===================================================================== */
+.page[data-look="titanium"] {
+  --ink: #eceef2;
+  --halo: rgba(200, 210, 230, 0.12);
+  background: radial-gradient(120% 70% at 50% 0%, #24262b, #0a0b0d 60%);
+}
+
+.page[data-look="titanium"] .beam {
+  background: radial-gradient(60% 50% at 50% 42%, rgba(210, 220, 240, 0.1), transparent 70%);
+}
+
+.page[data-look="titanium"] .floor {
+  top: 70%;
+  background: radial-gradient(40% 30% at 50% 0%, rgba(200, 210, 230, 0.08), transparent 70%);
+}
+
+.page[data-look="titanium"] .face {
+  color: #1b1c1f;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.35),
+    0 50px 90px -30px rgba(0, 0, 0, 0.95);
+}
+
+.page[data-look="titanium"] .material {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, rgba(0, 0, 0, 0.05) 1px 2px, transparent 2px 3px),
+    linear-gradient(112deg, #74777d 0%, #c3c6cc 22%, #85888e 40%, #dfe1e5 58%, #8b8e94 76%, #b5b8be 100%);
+}
+
+.page[data-look="titanium"] .glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.75), transparent 34%);
+  mix-blend-mode: overlay;
+}
+
+.page[data-look="titanium"] .small {
+  color: rgba(20, 21, 24, 0.55);
+}
+
+.page[data-look="titanium"] .planName,
+.page[data-look="titanium"] .faceFoot {
+  color: #26272b;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.page[data-look="titanium"] .face img.smile[src] {
+  filter: invert(1) brightness(0.25);
+}
+
+.page[data-look="titanium"] .chip {
+  background:
+    linear-gradient(90deg, transparent 32%, rgba(0, 0, 0, 0.22) 33%, transparent 34%, transparent 65%, rgba(0, 0, 0, 0.22) 66%, transparent 67%),
+    linear-gradient(0deg, transparent 48%, rgba(0, 0, 0, 0.22) 49%, transparent 51%),
+    linear-gradient(135deg, #f1f2f4, #9fa2a8 55%, #e4e6e9);
+}
+
+.page[data-look="titanium"] .stripe {
+  background: linear-gradient(180deg, #1c1d20, #3a3c41 40%, #1c1d20);
+}
+
+.page[data-look="titanium"] .backPerks {
+  color: rgba(20, 21, 24, 0.75);
+}
+
+.page[data-look="titanium"] .backPerks li::before {
+  color: rgba(20, 21, 24, 0.4);
+}
+
+.page[data-look="titanium"] .primary {
+  background: linear-gradient(112deg, #9a9da3, #eef0f2 40%, #a9acb2 70%, #e2e4e7);
+  color: #121316;
+}
+
+.page[data-look="titanium"] em:not(figure em) {
+  background: linear-gradient(100deg, #8e9198, #f2f3f5 35%, #9ea1a7 55%, #e6e8eb 75%, #8e9198);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: foil-sweep 9s linear infinite;
+}
+
+/* =====================================================================
+   Black & gold: matte black, gold foil type, gold dust in warm light.
+   ===================================================================== */
+.page[data-look="gold"] {
+  --gold: linear-gradient(100deg, #8c6b2c 0%, #f5dfa2 28%, #b8903f 48%, #fce9b5 64%, #94712f 100%);
+  --dim: rgba(240, 222, 180, 0.55);
+  --line: rgba(232, 200, 130, 0.18);
+  --halo: rgba(217, 176, 96, 0.14);
+  background: radial-gradient(110% 70% at 50% 35%, #15110a, #050403 65%);
+}
+
+.page[data-look="gold"] .beam {
+  background: radial-gradient(45% 45% at 50% 48%, rgba(217, 176, 96, 0.12), transparent 70%);
+}
+
+.page[data-look="gold"] .face {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(155deg, #17140f 0%, #050404 55%, #0e0c09 100%) padding-box,
+    linear-gradient(135deg, #9a7634, #f6e2a8 30%, #8d6b2d 55%, #f0d796 80%, #7a5c24) border-box;
+  box-shadow:
+    0 50px 90px -30px rgba(0, 0, 0, 1),
+    0 0 100px -40px rgba(217, 176, 96, 0.35);
+}
+
+.page[data-look="gold"] .material {
+  background: repeating-linear-gradient(45deg, rgba(255, 235, 190, 0.018) 0 2px, transparent 2px 4px);
+}
+
+.page[data-look="gold"] .glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 220, 150, 0.16), transparent 40%);
+}
+
+.page[data-look="gold"] .planName,
+.page[data-look="gold"] .faceFoot,
+.page[data-look="gold"] .small,
+.page[data-look="gold"] .backPerks,
+.page[data-look="gold"] em:not(figure em),
+.page[data-look="gold"] .price,
+.page[data-look="gold"] .tierPrice,
+.page[data-look="gold"] .numeral {
+  background: var(--gold);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: foil-sweep 7s linear infinite;
+}
+
+.page[data-look="gold"] .small {
+  opacity: 0.75;
+}
+
+.page[data-look="gold"] .face img.smile[src] {
+  filter: sepia(1) saturate(2.6) hue-rotate(-12deg) brightness(0.95);
+}
+
+.page[data-look="gold"] .stripe {
+  background: linear-gradient(180deg, #000, #1a160e 40%, #070605);
+}
+
+.page[data-look="gold"] .signature {
+  background: repeating-linear-gradient(-45deg, #efe2c2 0 4px, #e5d5b0 4px 8px);
+}
+
+.page[data-look="gold"] .primary {
+  background: var(--gold);
+  background-size: 200% 100%;
+  color: #1a1206;
+  animation: foil-sweep 7s linear infinite;
+}
+
+.page[data-look="gold"] .ghost {
+  border-color: rgba(232, 200, 130, 0.35);
+}
+
+.page[data-look="gold"] .front[data-plan="design-partner"] {
+  animation: none;
+}
+
+/* =====================================================================
+   Noir: film grain, letterbox, smoke, a warm key light.
+   ===================================================================== */
+.page[data-look="noir"] {
+  --grain: 0.11;
+  --ink: #efe8dc;
+  --dim: rgba(239, 232, 220, 0.5);
+  --halo: rgba(239, 225, 200, 0.1);
+  background: #0a0a0a;
+}
+
+.page[data-look="noir"] .smokeA,
+.page[data-look="noir"] .smokeB {
+  inset: auto;
+  width: 70vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(200, 195, 185, 0.12), transparent);
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+.page[data-look="noir"] .smokeA {
+  left: -10vw;
+  top: 10vh;
+}
+
+.page[data-look="noir"] .smokeB {
+  right: -15vw;
+  bottom: -20vh;
+  animation-duration: 28s;
+  animation-direction: alternate-reverse;
+}
+
+.page[data-look="noir"] .beam {
+  background: radial-gradient(35% 55% at 62% 30%, rgba(255, 236, 205, 0.12), transparent 70%);
+}
+
+/* The letterbox: closed bars at the top and bottom that open as the card comes forward. */
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 12vh;
+  background: #000;
+  pointer-events: none;
+  transition: none;
+}
+
+.barTop {
+  top: 0;
+  transform-origin: top;
+  transform: scaleY(calc(1 - var(--open, 0)));
+}
+
+.barBottom {
+  bottom: 0;
+  transform-origin: bottom;
+  transform: scaleY(calc(1 - var(--open, 0)));
+}
+
+.page[data-look="noir"] .head {
+  top: calc(12vh + 40px);
+}
+
+.page[data-look="noir"] .foot {
+  bottom: calc(12vh + 20px);
+}
+
+.page[data-look="noir"] .face {
+  background: linear-gradient(160deg, #1a1918, #0b0b0b 60%);
+  border: 1px solid rgba(255, 240, 220, 0.1);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 240, 220, 0.2),
+    0 50px 90px -30px rgba(0, 0, 0, 1),
+    30px -10px 120px -60px rgba(255, 230, 200, 0.4);
+}
+
+.page[data-look="noir"] .glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 236, 205, 0.14), transparent 45%);
+}
+
+.page[data-look="noir"] .h1,
+.page[data-look="noir"] .h2 {
+  font-family: var(--serif);
+  letter-spacing: -0.03em;
+}
+
+.page[data-look="noir"] .primary {
+  background: #efe8dc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .line,
+  .cardSpot,
+  .foot,
+  .page em:not(figure em),
+  .page[data-look="gold"] *,
+  .page[data-look="noir"] .smokeA,
+  .page[data-look="noir"] .smokeB {
+    animation: none !important;
+  }
+}
+
+/* ---------- Narrower screens: the captions above and below the card ---------- */
+@media (max-width: 899px) {
+  .head {
+    top: 96px;
+  }
+
+  .head .rule span:nth-child(2) {
+    display: none;
+  }
+
+  .stage .captions,
+  .stage .captions.right {
+    left: var(--pad);
+    right: var(--pad);
+    width: auto;
+    height: 120px;
+    text-align: center;
+    translate: none;
+  }
+
+  .stage .captions {
+    top: 14vh;
+  }
+
+  .stage .captions.right {
+    top: auto;
+    bottom: 12vh;
+  }
+
+  .caption {
+    align-items: center;
+  }
+
+  .capText,
+  .right .capText {
+    margin: 0 auto;
+  }
+}
+
+/* ---------- From Vault's opening: the rule, the lede and the scroll hint ---------- */
+.rule {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.lede {
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
+.scrollHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.scrollHint::after {
+  content: "";
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(var(--ink), transparent);
+  animation: drip 2.2s ease-in-out infinite;
+  transform-origin: top;
+}
+
+/* The signature strip is pale, whatever the look: its words stay in ink. */
+.page .signature em {
+  background: none;
+  color: #1a1a1a;
+  -webkit-text-fill-color: #1a1a1a;
+  animation: none;
+}
+
+/* On phones the card fills more of the width, and the hint gives the buttons room. */
+@media (max-width: 599px) {
+  .cardSpot {
+    width: 92vw;
+  }
+
+  .stage .scrollHint {
+    display: none;
+  }
+}
