@@ -13,6 +13,7 @@ export function AltosReel() {
   return (
     <BrandReel
       slides={ALTOS_SLIDES}
+      transitions={["rise", "sunrise", "zip", "push", "across", "fall"]}
       bars={BARS}
       className={anta.variable}
       label="Altos brand book: wordmark, Horizon Pattern, posters, logo mark, applications, colours and type"

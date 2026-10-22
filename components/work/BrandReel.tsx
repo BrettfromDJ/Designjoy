@@ -7,30 +7,47 @@ const SHOW_MS = 3800;
 // The stripes take this long to sweep in (and again to sweep away).
 const SWEEP_MS = 650;
 // And the reveals (where the next slide comes in over the last) this long.
-const ENTER_MS = 1100;
+const ENTER_MS = 1250;
 
-// The ways between slides, taken in turn so no two changes look alike: the
-// stripes rising, falling, zipping shut from both ends, or sweeping across
-// as bands; the next slide opening as a sunrise; or pushing the last aside.
-const TRANSITIONS = ["rise", "sunrise", "zip", "push", "across", "fall"] as const;
-const COVERS = new Set<string>(["rise", "zip", "across", "fall"]);
+// The ways between slides (see BrandReel.module.css). Each reel takes its
+// own set in turn, so no two changes look alike. Those that cover the slide
+// with the bars (`bars`) and uncover the next:
+//   rise, fall, zip, across: stripes up, down, from both ends, or across;
+//   doors: two panels closing from the sides and opening again.
+// And those that bring the next slide in over the last:
+//   sunrise: opening as a circle from the bottom centre;
+//   push: sliding in and pushing the last aside;
+//   lift: rising from below and lifting the last away;
+//   frame: opening out from a box in the middle (`frame`, in the slide's px);
+//   mark: showing through the brand's mark as it grows (`mark`, an image).
+export type Transition = "rise" | "fall" | "zip" | "across" | "doors" | "sunrise" | "push" | "lift" | "frame" | "mark";
+const COVERS = new Set<Transition>(["rise", "zip", "across", "fall", "doors"]);
 
 /**
  * A brand book from Figma as a reel: each slide (built in code, drawn at
  * 1440 × 1024 and scaled to the tile) comes in with its own motion, and a
- * different transition takes it to the next each time (see TRANSITIONS),
- * its stripes in the brand's colours (`bars`, ten of them). The next slide
+ * different transition takes it to the next each time, from the brand's own
+ * set (`transitions`, see Transition). The next slide
  * is drawn out of sight so its images are ready. It only runs while on
  * screen, and holds on the first slide with reduced motion.
  */
 export function BrandReel({
   slides,
-  bars,
+  transitions,
+  bars = [],
+  frame,
+  mark,
   label,
   className = "",
 }: {
   slides: ComponentType[];
-  bars: string[];
+  transitions: Transition[];
+  /** The colours of the covering bars (for the covering transitions). */
+  bars?: string[];
+  /** The box `frame` opens out from: [top, right, bottom, left] insets. */
+  frame?: [number, number, number, number];
+  /** The image `mark` reveals through. */
+  mark?: string;
   label: string;
   /** For the brand's fonts (next/font variables). */
   className?: string;
@@ -43,7 +60,7 @@ export function BrandReel({
   const [sweep, setSweep] = useState<"idle" | "cover" | "reveal" | "enter">("idle");
   // How many changes so far, which picks the next transition.
   const [turn, setTurn] = useState(0);
-  const transition = TRANSITIONS[turn % TRANSITIONS.length];
+  const transition = transitions[turn % transitions.length];
 
   // The slides are drawn at 1440 wide and scaled to the tile's width, set
   // here (before it paints, and again whenever the tile resizes). The CSS
@@ -106,6 +123,12 @@ export function BrandReel({
     <div
       ref={ref}
       className={`${styles.tile} ${className}`}
+      style={
+        {
+          ...(frame && { "--frame": frame.map((n) => `${n}px`).join(" ") }),
+          ...(mark && { "--mark": `url(${mark})` }),
+        } as CSSProperties
+      }
       aria-label={label}
     >
       <div className={styles.stage} data-play={visible || undefined} data-transition={transition} data-sweep={sweep}>
