@@ -54,9 +54,9 @@ function Word({
 }
 
 /** Lines of the small mono type (DX Mono in the design), at (x, y). */
-function Mono({ x, y, right, lines }: { x: number; y: number; right?: boolean; lines: string[] }) {
+function Mono({ x, y, lines }: { x: number; y: number; lines: string[] }) {
   return (
-    <p className={own.mono} style={right ? { right: 1440 - x, top: y, textAlign: "right" } : { left: x, top: y }}>
+    <p className={own.mono} style={{ left: x, top: y }}>
       {lines.map((line, i) => (
         <span key={i}>{line}</span>
       ))}
@@ -398,10 +398,6 @@ function Dots() {
       <Mono x={476} y={654} lines={[BUILT]} />
       <Mono x={715} y={654} lines={["//"]} />
       <Mono x={837} y={654} lines={[MADE]} />
-      <Mono x={40} y={40} lines={["OFF CANVAS ®"]} />
-      <Mono x={40} y={970} lines={["PROPERTY OF DESIGNJOY ™"]} />
-      <Mono x={1400} y={40} right lines={["LOGO EXPLORATION"]} />
-      <Mono x={1400} y={970} right lines={["® ALL RIGHTS RESERVED"]} />
     </Slide>
   );
 }
