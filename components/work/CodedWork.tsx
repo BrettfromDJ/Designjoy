@@ -1,6 +1,7 @@
 import type { WorkItem } from "@/content/site";
 import { AltosReel } from "./AltosReel";
 import { FinanceReel } from "./FinanceReel";
+import { KinobodyReel } from "./KinobodyReel";
 import { OrdinReel } from "./OrdinReel";
 import { RecapsReel } from "./RecapsReel";
 
@@ -10,5 +11,6 @@ export function CodedWork({ item, large = false }: { item: WorkItem; large?: boo
   if (item.id === "recaps") return <RecapsReel large={large} />;
   if (item.id === "altos") return <AltosReel />;
   if (item.id === "ordin") return <OrdinReel />;
+  if (item.id === "kinobody") return <KinobodyReel />;
   return null;
 }

@@ -17,6 +17,8 @@
   height: 1024px;
   transform-origin: 0 0;
   scale: var(--k, tan(atan2(100cqw, 1440px)));
+  /* What shows where a slide moves aside. */
+  background: #000;
 }
 
 .current,
@@ -286,8 +288,60 @@
     mask-size: 0 0;
   }
   to {
-    -webkit-mask-size: 10000px 9975px;
-    mask-size: 10000px 9975px;
+    -webkit-mask-size: var(--mark-size, 10000px 9975px);
+    mask-size: var(--mark-size, 10000px 9975px);
+    -webkit-mask-position: var(--mark-at, center);
+    mask-position: var(--mark-at, center);
+  }
+}
+
+/* Slash: the next slide cuts in along a diagonal, leaning as Kinobody's K
+   does (1.214 across for each 1 down), and the last gives way to the left. */
+.stage[data-sweep="enter"][data-transition="slash"] .current {
+  animation: slashIn 0.95s cubic-bezier(0.75, 0, 0.2, 1) both;
+}
+
+.stage[data-sweep="enter"][data-transition="slash"] .leaving {
+  animation: slashOut 0.95s cubic-bezier(0.75, 0, 0.2, 1) both;
+}
+
+@keyframes slashIn {
+  from {
+    clip-path: polygon(0 0, 0 0, -1243px 1024px, -1243px 1024px);
+  }
+  to {
+    clip-path: polygon(0 0, 2683px 0, 1440px 1024px, 0 1024px);
+  }
+}
+
+@keyframes slashOut {
+  to {
+    transform: translateX(-12%);
+  }
+}
+
+/* Deal: the next slide is dealt in from the right, turning straight as it
+   lands, over the last, which sinks back into the stack. */
+.stage[data-sweep="enter"][data-transition="deal"] .current {
+  transform-origin: 100% 100%;
+  box-shadow: 0 0 80px rgb(0 0 0 / 0.35);
+  animation: dealIn 1s cubic-bezier(0.6, 0, 0.15, 1) both;
+}
+
+.stage[data-sweep="enter"][data-transition="deal"] .leaving {
+  animation: dealUnder 1s cubic-bezier(0.6, 0, 0.15, 1) both;
+}
+
+@keyframes dealIn {
+  from {
+    transform: translateX(110%) rotate(8deg);
+  }
+}
+
+@keyframes dealUnder {
+  to {
+    transform: scale(0.9);
+    filter: brightness(0.6);
   }
 }
 

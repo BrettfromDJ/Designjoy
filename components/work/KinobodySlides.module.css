@@ -1,0 +1,125 @@
+/* Kinobody's own parts. Its motions play like the shared ones: only on the
+   slide showing ([data-slide]) while the reel runs ([data-play]). */
+
+/* The design's DM Mono labels (see KinobodyReel). */
+.mono {
+  flex: none;
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--font-mono);
+  font-size: 19.05px;
+  line-height: normal;
+  letter-spacing: -1.143px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The lockup's labels, set wider and wrapping. */
+.wide {
+  letter-spacing: 1.143px;
+  white-space: normal;
+}
+
+/* The wordmark, in the design's Metrik Black (stood in for, see
+   KinobodyReel), and its ® (Borna in the design). */
+.wordmark,
+.reg {
+  position: absolute;
+  margin: 0;
+  line-height: normal;
+  color: #9fa09f;
+  white-space: nowrap;
+}
+
+.wordmark {
+  font-family: var(--font-kinobody), var(--font-sans);
+  /* The design's 242px, tracked -12.1px; the stand-in runs wider, so a
+     little smaller and tighter, to end at the ® as the design does. */
+  font-size: 230px;
+  font-weight: 900;
+  letter-spacing: -15.5px;
+}
+
+.reg {
+  font-family: var(--font-sans);
+  font-size: 73.434px;
+  letter-spacing: -4.4061px;
+}
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  [data-play] [data-slide] :is(.slashIn, .deal, .swing, .hoist) {
+    animation-delay: var(--d, 0ms);
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* The mark cuts in along its own diagonal. */
+  [data-play] [data-slide] .slashIn {
+    animation-name: slashIn;
+    animation-duration: 0.9s;
+  }
+
+  /* The row of cards slides along, as if dealt. */
+  [data-play] [data-slide] .deal {
+    animation-name: deal;
+    animation-duration: 4.5s;
+    animation-timing-function: cubic-bezier(0.15, 0.7, 0.3, 1);
+  }
+
+  /* The tag swings to rest from its tie. */
+  [data-play] [data-slide] .swing {
+    transform-origin: 530px 270px;
+    animation-name: swing;
+    animation-duration: 2.6s;
+    animation-timing-function: linear;
+  }
+
+  /* The box is set down. */
+  [data-play] [data-slide] .hoist {
+    animation-name: hoist;
+    animation-duration: 2.4s;
+  }
+}
+
+/* The mark's long edge leans one to one in its box, so its slope is the
+   box's diagonal: a cut that far ahead at the top as at the bottom. */
+@keyframes slashIn {
+  from {
+    clip-path: polygon(0 0, 0 0, -100% 100%, -100% 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 200% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* Each from a little larger, so the edges stay covered, to as designed. */
+@keyframes deal {
+  from {
+    transform: scale(1.08) translateX(50px);
+  }
+}
+
+/* A damped swing. */
+@keyframes swing {
+  0% {
+    transform: scale(1.12) rotate(-2.5deg);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  30% {
+    transform: scale(1.07) rotate(1.2deg);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  60% {
+    transform: scale(1.03) rotate(-0.4deg);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes hoist {
+  from {
+    transform: scale(1.1) translateY(-40px);
+  }
+}
