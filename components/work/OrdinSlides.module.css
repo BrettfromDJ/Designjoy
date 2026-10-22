@@ -1,0 +1,229 @@
+/* Ordin's own parts. Its motions play like the shared ones: only on the
+   slide showing ([data-slide]) while the reel runs ([data-play]). */
+
+/* The design's OVR Demorny, stood in for by Marcellus (see OrdinReel). */
+.display {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-marcellus), Georgia, serif;
+  color: #000;
+  white-space: nowrap;
+}
+
+/* The script T of "THE", and the © (Kertosono and PP Editorial in the design). */
+.script {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  letter-spacing: 1.12px;
+}
+
+.editorial {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+}
+
+.corners p,
+.credit {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+}
+
+.corners {
+  color: #ddded8;
+}
+
+.credit {
+  left: 720.5px;
+  top: 80px;
+  translate: -50% 0;
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ---------- 1. The logomark's safe area ---------- */
+.safe {
+  position: absolute;
+  inset: 0;
+}
+
+.bar,
+.barTall {
+  background: #303030;
+}
+
+.turnBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hatch {
+  position: relative;
+  flex: none;
+  width: 680.001px;
+  height: 577.599px;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.axis {
+  position: absolute;
+  margin: 0;
+  translate: -50% 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: normal;
+  color: #5b5b5b;
+}
+
+/* ---------- 2. Columns ---------- */
+.pill {
+  box-sizing: border-box;
+  border: 3.356px solid #000;
+  border-radius: 75.966px;
+}
+
+/* ---------- 6. Machines in motion ---------- */
+.grey,
+.ghost {
+  color: #8a8a8a;
+}
+
+.ghost {
+  opacity: 0.2;
+}
+
+/* ---------- 8. Embossed ---------- */
+.warm {
+  position: absolute;
+  inset: 0;
+  background: #ff7708;
+  mix-blend-mode: soft-light;
+}
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  [data-play] [data-slide] :is(.bar, .barTall, .build, .pill, .lineA, .lineB, .drift, .lightSweep) {
+    animation-delay: var(--d, 0ms);
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* The safe-area bars draw out from the middle. */
+  [data-play] [data-slide] .bar {
+    animation-name: drawX;
+    animation-duration: 0.9s;
+  }
+
+  [data-play] [data-slide] .barTall {
+    animation-name: drawY;
+    animation-duration: 0.9s;
+  }
+
+  /* The columns build up from their plinth. */
+  [data-play] [data-slide] .build {
+    animation-name: buildUp;
+    animation-duration: 1.4s;
+  }
+
+  [data-play] [data-slide] .pill {
+    animation-name: popIn;
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.2, 1.5, 0.4, 1);
+  }
+
+  /* The big lines of type glide past each other. */
+  .lines > span {
+    display: inline-block;
+  }
+
+  [data-play] [data-slide] .lineA {
+    animation-name: glideLeft;
+    animation-duration: 4.5s;
+    animation-timing-function: linear;
+  }
+
+  [data-play] [data-slide] .lineB {
+    animation-name: glideRight;
+    animation-duration: 4.5s;
+    animation-timing-function: linear;
+  }
+
+  /* "Order in control", above and below, rolls slowly upward. */
+  [data-play] [data-slide] .drift {
+    animation-name: rollUp;
+    animation-duration: 4.5s;
+    animation-timing-function: linear;
+  }
+
+  /* The light slides across the embossed paper. */
+  [data-play] [data-slide] .lightSweep {
+    animation-name: lightSweep;
+    animation-duration: 4.5s;
+    animation-timing-function: ease-out;
+  }
+}
+
+@keyframes drawX {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes drawY {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes buildUp {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0);
+  }
+}
+
+@keyframes glideLeft {
+  from {
+    transform: translateX(160px);
+  }
+  to {
+    transform: translateX(-60px);
+  }
+}
+
+@keyframes glideRight {
+  from {
+    transform: translateX(-160px);
+  }
+  to {
+    transform: translateX(60px);
+  }
+}
+
+@keyframes rollUp {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes lightSweep {
+  from {
+    transform: scale(1.1) translateX(3%);
+    filter: brightness(0.8);
+  }
+}

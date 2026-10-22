@@ -1,9 +1,9 @@
 import type { CSSProperties, ReactNode } from "react";
-import styles from "./AltosReel.module.css";
+import styles from "./BrandReel.module.css";
 
 // The ten Altos brand slides from the Figma file, each drawn at its own
 // 1440 × 1024 and placed in the design's pixels (the reel scales them to the
-// tile). Classes from AltosReel.module.css bring each one in as it shows.
+// tile). Classes from BrandReel.module.css bring each one in as it shows.
 
 const DIR = "/work/altos";
 const src = (name: string) => `${DIR}/${name}`;
